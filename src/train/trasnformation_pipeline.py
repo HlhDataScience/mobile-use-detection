@@ -1,6 +1,7 @@
-import csv
+import json
 import numpy as np
 from sklearn.model_selection import train_test_split
+import os
 #from sklearn.pipeline import Pipeline
 import polars as pl
 from pydantic import BaseModel, Field, FilePath, ValidationError
@@ -28,7 +29,7 @@ class DataValidationConfig(BaseModel):
         UserBehaviorClass (int): Class label for user behavior.
     """
 
-    UserID: pl.col = Field(..., description="User ID.")
+    UserID: int = Field(..., description="User ID.")
     DeviceModel: str = Field(..., description="Device Model.")
     OperatingSystem: str = Field(..., description="Operating System.")
     AppUsageTime_min_day: int = Field(..., description="App Usage Time in Minutes.")
@@ -76,19 +77,68 @@ class DataValidationConfig(BaseModel):
         all_valid = True
 
         # Use 'with' to automatically handle file opening and closing
-        with open(filepath, 'r') as csvfile:
-            dict_reader = csv.DictReader(csvfile)
-            for row in dict_reader:
-                if not cls.validate_data(row):
-                    all_valid = False
-                    logger.error(f"Invalid row: {row}")
-                    if raise_on_invalid:
-                        raise TypeError(f"Invalid row found: {row}")
-                    if stop_on_invalid_row:
-                        return False
+        df = pl.read_csv(filepath)
+        dfdict = df.to_dicts()
+        for row in dfdict:
+            if not cls.validate_data(row):
+                all_valid = False
+                logger.error(f"Invalid row: {row}")
+                if raise_on_invalid:
+                    raise TypeError(f"Invalid row found: {row}")
+                if stop_on_invalid_row:
+                    return False
 
         return all_valid
+    @classmethod
+    def validate_and_serialize(
+            cls,
+            filepath: FilePath,
+            json_schema_filepath: str,
+            json_schema_name: str = 'json_schema.json',
+            serialized_data: str = 'validated_serialized_data.json'
+            ) -> str:
+        """
+        Validates each row of a CSV file against the schema and serialize the file to be ready to use
 
+        Args:
+            filepath (Path): Path to the CSV file.
+            json_schema_filepath (str): Path to the JSON Schema file.
+            json_schema_name (str): Name of the JSON Schema file.
+            serialized_data (str): Path to the serialized JSON Schema file.
+
+        Returns:
+            bool: True if all rows are valid, False otherwise.
+            Dict[str, Any]: Dictionary of serialized data.
+
+        Raises:
+            ValidationErrorException: If raise_on_invalid is True and an invalid row is found.
+        """
+
+        all_valid = True
+        schema_path: FilePath = str(os.path.join(json_schema_filepath, json_schema_name))
+        serialized_data_path: FilePath = str(os.path.join(json_schema_filepath, serialized_data))
+
+        df = pl.read_csv(filepath)
+        df_dict = df.to_dicts()
+        for row in df_dict:
+            if not cls.validate_data(row):
+                all_valid = False
+                logger.error(f"Invalid row: {row}")
+
+                raise TypeError(f"Invalid row found: {row}")
+
+
+
+
+        with open(schema_path, 'w') as f:
+            schema_to_json = cls.model_json_schema()
+            json.dump(schema_to_json, f)
+
+        with open(serialized_data_path, 'w') as f:
+            json.dump(df_dict, f)
+
+
+        return print(f'All the files are valid : {all_valid}\n\nJSON schema file saved at {schema_path}\n\n JSON serialized data at {schema_path}')
 
 
 class DataTransformationConfig(BaseModel):

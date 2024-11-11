@@ -17,7 +17,7 @@ class EdaDataValidationConfig(BaseModel):
     drop: str  = Field(..., description="ID user we do not need")
 
 
-def df_transformation_to_np(df: pl.DataFrame, config: Config, return_corr_matrix: bool) -> np.ndarray | List[str] | np.ndarray:
+def df_transformation_to_np(df: pl.DataFrame, config: EdaDataValidationConfig, return_corr_matrix: bool) -> np.ndarray | List[str] | np.ndarray:
     """
     Transforms a Polars DataFrame by encoding specified categorical columns into numeric values
     and returns the result as a NumPy array.
@@ -35,9 +35,7 @@ def df_transformation_to_np(df: pl.DataFrame, config: Config, return_corr_matrix
     category_columns = config.columns
 
     # Cast categorical columns to integer codes and create new columns with the encoded values
-    df = df.with_columns(
-        [pl.col(col).cast(pl.Categorical).to_physical().alias(f"{col}_encoded") for col in category_columns]
-    )
+    df = df.with_columns([pl.col(col).cast(pl.Categorical).to_physical().alias(f"{col}_encoded") for col in category_columns])
     df = df.drop(config.columns)
     df = df.drop(config.drop)
 
@@ -68,7 +66,7 @@ def plot_correlation_matrix(correlation_np: np.ndarray, labels: List[str]) -> No
     plt.show()
 
 
-def plot_violin_grid(df: pl.DataFrame, config: Config) -> None:
+def plot_violin_grid(df: pl.DataFrame, config: EdaDataValidationConfig) -> None:
     """
     Plots a grid of violin plots for each numerical column in the Polars DataFrame.
 
@@ -106,7 +104,7 @@ def plot_violin_grid(df: pl.DataFrame, config: Config) -> None:
     plt.show()
 
 
-def plot_box_grid(df: pl.DataFrame, config: Config) -> None:
+def plot_box_grid(df: pl.DataFrame, config: EdaDataValidationConfig) -> None:
     """
     Plots a grid of box plots for each numerical column in the Polars DataFrame.
 
@@ -142,7 +140,7 @@ def plot_box_grid(df: pl.DataFrame, config: Config) -> None:
 
     plt.tight_layout()  # Adjust layout to make sure plots are well spaced
     plt.show()
-def plot_histplot_grid(df: pl.DataFrame, config: Config) -> None:
+def plot_histplot_grid(df: pl.DataFrame, config: EdaDataValidationConfig) -> None:
     """
     Plots a grid of histogram plots for each numerical column in the Polars DataFrame.
 

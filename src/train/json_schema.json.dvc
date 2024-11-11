@@ -1,0 +1,5 @@
+outs:
+- md5: bf2803057b8709ccc8f4d8f2f226afdb
+  size: 2073
+  hash: md5
+  path: json_schema.json
