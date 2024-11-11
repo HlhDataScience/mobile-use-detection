@@ -1,11 +1,13 @@
+import csv
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.pipeline import Pipeline
+#from sklearn.pipeline import Pipeline
 import polars as pl
 from pydantic import BaseModel, Field, FilePath, ValidationError
-from typing import List, Dict, Any, Tuple, Union
+from typing import Any, List, Dict,  Tuple, Union
+import logging
 
-
+logger = logging.getLogger(__name__)
 #Class Validations for Data input and data transformation
 
 class DataValidationConfig(BaseModel):
@@ -26,7 +28,7 @@ class DataValidationConfig(BaseModel):
         UserBehaviorClass (int): Class label for user behavior.
     """
 
-    UserID: int = Field(..., description="User ID.")
+    UserID: pl.col = Field(..., description="User ID.")
     DeviceModel: str = Field(..., description="Device Model.")
     OperatingSystem: str = Field(..., description="Operating System.")
     AppUsageTime_min_day: int = Field(..., description="App Usage Time in Minutes.")
@@ -53,29 +55,41 @@ class DataValidationConfig(BaseModel):
             cls(**data)
             return True
         except ValidationError as e:
-            print(f'Validation error: {e}')
+            logger.error(f'Validation error: {e}')
 
     @classmethod
-    def validate_csv(cls, filepath: FilePath)-> bool:
+    def validate_csv(cls, filepath: FilePath, stop_on_invalid_row: bool = True, raise_on_invalid: bool = True) -> bool:
         """
         Validates each row of a CSV file against the schema.
 
         Args:
-            filepath (FilePath): Path to the CSV file.
+            filepath (Path): Path to the CSV file.
+            stop_on_invalid_row (bool): If True, will stop processing after the first invalid row.
+            raise_on_invalid (bool): If True, will raise an exception after finding an invalid row.
 
         Returns:
             bool: True if all rows are valid, False otherwise.
+
+        Raises:
+            ValidationErrorException: If raise_on_invalid is True and an invalid row is found.
         """
-        df = pl.read_csv(filepath)
         all_valid = True
 
-        for row in df.iter_rows(named=True):
-            if not cls.validate_data(row):
-                all_valid = False
-                print(f'Row {row} is not valid.')
+        # Use 'with' to automatically handle file opening and closing
+        with open(filepath, 'r') as csvfile:
+            dict_reader = csv.DictReader(csvfile)
+            for row in dict_reader:
+                if not cls.validate_data(row):
+                    all_valid = False
+                    logger.error(f"Invalid row: {row}")
+                    if raise_on_invalid:
+                        raise TypeError(f"Invalid row found: {row}")
+                    if stop_on_invalid_row:
+                        return False
+
+        return all_valid
 
 
-            return all_valid
 
 class DataTransformationConfig(BaseModel):
     """
@@ -153,6 +167,5 @@ def df_categorical_to_numerical(
         return df, df.columns, correlation_matrix
 
     return df, df.columns
-
 
 
