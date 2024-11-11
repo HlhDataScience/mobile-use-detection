@@ -7,7 +7,7 @@ from typing import List
 from pydantic import BaseModel, Field, FilePath
 
 
-class Config(BaseModel):
+class EdaDataValidationConfig(BaseModel):
     """
     Pydantic model to define the configuration structure.
     This model ensures the configuration is valid.
@@ -17,7 +17,7 @@ class Config(BaseModel):
     drop: str  = Field(..., description="ID user we do not need")
 
 
-def df_transformation_to_np(df: pl.DataFrame, config: Config) -> np.ndarray | List[str]:
+def df_transformation_to_np(df: pl.DataFrame, config: Config, return_corr_matrix: bool) -> np.ndarray | List[str] | np.ndarray:
     """
     Transforms a Polars DataFrame by encoding specified categorical columns into numeric values
     and returns the result as a NumPy array.
@@ -25,9 +25,12 @@ def df_transformation_to_np(df: pl.DataFrame, config: Config) -> np.ndarray | Li
     Args:
         df (pl.DataFrame): The input Polars DataFrame containing categorical data.
         config (DictConfig): The Hydra configuration containing the column names to be encoded.
+        return_corr_matrix (bool): Whether to return the correlation matrix or not.
 
     Returns:
         np.ndarray: A NumPy array representation of the transformed DataFrame with encoded columns.
+        np.ndarray if return_corr_matrix is True.
+        List[str]: A list of categorical column names.
     """
     category_columns = config.columns
 
@@ -38,23 +41,12 @@ def df_transformation_to_np(df: pl.DataFrame, config: Config) -> np.ndarray | Li
     df = df.drop(config.columns)
     df = df.drop(config.drop)
 
-    return df.to_numpy(), df.columns
+    if return_corr_matrix:
 
-
-
-def correlation_matrix_calculation(df_np: np.ndarray) -> np.ndarray:
-    """
-    Computes the correlation matrix of a NumPy array, representing the linear relationship
-    between columns (features).
-
-    Args:
-        df_np (np.ndarray): The input NumPy array where columns represent features.
-
-    Returns:
-        np.ndarray: The correlation matrix as a NumPy array.
-    """
-
-    return np.corrcoef(df_np, rowvar=False)  # rowvar=False ensures correlation is computed across columns
+        correlation_matrix = np.corrcoef(df.to_numpy(), rowvar=False)
+        return df.to_numpy(), df.columns, correlation_matrix
+    else:
+        return df.to_numpy(), df.columns
 
 
 def plot_correlation_matrix(correlation_np: np.ndarray, labels: List[str]) -> None:
