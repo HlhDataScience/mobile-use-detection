@@ -23,7 +23,10 @@ pandera = "^0.20.4"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 pre-commit = "^2.17.0"
-black = { version = "^22.3.0", allow-prereleases = true }
+black = "^23.7.0"  # Update to match the version from the pre-commit config
+flake8 = "^6.1.0"  # Add flake8 to match the version from the pre-commit config
+isort = "^5.12.0"  # Add isort to match the version from the pre-commit config
+interrogate = "^1.5.0"  # Add interrogate to match the version from the pre-commit config
 
 [build-system]
 requires = ["poetry-core"]
