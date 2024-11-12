@@ -1,15 +1,17 @@
 import json
-import numpy as np
-from sklearn.model_selection import train_test_split
+import logging
 import os
-#from sklearn.pipeline import Pipeline
+from typing import Any, Dict, List, Tuple, Union
+
+import numpy as np
+# from sklearn.pipeline import Pipeline
 import polars as pl
 from pydantic import BaseModel, Field, FilePath, ValidationError
-from typing import Any, List, Dict,  Tuple, Union
-import logging
+from sklearn.model_selection import train_test_split
 
 logger = logging.getLogger(__name__)
-#Class Validations for Data input and data transformation
+# Class Validations for Data input and data transformation
+
 
 class DataValidationConfig(BaseModel):
     """
@@ -38,8 +40,8 @@ class DataValidationConfig(BaseModel):
     NumberOfAppsInstalled: int = Field(..., description="Number of Apps installed.")
     DataUsage_MB_day: int = Field(..., description="Data Usage in MB.")
     Age: int = Field(..., description="Age in days.")
-    Gender:str = Field(..., description="Gender.")
-    UserBehaviorClass:int = Field(..., description="UserBehavior Class.")
+    Gender: str = Field(..., description="Gender.")
+    UserBehaviorClass: int = Field(..., description="UserBehavior Class.")
 
     @classmethod
     def validate_data(cls, data: Dict[str, Any]) -> bool:
@@ -56,10 +58,15 @@ class DataValidationConfig(BaseModel):
             cls(**data)
             return True
         except ValidationError as e:
-            logger.error(f'Validation error: {e}')
+            logger.error(f"Validation error: {e}")
 
     @classmethod
-    def validate_csv(cls, filepath: FilePath, stop_on_invalid_row: bool = True, raise_on_invalid: bool = True) -> bool:
+    def validate_csv(
+        cls,
+        filepath: FilePath,
+        stop_on_invalid_row: bool = True,
+        raise_on_invalid: bool = True,
+    ) -> bool:
         """
         Validates each row of a CSV file against the schema.
 
@@ -89,14 +96,15 @@ class DataValidationConfig(BaseModel):
                     return False
 
         return all_valid
+
     @classmethod
     def validate_and_serialize(
-            cls,
-            filepath: FilePath,
-            json_schema_filepath: str,
-            json_schema_name: str = 'json_schema.json',
-            serialized_data: str = 'validated_serialized_data.json'
-            ) -> str:
+        cls,
+        filepath: FilePath,
+        json_schema_filepath: str,
+        json_schema_name: str = "json_schema.json",
+        serialized_data: str = "validated_serialized_data.json",
+    ) -> str:
         """
         Validates each row of a CSV file against the schema and serialize the file to be ready to use
 
@@ -115,8 +123,12 @@ class DataValidationConfig(BaseModel):
         """
 
         all_valid = True
-        schema_path: FilePath = str(os.path.join(json_schema_filepath, json_schema_name))
-        serialized_data_path: FilePath = str(os.path.join(json_schema_filepath, serialized_data))
+        schema_path: FilePath = str(
+            os.path.join(json_schema_filepath, json_schema_name)
+        )
+        serialized_data_path: FilePath = str(
+            os.path.join(json_schema_filepath, serialized_data)
+        )
 
         df = pl.read_csv(filepath)
         df_dict = df.to_dicts()
@@ -127,18 +139,16 @@ class DataValidationConfig(BaseModel):
 
                 raise TypeError(f"Invalid row found: {row}")
 
-
-
-
-        with open(schema_path, 'w') as f:
+        with open(schema_path, "w") as f:
             schema_to_json = cls.model_json_schema()
             json.dump(schema_to_json, f)
 
-        with open(serialized_data_path, 'w') as f:
+        with open(serialized_data_path, "w") as f:
             json.dump(df_dict, f)
 
-
-        return print(f'All the files are valid : {all_valid}\n\nJSON schema file saved at {schema_path}\n\n JSON serialized data at {schema_path}')
+        return print(
+            f"All the files are valid : {all_valid}\n\nJSON schema file saved at {schema_path}\n\n JSON serialized data at {schema_path}"
+        )
 
 
 class DataTransformationConfig(BaseModel):
@@ -156,58 +166,73 @@ class DataTransformationConfig(BaseModel):
         target_column (str): Name of the target column.
     """
 
-    original_datapath: FilePath = Field(..., description="Path to the original data folder")
-    categorical_columns_to_transform: List[str] = Field(..., description="List of columns to transform from categorical string to numerical")
+    original_datapath: FilePath = Field(
+        ..., description="Path to the original data folder"
+    )
+    categorical_columns_to_transform: List[str] = Field(
+        ...,
+        description="List of columns to transform from categorical string to numerical",
+    )
     columns_to_drop: List[str] = Field(..., description="List of columns to drop")
-    normalize_df : bool = Field(..., description="Whether to normalize the data")
-    feature_engineering_dict: Dict[str, float | int | str]  = Field(..., description="Feature engineering dict")
-    transformed_train_df_path: FilePath = Field(..., description="Path to the transformed train data folder")
-    transformed_test_df_path: FilePath = Field(..., description="Path to the transformed test data folder")
+    normalize_df: bool = Field(..., description="Whether to normalize the data")
+    feature_engineering_dict: Dict[str, float | int | str] = Field(
+        ..., description="Feature engineering dict"
+    )
+    transformed_train_df_path: FilePath = Field(
+        ..., description="Path to the transformed train data folder"
+    )
+    transformed_test_df_path: FilePath = Field(
+        ..., description="Path to the transformed test data folder"
+    )
     target_column: str = Field(..., description="target column name")
+
 
 # Transformation functions:
 
-def split(config: DataTransformationConfig, return_files: bool, random_state: str = 42) -> Tuple[np.ndarray, np.ndarray]:
-    print('Loading data...')
+
+def split(
+    config: DataTransformationConfig, return_files: bool, random_state: str = 42
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Splits the data into train and test sets."""
+    print("Loading data...")
     df = pl.read_csv(config.original_datapath)
     y = df[config.target_column]
-    x= df.drop(config.target_column)
+    x = df.drop(config.target_column)
 
     train_df, test_df = train_test_split(x, y, random_state=random_state, stratify=y)
 
-    print('Saving split data...')
+    print("Saving split data...")
     train_df.to_csv(config.transformed_train_df_path, index=False)
     test_df.to_csv(config.transformed_test_df_path, index=False)
     if return_files:
         return train_df, test_df
 
 
-
 def df_categorical_to_numerical(
-    df: pl.DataFrame,
-    config: DataTransformationConfig,
-    return_corr_matrix: bool
-
+    df: pl.DataFrame, config: DataTransformationConfig, return_corr_matrix: bool
 ) -> Union[Tuple[pl.DataFrame, List[str], np.ndarray], Tuple[pl.DataFrame, List[str]]]:
     """
-     Encodes categorical columns as numeric values and optionally returns a correlation matrix.
+    Encodes categorical columns as numeric values and optionally returns a correlation matrix.
 
-     Args:
-         df (pl.DataFrame): The DataFrame containing categorical columns.
-         config (DataTransformationConfig): Configuration with columns to transform and drop.
-         return_corr_matrix (bool): If True, returns a correlation matrix.
+    Args:
+        df (pl.DataFrame): The DataFrame containing categorical columns.
+        config (DataTransformationConfig): Configuration with columns to transform and drop.
+        return_corr_matrix (bool): If True, returns a correlation matrix.
 
-     Returns:
-         Union[Tuple[pl.DataFrame, List[str], np.ndarray], Tuple[pl.DataFrame, List[str]]]:
-         - If return_corr_matrix is True, returns a tuple with the DataFrame, column names, and correlation matrix.
-         - If return_corr_matrix is False, returns a tuple with the DataFrame and column names.
-     """
+    Returns:
+        Union[Tuple[pl.DataFrame, List[str], np.ndarray], Tuple[pl.DataFrame, List[str]]]:
+        - If return_corr_matrix is True, returns a tuple with the DataFrame, column names, and correlation matrix.
+        - If return_corr_matrix is False, returns a tuple with the DataFrame and column names.
+    """
     category_columns = config.categorical_columns_to_transform
 
     # Cast categorical columns to integer codes and create new columns with the encoded values
     df = df.clone()
     df = df.with_columns(
-        [pl.col(col).cast(pl.Categorical).to_physical().alias(f"{col}_encoded") for col in category_columns]
+        [
+            pl.col(col).cast(pl.Categorical).to_physical().alias(f"{col}_encoded")
+            for col in category_columns
+        ]
     )
     df = df.drop(config.categorical_columns_to_transform)
     df = df.drop(config.columns_to_drop)
@@ -217,5 +242,3 @@ def df_categorical_to_numerical(
         return df, df.columns, correlation_matrix
 
     return df, df.columns
-
-
