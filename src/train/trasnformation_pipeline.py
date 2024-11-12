@@ -4,10 +4,10 @@ import os
 from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
-# from sklearn.pipeline import Pipeline
 import polars as pl
 from pydantic import BaseModel, Field, FilePath, ValidationError
 from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
 
 logger = logging.getLogger(__name__)
 # Class Validations for Data input and data transformation
