@@ -1,17 +1,22 @@
-import csv
 import json
 import logging
 import os
-from os import PathLike
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Literal, Union
 
-import numpy as np
-import pandera.polars as pa
+# import pandera.polars as pa
 import polars as pl
 from pydantic import BaseModel, Field, FilePath, ValidationError
-from sklearn.model_selection import train_test_split
-from sklearn.pipeline import Pipeline
 
+""")
+from sklearn.svm import SVC
+from sklearn.model_selection import(
+GridSearchCV,
+RandomizedSearchCV,
+)
+from skopt import BayesSearchCV"""
+
+# TODO WE NEED TO CREATE A NEW JUPYTER NOTEBOOK TO TEST THE CLASS LazyTransformationPipeline & class DataTransformationConfig
+# TODO WE NEED TO CHANGE THE DataValidationConfig to use pandera and see how we can integrate polars and/or pydantic
 logger = logging.getLogger(__name__)
 # Class Validations for Data input and data transformation
 
@@ -107,8 +112,7 @@ class DataValidationConfig(BaseModel):
         filepath: FilePath,
         json_schema_filepath: str,
         json_schema_name: str = "json_schema.json",
-        serialized_data: str = "validated_serialized_data.json",
-    ) -> str:
+    ) -> None:
         """
         Validates each row of a CSV file against the schema and serialize the file to be ready to use
 
@@ -116,7 +120,7 @@ class DataValidationConfig(BaseModel):
             filepath (Path): Path to the CSV file.
             json_schema_filepath (str): Path to the JSON Schema file.
             json_schema_name (str): Name of the JSON Schema file.
-            serialized_data (str): Path to the serialized JSON Schema file.
+
 
         Returns:
             bool: True if all rows are valid, False otherwise.
@@ -142,29 +146,35 @@ class DataValidationConfig(BaseModel):
 
         with open(schema_path, "w") as f:
             schema_to_json = cls.model_json_schema()
-            json.dump(schema_to_json, f)
-
-        return print(
-            f"All the files are valid : {all_valid}\n\nJSON schema file saved at {schema_path}\n\n CSV validated data at {schema_path}"
+            json.dump(schema_to_json, f)  # type: ignore
+        print(
+            f"All the files are valid : {str(all_valid)}\n\nJSON schema file saved at {schema_path}"
         )
 
 
+# This class seems fine at the moment.
 class DataTransformationConfig(BaseModel):
     """
-    Configuration for data transformation steps.
+    Configuration for LazyTransformationPipeline class.
 
     Attributes:
         original_datapath (FilePath): Path to the original data file.
         categorical_columns_to_transform (List[str]): Columns to transform from categorical to numeric.
         columns_to_drop (List[str]): Columns to drop from the DataFrame.
         normalize_df (bool): Whether to normalize the DataFrame.
+        standarized_df (bool): Whether to standardize the DataFrame.
         feature_engineering_dict (Dict[str, Union[float, int, str]]): Dictionary for feature engineering.
         transformed_intermediate_df_path (FilePath): Path to the transformed intermediate data file.
         transformed_train_df_path_X (FilePath): Path to save the transformed train X DataFrame.
-        transformed_test_df_path_X (FilePath): Path to save the transformed test X DataFrame.
         transformed_train_df_path_y (FilePath): Path to save the transformed train y DataFrame.
+        transformed_test_df_path_X (FilePath): Path to save the transformed test X DataFrame.
         transformed_test_df_path_y (FilePath): Path to save the transformed test y DataFrame.
         target_column (str): Name of the target column.
+        feature_mode (Literal['RandomSearch', "GridSearch", "BayesianOptim"]): The feature selection mode, which can be one of 'RandomSearch', 'GridSearch', or 'BayesianOptim'.
+        transformed_normalized_df_path_train_X (FilePath): Path to save the transformed normalized train X DataFrame.
+        transformed_standarized_df_path_train_X (FilePath): Path to save the transformed standardized train X DataFrame.
+        transformed_normalized_df_path_test_X (FilePath): Path to save the transformed normalized test X DataFrame.
+        transformed_standarized_df_path_test_X (FilePath): Path to save the transformed standardized test X DataFrame.
     """
 
     original_datapath: FilePath = Field(
@@ -176,8 +186,10 @@ class DataTransformationConfig(BaseModel):
     )
     columns_to_drop: List[str] = Field(..., description="List of columns to drop")
     normalize_df: bool = Field(..., description="Whether to normalize the data")
-    feature_engineering_dict: Dict[str, float | int | str] = Field(
-        ..., description="Feature engineering dict"
+    standarized_df: bool = Field(..., description="Whether to standardize the data")
+    feature_engineering_dict: Dict[str, Union[float, int, str]] = Field(
+        ...,
+        description="Feature engineering dictionary specifying transformations for columns",
     )
     transformed_intermediate_df_path: FilePath = Field(
         ..., description="Path to save the transformed intermediate DataFrame"
@@ -194,14 +206,30 @@ class DataTransformationConfig(BaseModel):
     transformed_test_df_path_y: FilePath = Field(
         ..., description="Path to the transformed test data Y folder"
     )
-    target_column: str = Field(..., description="target column name")
+    transformed_normalized_df_path_train_X: FilePath = Field(
+        ..., description="Path to save the transformed normalized train DataFrame"
+    )
+    transformed_standarized_df_path_train_X: FilePath = Field(
+        ..., description="Path to save the transformed standardized train DataFrame"
+    )
+    transformed_normalized_df_path_test_X: FilePath = Field(
+        ..., description="Path to save the transformed normalized test DataFrame"
+    )
+    transformed_standarized_df_path_test_X: FilePath = Field(
+        ..., description="Path to save the transformed standardized test DataFrame"
+    )
+    target_column: str = Field(..., description="Name of the target column")
+    feature_mode: Literal["RandomSearch", "GridSearch", "BayesianOptim"] = Field(
+        ...,
+        description="Feature mode selected from 'RandomSearch', 'GridSearch', or 'BayesianOptim'",
+    )
 
 
 # Transformation class:
 
 
 # The transformation functions can be split further into a  new class Pipeline that uses some of the sklearn elements
-class TransformationPipeline:
+class LazyTransformationPipeline:
     """This class leverages lazy api of polars to perform speed up transformations in dataframes using a config from pandera"""
 
     def __init__(self):
@@ -231,12 +259,13 @@ class TransformationPipeline:
 
         lf.sink_csv(self.config.transformed_intermediate_df_path)
 
-    def split_and_save(
+    def split_train_test(
         self, random_state: int = 42, train_fraction: float = 0.75
     ) -> None:
         """Splits the data into train and test sets."""
 
         print("Loading data...")
+
         lazy_df = pl.scan_csv(
             self.config.transformed_intermediate_df_path
         ).with_columns(pl.all().shuffle(seed=random_state))
@@ -260,18 +289,91 @@ class TransformationPipeline:
         y_train.sink_csv(self.config.transformed_train_df_path_y, index=False)
         y_test.sink_csv(self.config.transformed_test_df_path_y, index=False)
 
-        """def train_test_split_lazy(
-    df: pl.DataFrame, train_fraction: float = 0.75
-) -> tuple[pl.DataFrame, pl.DataFrame]:
-  Split polars dataframe into two sets.
-    Args:
-        df (pl.DataFrame): Dataframe to split
-        train_fraction (float, optional): Fraction that goes to train. Defaults to 0.75.
-    Returns:
-        Tuple[pl.DataFrame, pl.DataFrame]: Tuple of train and test dataframes
+    def normalize(self) -> None:
+        """performs the normalization between [0, 1] for the"""
+        lazy_normalize_train_X = pl.scan_csv(
+            self.config.transformed_train_df_path_X
+        ).select(pl.all() - pl.all().min()) / (pl.all().max() - pl.all().min())
+        lazy_normalize_test_X = pl.scan_csv(
+            self.config.transformed_test_df_path_X
+        ).select(pl.all() - pl.all().min()) / (pl.all().max() - pl.all().min())
 
-    df = df.with_columns(pl.all().shuffle(seed=1)).with_row_count()
-    df_train = df.filter(pl.col("row_nr") < pl.col("row_nr").max() * train_fraction)
-    df_test = df.filter(pl.col("row_nr") >= pl.col("row_nr").max() * train_fraction)
-    return df_train, df_test
-    PARTIMOS DE ESTA IDEA A LA HORA DE COMPONER EL TRAIN TEST SPLIT"""
+        lazy_normalize_train_X.sink_csv(
+            self.config.transformed_normalized_df_path_train_X
+        )
+        lazy_normalize_test_X.sink_csv(
+            self.config.transformed_normalized_df_path_test_X
+        )
+
+    def standardize(self) -> None:
+        """Performs the standardization within a normal distribution for the dataframe"""
+        lazy_standardize_train_X = pl.scan_csv(
+            self.config.transformed_train_df_path_X
+        ).select((pl.all() - pl.all().mean()) / pl.all().std())
+        lazy_standardize_test_X = pl.scan_csv(
+            self.config.transformed_test_df_path_X
+        ).select((pl.all() - pl.all().mean()) / pl.all().std())
+        lazy_standardize_train_X.sink_csv(
+            self.config.transformed_standarized_df_path_train_X
+        )
+        lazy_standardize_test_X.sink_csv(
+            self.config.transformed_standarized_df_path_train_X
+        )
+
+    def random_search_feature_engineering(self) -> None:
+        """Performs random feature engineering for the dataframe"""
+        pass
+
+    def grid_search_feature_engineering(self) -> None:
+        """Performs grid search feature engineering for the dataframe"""
+        pass
+
+    def bayesian_feature_engineering(self) -> None:
+        """Performs Bayesian Optimization for the dataframe"""
+        pass
+
+    def run(
+        self,
+    ) -> None:
+        """This function runs the full pipeline."""
+        print("Pipeline running...")
+
+        self.df_categorical_to_numerical()
+        self.split_train_test()
+        if self.config.normalize_df:
+            self.normalize()
+            if self.config.feature_mode == "RandomSearch":
+                self.random_search_feature_engineering()
+                print("Completed random search feature engineering")
+            elif self.config.feature_mode == "GridSearch":
+                self.grid_search_feature_engineering()
+                print("Completed grid search feature engineering")
+            else:
+                self.bayesian_feature_engineering()
+                print("Completed bayesian feature engineering")
+
+        elif self.config.standardize_df:
+            self.standardize()
+            print("Completed categorical transformation")
+            if self.config.feature_mode == "RandomSearch":
+                self.random_search_feature_engineering()
+                print("Completed random search feature engineering")
+            elif self.config.feature_mode == "GridSearch":
+                self.grid_search_feature_engineering()
+                print("Completed grid search feature engineering")
+            else:
+                self.bayesian_feature_engineering()
+                print("Completed bayesian feature engineering")
+        else:
+            print("Completed categorical transformation")
+            if self.config.feature_mode == "RandomSearch":
+                self.random_search_feature_engineering()
+                print("Completed random search feature engineering")
+            elif self.config.feature_mode == "GridSearch":
+                self.grid_search_feature_engineering()
+                print("Completed grid search feature engineering")
+            else:
+                self.bayesian_feature_engineering()
+                print("Completed bayesian feature engineering")
+
+        return  # TODO WE NEED TO CREATE A NEW JUPYTERNOTEBOOK TO TEST THE CLASS

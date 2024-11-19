@@ -1,0 +1,24 @@
+original_datapath: "/home/tensorboard/PycharmProjects/mobile_usage_detection/rawdata/user_behavior_dataset.csv"
+categorical_columns_to_transform:
+  - "Device Model"
+  - "Operating System"
+  - "Gender"
+columns_to_drop:
+  - "User ID"
+normalize_df: true
+standarized_df: false
+model: "SVC"
+feature_engineering_dict:
+
+  with_values: 34
+transformed_intermediate_df_path: "/home/tensorboard/PycharmProjects/mobile_usage_detection/src/intermediate_data/transformed_intermediate_data.csv"
+transformed_train_df_path_x: "/home/tensorboard/PycharmProjects/mobile_usage_detection/src/train/train_x.csv"
+transformed_test_df_path_x: "/home/tensorboard/PycharmProjects/mobile_usage_detection/src/test/test_x.csv"
+transformed_train_df_path_y: "/home/tensorboard/PycharmProjects/mobile_usage_detection/src/train/train_y.csv"
+transformed_test_df_path_y: "/home/tensorboard/PycharmProjects/mobile_usage_detection/src/test/test_y.csv"
+transformed_normalized_df_path_train_X: "/home/tensorboard/PycharmProjects/mobile_usage_detection/src/train/train_normalize_X.csv"
+transformed_normalized_df_path_test_X: "/home/tensorboard/PycharmProjects/mobile_usage_detection/src/test/test_normalize_X.csv"
+transformed_standarized_df_path_train_X: "/home/tensorboard/PycharmProjects/mobile_usage_detection/src/train/train_standarized_X.csv"
+transformed_standarized_df_path_test_X: "/home/tensorboard/PycharmProjects/mobile_usage_detection/src/test/test_standarized_X.csv"
+target_column: "UserBehaviorClass"
+feature_mode: "Bayesian"
