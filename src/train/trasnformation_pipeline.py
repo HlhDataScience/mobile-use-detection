@@ -1,9 +1,12 @@
+import csv
 import json
 import logging
 import os
+from os import PathLike
 from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
+import pandera.polars as pa
 import polars as pl
 from pydantic import BaseModel, Field, FilePath, ValidationError
 from sklearn.model_selection import train_test_split
@@ -13,6 +16,7 @@ logger = logging.getLogger(__name__)
 # Class Validations for Data input and data transformation
 
 
+# This class needs to be changed to take advantage of lazyframe in polars as well as pandera.
 class DataValidationConfig(BaseModel):
     """
     Validates the format of incoming data to ensure it conforms to the expected schema.
@@ -31,7 +35,7 @@ class DataValidationConfig(BaseModel):
         UserBehaviorClass (int): Class label for user behavior.
     """
 
-    UserID: int = Field(..., description="User ID.")
+    UserID: int = Field(default=..., description="User ID.")
     DeviceModel: str = Field(..., description="Device Model.")
     OperatingSystem: str = Field(..., description="Operating System.")
     AppUsageTime_min_day: int = Field(..., description="App Usage Time in Minutes.")
@@ -126,9 +130,6 @@ class DataValidationConfig(BaseModel):
         schema_path: FilePath = str(
             os.path.join(json_schema_filepath, json_schema_name)
         )
-        serialized_data_path: FilePath = str(
-            os.path.join(json_schema_filepath, serialized_data)
-        )
 
         df = pl.read_csv(filepath)
         df_dict = df.to_dicts()
@@ -143,11 +144,8 @@ class DataValidationConfig(BaseModel):
             schema_to_json = cls.model_json_schema()
             json.dump(schema_to_json, f)
 
-        with open(serialized_data_path, "w") as f:
-            json.dump(df_dict, f)
-
         return print(
-            f"All the files are valid : {all_valid}\n\nJSON schema file saved at {schema_path}\n\n JSON serialized data at {schema_path}"
+            f"All the files are valid : {all_valid}\n\nJSON schema file saved at {schema_path}\n\n CSV validated data at {schema_path}"
         )
 
 
@@ -161,8 +159,11 @@ class DataTransformationConfig(BaseModel):
         columns_to_drop (List[str]): Columns to drop from the DataFrame.
         normalize_df (bool): Whether to normalize the DataFrame.
         feature_engineering_dict (Dict[str, Union[float, int, str]]): Dictionary for feature engineering.
-        transformed_train_df_path (FilePath): Path to save the transformed train DataFrame.
-        transformed_test_df_path (FilePath): Path to save the transformed test DataFrame.
+        transformed_intermediate_df_path (FilePath): Path to the transformed intermediate data file.
+        transformed_train_df_path_X (FilePath): Path to save the transformed train X DataFrame.
+        transformed_test_df_path_X (FilePath): Path to save the transformed test X DataFrame.
+        transformed_train_df_path_y (FilePath): Path to save the transformed train y DataFrame.
+        transformed_test_df_path_y (FilePath): Path to save the transformed test y DataFrame.
         target_column (str): Name of the target column.
     """
 
@@ -178,67 +179,99 @@ class DataTransformationConfig(BaseModel):
     feature_engineering_dict: Dict[str, float | int | str] = Field(
         ..., description="Feature engineering dict"
     )
-    transformed_train_df_path: FilePath = Field(
-        ..., description="Path to the transformed train data folder"
+    transformed_intermediate_df_path: FilePath = Field(
+        ..., description="Path to save the transformed intermediate DataFrame"
     )
-    transformed_test_df_path: FilePath = Field(
-        ..., description="Path to the transformed test data folder"
+    transformed_train_df_path_X: FilePath = Field(
+        ..., description="Path to the transformed train data X folder"
+    )
+    transformed_train_df_path_y: FilePath = Field(
+        ..., description="Path to the transformed train data y folder"
+    )
+    transformed_test_df_path_X: FilePath = Field(
+        ..., description="Path to the transformed test data X folder"
+    )
+    transformed_test_df_path_y: FilePath = Field(
+        ..., description="Path to the transformed test data Y folder"
     )
     target_column: str = Field(..., description="target column name")
 
 
-# Transformation functions:
+# Transformation class:
 
 
-def split(
-    config: DataTransformationConfig, return_files: bool, random_state: str = 42
-) -> Tuple[np.ndarray, np.ndarray]:
-    """Splits the data into train and test sets."""
-    print("Loading data...")
-    df = pl.read_csv(config.original_datapath)
-    y = df[config.target_column]
-    x = df.drop(config.target_column)
+# The transformation functions can be split further into a  new class Pipeline that uses some of the sklearn elements
+class TransformationPipeline:
+    """This class leverages lazy api of polars to perform speed up transformations in dataframes using a config from pandera"""
 
-    train_df, test_df = train_test_split(x, y, random_state=random_state, stratify=y)
+    def __init__(self):
+        self.config = DataTransformationConfig()
 
-    print("Saving split data...")
-    train_df.to_csv(config.transformed_train_df_path, index=False)
-    test_df.to_csv(config.transformed_test_df_path, index=False)
-    if return_files:
-        return train_df, test_df
+    def df_categorical_to_numerical(self) -> None:
+        """
+        Encodes categorical columns as numeric values and save the dataframe in csv format
+        """
+        category_columns = self.config.categorical_columns_to_transform
 
+        # Cast categorical columns to integer codes and create new columns with the encoded values
+        lf = (
+            pl.scan_csv(self.config.original_datapath)
+            .with_columns(
+                [  # WE NEED TO CHANGE THE VALIDATION METHOD TO MAKE THIS WORK!
+                    pl.col(col)
+                    .cast(pl.Categorical)
+                    .to_physical()
+                    .alias(f"{col}_encoded")
+                    for col in category_columns
+                ]
+            )
+            .drop(self.config.categorical_columns_to_transform)
+            .drop(self.config.columns_to_drop)
+        )
 
-def df_categorical_to_numerical(
-    df: pl.DataFrame, config: DataTransformationConfig, return_corr_matrix: bool
-) -> Union[Tuple[pl.DataFrame, List[str], np.ndarray], Tuple[pl.DataFrame, List[str]]]:
-    """
-    Encodes categorical columns as numeric values and optionally returns a correlation matrix.
+        lf.sink_csv(self.config.transformed_intermediate_df_path)
 
+    def split_and_save(
+        self, random_state: int = 42, train_fraction: float = 0.75
+    ) -> None:
+        """Splits the data into train and test sets."""
+
+        print("Loading data...")
+        lazy_df = pl.scan_csv(
+            self.config.transformed_intermediate_df_path
+        ).with_columns(pl.all().shuffle(seed=random_state))
+
+        print("Transforming Data...")
+        train_lazy_df = lazy_df.filter(
+            pl.col("row_nr") < pl.col("row_nr").max() * train_fraction
+        )
+        test_lazy_df = lazy_df.filter(
+            pl.col("row_nr") >= pl.col("row_nr").max() * train_fraction
+        )
+
+        x_train = train_lazy_df.drop([self.config.target_column, "row_nr"])
+        x_test = test_lazy_df.drop([self.config.target_column, "row_nr"])
+        y_train = train_lazy_df.select(self.config.target_column)
+        y_test = test_lazy_df.select(self.config.target_column)
+
+        print("Saving Data...")
+        x_train.sink_csv(self.config.transformed_train_df_path_X, index=False)
+        x_test.sink_csv(self.config.transformed_test_df_path_X, index=False)
+        y_train.sink_csv(self.config.transformed_train_df_path_y, index=False)
+        y_test.sink_csv(self.config.transformed_test_df_path_y, index=False)
+
+        """def train_test_split_lazy(
+    df: pl.DataFrame, train_fraction: float = 0.75
+) -> tuple[pl.DataFrame, pl.DataFrame]:
+  Split polars dataframe into two sets.
     Args:
-        df (pl.DataFrame): The DataFrame containing categorical columns.
-        config (DataTransformationConfig): Configuration with columns to transform and drop.
-        return_corr_matrix (bool): If True, returns a correlation matrix.
-
+        df (pl.DataFrame): Dataframe to split
+        train_fraction (float, optional): Fraction that goes to train. Defaults to 0.75.
     Returns:
-        Union[Tuple[pl.DataFrame, List[str], np.ndarray], Tuple[pl.DataFrame, List[str]]]:
-        - If return_corr_matrix is True, returns a tuple with the DataFrame, column names, and correlation matrix.
-        - If return_corr_matrix is False, returns a tuple with the DataFrame and column names.
-    """
-    category_columns = config.categorical_columns_to_transform
+        Tuple[pl.DataFrame, pl.DataFrame]: Tuple of train and test dataframes
 
-    # Cast categorical columns to integer codes and create new columns with the encoded values
-    df = df.clone()
-    df = df.with_columns(
-        [
-            pl.col(col).cast(pl.Categorical).to_physical().alias(f"{col}_encoded")
-            for col in category_columns
-        ]
-    )
-    df = df.drop(config.categorical_columns_to_transform)
-    df = df.drop(config.columns_to_drop)
-
-    if return_corr_matrix:
-        correlation_matrix = np.corrcoef(df.to_numpy(), rowvar=False)
-        return df, df.columns, correlation_matrix
-
-    return df, df.columns
+    df = df.with_columns(pl.all().shuffle(seed=1)).with_row_count()
+    df_train = df.filter(pl.col("row_nr") < pl.col("row_nr").max() * train_fraction)
+    df_test = df.filter(pl.col("row_nr") >= pl.col("row_nr").max() * train_fraction)
+    return df_train, df_test
+    PARTIMOS DE ESTA IDEA A LA HORA DE COMPONER EL TRAIN TEST SPLIT"""
