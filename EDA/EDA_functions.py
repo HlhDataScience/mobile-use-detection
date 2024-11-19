@@ -1,3 +1,4 @@
+# TODO: Transform into a class called EdaPipeline: It includes the EdaDataExplorationConfig and all the methods related to the class. The run method must return a file with the plots.
 from typing import List
 
 import matplotlib.pyplot as plt
@@ -8,7 +9,7 @@ import seaborn as sns
 from pydantic import BaseModel, Field, FilePath
 
 
-class EdaDataValidationConfig(BaseModel):
+class EdaDataExplorationConfig(BaseModel):
     """
     Pydantic model to define the configuration structure.
     This model ensures the configuration is valid.
@@ -20,7 +21,11 @@ class EdaDataValidationConfig(BaseModel):
     data_path: FilePath = Field(..., description="Path to the dataset CSV file.")
     drop: str = Field(..., description="ID user we do not need")
 
-
+class EdaPipeline:
+    """ This class creates an inform of the EDA by plots"""
+    def __init__(self):
+        pass
+    
 def df_transformation_to_np(
     df: pl.DataFrame, config: EdaDataValidationConfig, return_corr_matrix: bool
 ) -> np.ndarray | List[str] | np.ndarray:
