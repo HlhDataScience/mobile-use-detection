@@ -6,11 +6,13 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
 
 ## Done
   - We have performed the EDA analysis
+  - We have completed the data validation & serialization classes
+  - We have completed the optim search models within the LazyTransformationPipeline
 
-## toDOs related to train section
-  - We need to complete the class for data validation & serialization using pandera, polars & pydantic
-  - We need to complete the optim search models within LazyTransformationPipeline class & test them in a jupyter notebook.
+## TODOs related to train section
+  - We need to test all the classes developed on transformation_pipeline within the jupyter notebook.
+  - To improve EDA wwe will need to transform all the functions into a class and test it into the EDA notebook.
   - We need to complete the train.py and generate the Makefiles to automate the process.
-  - We need to create a devation branch(or several) to test orther classic machine learning models.
+  - We need to create a deviating branch(or several) to test other classic machine learning models.
 
 ## toDOs related to API, app and dockerization 

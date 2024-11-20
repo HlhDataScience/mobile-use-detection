@@ -1,3 +1,3 @@
-data_path: "//home/tensorboard/PycharmProjects/mobile_usage_detection/data/user_behavior_dataset.csv"
-columns: ["Device Model", "Operating System", "Gender"]
-drop: "User ID"
+data_path: "/home/tensorboard/PycharmProjects/mobile_usage_detection/rawdata/user_behavior_dataset.csv"
+columns: ["DeviceModel", "OperatingSystem", "Gender"]
+drop: "UserID"

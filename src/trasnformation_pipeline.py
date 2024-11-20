@@ -1,30 +1,41 @@
+"""
+This module contains classes and functions for data validation, transformation, and feature engineering pipelines. It is designed to handle the preprocessing of data for machine learning tasks, focusing on categorical transformation, normalization, standardization, and feature engineering. The module includes the following key components:
+
+- DataValidationConfig: A Pandera-based configuration class for validating incoming data and ensuring it adheres to an expected schema.
+- DataTransformationConfig: A Pydantic-based configuration class for managing transformation settings, including data file paths, model configurations, and feature engineering modes.
+- LazyTransformationPipeline: A class that orchestrates the data transformation pipeline using Polars' lazy API. This class handles tasks such as categorical encoding, splitting data into train/test sets, applying normalization or standardization, and performing feature engineering.
+
+The pipeline supports various machine learning models, including SVM, KNN, PCA, and tree-based models, and provides mechanisms for hyperparameter tuning using RandomSearch, GridSearch, or Bayesian Optimization.
+
+Modules used:
+- Pandera for schema validation
+- Polars for efficient data manipulation and transformation
+- Pydantic for configuration management and validation
+- Scikit-learn for hyperparameter tuning
+- Skopt for Bayesian optimization
+"""
+
 import json
-import logging
-import os
-from typing import Any, Dict, List, Literal, Union
+from typing import Dict, List, Literal, Union
 
-# import pandera.polars as pa
+import pandera.polars as pa
 import polars as pl
-from pydantic import BaseModel, Field, FilePath, ValidationError
+import polars.selectors as cs
+from pydantic import BaseModel, Field, FilePath
+from pydantic.class_validators import root_validator
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from skopt import BayesSearchCV
 
-""")
-from sklearn.svm import SVC
-from sklearn.model_selection import(
-GridSearchCV,
-RandomizedSearchCV,
-)
-from skopt import BayesSearchCV"""
-
-# TODO WE NEED TO CREATE A NEW JUPYTER NOTEBOOK TO TEST THE CLASS LazyTransformationPipeline & class DataTransformationConfig
-# TODO WE NEED TO CHANGE THE DataValidationConfig to use pandera and see how we can integrate polars and/or pydantic
-logger = logging.getLogger(__name__)
-# Class Validations for Data input and data transformation
+# TODO TESTING THE CLASSES WITHIN THE NOTEBOOK
+# Created Hyperparameters tuning methods
+# Notebook Created
+# DataValidationConfig has been updated to use Pandera for schema validation.
+# Further integration with Polars and/or Pydantic is under consideration.
 
 
-# This class needs to be changed to take advantage of lazyframe in polars as well as pandera.
-class DataValidationConfig(BaseModel):
+class DataValidationConfig(pa.DataFrameModel):
     """
-    Validates the format of incoming data to ensure it conforms to the expected schema.
+    Validates the format of incoming data to ensure it conforms to the expected schema using pandera.
 
     Attributes:
         UserID (int): User ID.
@@ -40,119 +51,19 @@ class DataValidationConfig(BaseModel):
         UserBehaviorClass (int): Class label for user behavior.
     """
 
-    UserID: int = Field(default=..., description="User ID.")
-    DeviceModel: str = Field(..., description="Device Model.")
-    OperatingSystem: str = Field(..., description="Operating System.")
-    AppUsageTime_min_day: int = Field(..., description="App Usage Time in Minutes.")
-    ScreenOnTime_hours_day: float = Field(..., description="Screen On Time in Hours.")
-    BatteryDrain_mAh_day: int = Field(..., description="Battery Drain in Ah.")
-    NumberOfAppsInstalled: int = Field(..., description="Number of Apps installed.")
-    DataUsage_MB_day: int = Field(..., description="Data Usage in MB.")
-    Age: int = Field(..., description="Age in days.")
-    Gender: str = Field(..., description="Gender.")
-    UserBehaviorClass: int = Field(..., description="UserBehavior Class.")
-
-    @classmethod
-    def validate_data(cls, data: Dict[str, Any]) -> bool:
-        """
-        Validates a dictionary of data to ensure it matches the schema.
-
-        Args:
-            data (Dict[str, Any]): Data to validate.
-
-        Returns:
-            bool: True if data is valid, False otherwise.
-        """
-        try:
-            cls(**data)
-            return True
-        except ValidationError as e:
-            logger.error(f"Validation error: {e}")
-
-    @classmethod
-    def validate_csv(
-        cls,
-        filepath: FilePath,
-        stop_on_invalid_row: bool = True,
-        raise_on_invalid: bool = True,
-    ) -> bool:
-        """
-        Validates each row of a CSV file against the schema.
-
-        Args:
-            filepath (Path): Path to the CSV file.
-            stop_on_invalid_row (bool): If True, will stop processing after the first invalid row.
-            raise_on_invalid (bool): If True, will raise an exception after finding an invalid row.
-
-        Returns:
-            bool: True if all rows are valid, False otherwise.
-
-        Raises:
-            ValidationErrorException: If raise_on_invalid is True and an invalid row is found.
-        """
-        all_valid = True
-
-        # Use 'with' to automatically handle file opening and closing
-        df = pl.read_csv(filepath)
-        dfdict = df.to_dicts()
-        for row in dfdict:
-            if not cls.validate_data(row):
-                all_valid = False
-                logger.error(f"Invalid row: {row}")
-                if raise_on_invalid:
-                    raise TypeError(f"Invalid row found: {row}")
-                if stop_on_invalid_row:
-                    return False
-
-        return all_valid
-
-    @classmethod
-    def validate_and_serialize(
-        cls,
-        filepath: FilePath,
-        json_schema_filepath: str,
-        json_schema_name: str = "json_schema.json",
-    ) -> None:
-        """
-        Validates each row of a CSV file against the schema and serialize the file to be ready to use
-
-        Args:
-            filepath (Path): Path to the CSV file.
-            json_schema_filepath (str): Path to the JSON Schema file.
-            json_schema_name (str): Name of the JSON Schema file.
+    UserID: int = pa.Field(description="User ID.")
+    DeviceModel: str = pa.Field(description="Device Model.")
+    OperatingSystem: str = pa.Field(description="Operating System.")
+    AppUsageTime_min_day: int = pa.Field(description="App Usage Time in Minutes.")
+    ScreenOnTime_hours_day: float = pa.Field(description="Screen On Time in Hours.")
+    BatteryDrain_mAh_day: int = pa.Field(description="Battery Drain in Ah.")
+    NumberOfAppsInstalled: int = pa.Field(description="Number of Apps installed.")
+    DataUsage_MB_day: int = pa.Field(description="Data Usage in MB.")
+    Age: int = pa.Field(description="Age in days.")
+    Gender: str = pa.Field(description="Gender.")
+    UserBehaviorClass: int = pa.Field(description="UserBehavior Class.")
 
 
-        Returns:
-            bool: True if all rows are valid, False otherwise.
-            Dict[str, Any]: Dictionary of serialized data.
-
-        Raises:
-            ValidationErrorException: If raise_on_invalid is True and an invalid row is found.
-        """
-
-        all_valid = True
-        schema_path: FilePath = str(
-            os.path.join(json_schema_filepath, json_schema_name)
-        )
-
-        df = pl.read_csv(filepath)
-        df_dict = df.to_dicts()
-        for row in df_dict:
-            if not cls.validate_data(row):
-                all_valid = False
-                logger.error(f"Invalid row: {row}")
-
-                raise TypeError(f"Invalid row found: {row}")
-
-        with open(schema_path, "w") as f:
-            schema_to_json = cls.model_json_schema()
-            json.dump(schema_to_json, f)  # type: ignore
-        print(
-            f"All the files are valid : {str(all_valid)}\n\nJSON schema file saved at {schema_path}"
-        )
-
-
-# This class seems fine at the moment.
 class DataTransformationConfig(BaseModel):
     """
     Configuration for LazyTransformationPipeline class.
@@ -161,20 +72,26 @@ class DataTransformationConfig(BaseModel):
         original_datapath (FilePath): Path to the original data file.
         categorical_columns_to_transform (List[str]): Columns to transform from categorical to numeric.
         columns_to_drop (List[str]): Columns to drop from the DataFrame.
+        mapping_file_path (FilePath): Path to the mapping file.
+        ML_type (Literal[ "SVM","KNN","PCA","Gradient","Tree-Based","Naive"]): Model type to perform normalization just into numerical values or into categorical as well,
         normalize_df (bool): Whether to normalize the DataFrame.
-        standarized_df (bool): Whether to standardize the DataFrame.
+        standardized_df (bool): Whether to standardize the DataFrame.
         feature_engineering_dict (Dict[str, Union[float, int, str]]): Dictionary for feature engineering.
+        tuned_parameters (FilePath): Path to the tuned parameters json file created after feature engineering is performed.
         transformed_intermediate_df_path (FilePath): Path to the transformed intermediate data file.
-        transformed_train_df_path_X (FilePath): Path to save the transformed train X DataFrame.
+        transformed_train_df_path_x (FilePath): Path to save the transformed train X DataFrame.
         transformed_train_df_path_y (FilePath): Path to save the transformed train y DataFrame.
-        transformed_test_df_path_X (FilePath): Path to save the transformed test X DataFrame.
+        transformed_test_df_path_x(FilePath): Path to save the transformed test X DataFrame.
         transformed_test_df_path_y (FilePath): Path to save the transformed test y DataFrame.
         target_column (str): Name of the target column.
         feature_mode (Literal['RandomSearch', "GridSearch", "BayesianOptim"]): The feature selection mode, which can be one of 'RandomSearch', 'GridSearch', or 'BayesianOptim'.
-        transformed_normalized_df_path_train_X (FilePath): Path to save the transformed normalized train X DataFrame.
-        transformed_standarized_df_path_train_X (FilePath): Path to save the transformed standardized train X DataFrame.
-        transformed_normalized_df_path_test_X (FilePath): Path to save the transformed normalized test X DataFrame.
-        transformed_standarized_df_path_test_X (FilePath): Path to save the transformed standardized test X DataFrame.
+        transformed_normalized_df_path_train_x (FilePath): Path to save the transformed normalized train X DataFrame.
+        transformed_standardized_df_path_train_x (FilePath): Path to save the transformed standardized train X DataFrame.
+        transformed_normalized_df_path_test_x(FilePath): Path to save the transformed normalized test X DataFrame.
+        transformed_standardized_df_path_test_x (FilePath): Path to save the transformed standardized test X DataFrame.
+
+
+
     """
 
     original_datapath: FilePath = Field(
@@ -185,37 +102,53 @@ class DataTransformationConfig(BaseModel):
         description="List of columns to transform from categorical string to numerical",
     )
     columns_to_drop: List[str] = Field(..., description="List of columns to drop")
+    mapping_file_path: FilePath = Field(
+        ..., description="JSON file path for the categorical mapping."
+    )
+
+    ML_type: Literal["SVM", "KNN", "PCA", "Gradient", "Tree-Based", "Naive"] = Field(
+        ...,
+        description="Model type to perform normalization just into numerical values or into categorical as well",
+    )
     normalize_df: bool = Field(..., description="Whether to normalize the data")
-    standarized_df: bool = Field(..., description="Whether to standardize the data")
+
+    standardized_df: bool = Field(..., description="Whether to standardize the data")
+
     feature_engineering_dict: Dict[str, Union[float, int, str]] = Field(
         ...,
         description="Feature engineering dictionary specifying transformations for columns",
     )
+
+    tuned_parameters: FilePath = Field(
+        ...,
+        description="Path to the tuned parameters json file created after feature engineering is performed.",
+    )
+
     transformed_intermediate_df_path: FilePath = Field(
         ..., description="Path to save the transformed intermediate DataFrame"
     )
-    transformed_train_df_path_X: FilePath = Field(
+    transformed_train_df_path_x: FilePath = Field(
         ..., description="Path to the transformed train data X folder"
     )
     transformed_train_df_path_y: FilePath = Field(
         ..., description="Path to the transformed train data y folder"
     )
-    transformed_test_df_path_X: FilePath = Field(
+    transformed_test_df_path_x: FilePath = Field(
         ..., description="Path to the transformed test data X folder"
     )
     transformed_test_df_path_y: FilePath = Field(
         ..., description="Path to the transformed test data Y folder"
     )
-    transformed_normalized_df_path_train_X: FilePath = Field(
+    transformed_normalized_df_path_train_x: FilePath = Field(
         ..., description="Path to save the transformed normalized train DataFrame"
     )
-    transformed_standarized_df_path_train_X: FilePath = Field(
+    transformed_standardized_df_path_train_x: FilePath = Field(
         ..., description="Path to save the transformed standardized train DataFrame"
     )
     transformed_normalized_df_path_test_X: FilePath = Field(
         ..., description="Path to save the transformed normalized test DataFrame"
     )
-    transformed_standarized_df_path_test_X: FilePath = Field(
+    transformed_standardized_df_path_test_x: FilePath = Field(
         ..., description="Path to save the transformed standardized test DataFrame"
     )
     target_column: str = Field(..., description="Name of the target column")
@@ -224,53 +157,116 @@ class DataTransformationConfig(BaseModel):
         description="Feature mode selected from 'RandomSearch', 'GridSearch', or 'BayesianOptim'",
     )
 
+    @root_validator(pre=True)
+    def check_normalization_and_standardization(cls, values):
+        normalize_df = values["normalize_df"]
+        standardized_df = values["standardized_df"]
 
-# Transformation class:
+        if normalize_df and standardized_df:
+            raise ValueError("Both methods cannot be True at the same time.")
+        return values
 
 
-# The transformation functions can be split further into a  new class Pipeline that uses some of the sklearn elements
 class LazyTransformationPipeline:
-    """This class leverages lazy api of polars to perform speed up transformations in dataframes using a config from pandera"""
+    """
+    A pipeline class to perform efficient data transformations on dataframes using Polars' lazy API.
+    The class reads raw data, validates it, applies categorical to numerical encoding, splits into
+    training and testing datasets, and optionally normalizes or standardizes the data. It also
+    supports feature engineering using Random Search, Grid Search, and Bayesian Optimization.
+
+    Attributes:
+        config: An instance of the DataTransformationConfig class, holding configuration settings.
+        df_validation: An instance of the DataValidationConfig class, used to validate the data.
+        model: The machine learning model used for feature engineering.
+    """
 
     def __init__(self):
-        self.config = DataTransformationConfig()
+        """
+        Initializes the LazyTransformationPipeline with default configurations for data transformation,
+        validation, and feature engineering. It attempts to validate the dataframe schema based on the
+        provided configuration. If validation fails, an error message is printed.
+
+        Raises:
+            SchemaError: If the dataframe schema does not match the expected schema defined in the configuration.
+        """
+        self.config: DataTransformationConfig = DataTransformationConfig()
+        self.df_validation: DataValidationConfig = DataValidationConfig()
+        self.model = None
+        self.search_class = None
+        try:
+            pl.scan_csv(self.config.original_datapath).pipe(self.df_validation.validate)
+
+            print("DataFrame Validation is correct")
+        except pa.errors.SchemaError as e:
+            print(e)
 
     def df_categorical_to_numerical(self) -> None:
         """
-        Encodes categorical columns as numeric values and save the dataframe in csv format
+        Transforms categorical columns into numeric representations using consistent mappings. The transformed
+        dataframe is saved to the specified path in the configuration.
+
+        The method:
+            - Loads the data lazily using Polars
+            - Creates mappings for categorical columns to numerical values
+            - Drops original categorical columns and any columns specified in `columns_to_drop`
+            - Saves the transformed dataframe and the mappings to specified paths
+
+        Returns:
+            None
         """
         category_columns = self.config.categorical_columns_to_transform
 
-        # Cast categorical columns to integer codes and create new columns with the encoded values
-        lf = (
-            pl.scan_csv(self.config.original_datapath)
-            .with_columns(
-                [  # WE NEED TO CHANGE THE VALIDATION METHOD TO MAKE THIS WORK!
-                    pl.col(col)
-                    .cast(pl.Categorical)
-                    .to_physical()
-                    .alias(f"{col}_encoded")
-                    for col in category_columns
-                ]
-            )
-            .drop(self.config.categorical_columns_to_transform)
-            .drop(self.config.columns_to_drop)
-        )
+        lf = pl.scan_csv(self.config.original_datapath)
 
+        mappings = {}
+        for col in category_columns:
+            unique_values = lf.select(pl.col(col).unique()).collect()
+            mapping = {
+                value: idx for idx, value in enumerate(unique_values.to_series())
+            }
+            mappings[col] = mapping
+            lf = lf.with_columns(
+                pl.col(col).map_elements(mapping).alias(f"{col}_encoded")
+            )
+
+        lf = lf.drop(category_columns + self.config.columns_to_drop)
+
+        # Save the transformed LazyFrame
         lf.sink_csv(self.config.transformed_intermediate_df_path)
+
+        with open(self.config.mapping_file_path, "w") as f:
+            json.dump(mappings, f)
+
+        print(
+            f"Categorical columns transformed and saved at {self.config.transformed_intermediate_df_path}."
+        )
 
     def split_train_test(
         self, random_state: int = 42, train_fraction: float = 0.75
     ) -> None:
-        """Splits the data into train and test sets."""
+        """
+        Splits the transformed dataset into training and testing sets based on the specified fraction.
 
-        print("Loading data...")
+        The method:
+            - Loads the transformed dataframe lazily
+            - Adds a row number for shuffling and splitting
+            - Splits the data based on the row number into training and testing sets
+            - Saves the resulting datasets (X_train, X_test, y_train, y_test) to the specified paths
 
-        lazy_df = pl.scan_csv(
-            self.config.transformed_intermediate_df_path
-        ).with_columns(pl.all().shuffle(seed=random_state))
+        Args:
+            random_state (int, optional): The seed for random operations. Defaults to 42.
+            train_fraction (float, optional): The fraction of data to use for training. Defaults to 0.75.
 
-        print("Transforming Data...")
+        Returns:
+            None
+        """
+
+        lazy_df = (
+            pl.scan_csv(self.config.transformed_intermediate_df_path)
+            .with_columns(pl.arange(0, pl.count()).alias("row_nr"))
+            .with_columns(pl.all().shuffle(seed=random_state))
+        )
+
         train_lazy_df = lazy_df.filter(
             pl.col("row_nr") < pl.col("row_nr").max() * train_fraction
         )
@@ -283,97 +279,256 @@ class LazyTransformationPipeline:
         y_train = train_lazy_df.select(self.config.target_column)
         y_test = test_lazy_df.select(self.config.target_column)
 
-        print("Saving Data...")
-        x_train.sink_csv(self.config.transformed_train_df_path_X, index=False)
+        x_train.sink_csv(self.config.transformed_train_df_path_x, index=False)
         x_test.sink_csv(self.config.transformed_test_df_path_X, index=False)
         y_train.sink_csv(self.config.transformed_train_df_path_y, index=False)
         y_test.sink_csv(self.config.transformed_test_df_path_y, index=False)
 
     def normalize(self) -> None:
-        """performs the normalization between [0, 1] for the"""
-        lazy_normalize_train_X = pl.scan_csv(
-            self.config.transformed_train_df_path_X
-        ).select(pl.all() - pl.all().min()) / (pl.all().max() - pl.all().min())
-        lazy_normalize_test_X = pl.scan_csv(
-            self.config.transformed_test_df_path_X
-        ).select(pl.all() - pl.all().min()) / (pl.all().max() - pl.all().min())
+        """
+        Performs column-wise normalization [0, 1] for continuous columns only.
+        If the model is SVM, KNN, or PCA, normalizes categorical encoded columns as well.
+        Otherwise, skips normalization for categorical columns.
 
-        lazy_normalize_train_X.sink_csv(
-            self.config.transformed_normalized_df_path_train_X
-        )
-        lazy_normalize_test_X.sink_csv(
-            self.config.transformed_normalized_df_path_test_X
-        )
+        Args:
+        model_type (str): The model type used for prediction (e.g., "SVM", "KNN", "PCA").
+        """
+        # Specify models that will normalize the categorical columns already converted
+        normalize_categorical = ["SVM", "KNN", "PCA"]
+
+        # Read data lazily
+        lazy_df_train = pl.scan_csv(self.config.transformed_train_df_path_x)
+        lazy_df_test = pl.scan_csv(self.config.transformed_test_df_path_x)
+
+        # Create variables
+        train_categorical_columns = lazy_df_train.select(
+            cs.contains("_encoded")
+        ).columns
+        train_continuous_columns = lazy_df_train.select(
+            cs.exclude(cs.contains("_encoded"))
+        ).columns
+        test_categorical_columns = lazy_df_test.select(cs.contains("_encoded")).columns
+        test_continuous_columns = lazy_df_test.select(
+            cs.exclude(cs.contains("_encoded"))
+        ).columns
+        train_all_columns = train_categorical_columns + train_continuous_columns
+        test_all_columns = test_categorical_columns + test_continuous_columns
+
+        # Check if the model is distance, gradient, or scale-sensitive
+        if self.config.model_type in normalize_categorical:
+            print(
+                f"Model type '{self.config.model_type}' detected. Normalizing categorical columns as well."
+            )
+
+            # Normalize categorical encoded columns (if using SVM, KNN, or PCA)
+            train_normalized = lazy_df_train.select(
+                [
+                    (pl.col(col) - pl.col(col).min())
+                    / (pl.col(col).max() - pl.col(col).min())
+                    for col in train_all_columns
+                ]
+            )
+            test_normalized = lazy_df_test.select(
+                [
+                    (pl.col(col) - pl.col(col).min())
+                    / (pl.col(col).max() - pl.col(col).min())
+                    for col in test_all_columns
+                ]
+            )
+        else:
+            print(
+                f"Model type '{self.config.model_type}' detected. Skipping normalization for categorical columns."
+            )
+            train_normalized = lazy_df_train.select(
+                [
+                    (pl.col(col) - pl.col(col).min())
+                    / (pl.col(col).max() - pl.col(col).min())
+                    for col in train_continuous_columns
+                ]
+                + [
+                    pl.col(c)
+                    for c in lazy_df_train.columns
+                    if c not in train_continuous_columns
+                ]
+            )
+            test_normalized = lazy_df_test.select(
+                [
+                    (pl.col(col) - pl.col(col).min())
+                    / (pl.col(col).max() - pl.col(col).min())
+                    for col in test_continuous_columns
+                ]
+                + [
+                    pl.col(c)
+                    for c in lazy_df_test.columns
+                    if c not in test_continuous_columns
+                ]
+            )
+
+        # Save the normalized dataset
+        train_normalized.sink_csv(self.config.transformed_normalized_df_path_train_x)
+        test_normalized.sink_csv(self.config.transformed_normalized_df_path_test_x)
 
     def standardize(self) -> None:
-        """Performs the standardization within a normal distribution for the dataframe"""
-        lazy_standardize_train_X = pl.scan_csv(
-            self.config.transformed_train_df_path_X
-        ).select((pl.all() - pl.all().mean()) / pl.all().std())
-        lazy_standardize_test_X = pl.scan_csv(
-            self.config.transformed_test_df_path_X
-        ).select((pl.all() - pl.all().mean()) / pl.all().std())
-        lazy_standardize_train_X.sink_csv(
-            self.config.transformed_standarized_df_path_train_X
+        """
+        Performs column-wise standardization [0, 1] for continuous columns only.
+        If the model is SVM, KNN, or PCA, normalizes categorical encoded columns as well.
+        Otherwise, skips normalization for categorical columns.
+
+        Args:
+        model_type (str): The model type used for prediction (e.g., "SVM", "KNN", "PCA").
+        """
+        # Specify models that will standardize the categorical columns already converted
+        standardize_categorical: list[str] = ["SVM", "KNN", "PCA"]
+
+        # Read data lazily
+        lazy_df_train = pl.scan_csv(self.config.transformed_train_df_path_x)
+        lazy_df_test = pl.scan_csv(self.config.transformed_test_df_path_x)
+
+        # Create variables
+        train_categorical_columns = lazy_df_train.select(
+            cs.contains("_encoded")
+        ).columns
+        train_continuous_columns = lazy_df_train.select(
+            cs.exclude(cs.contains("_encoded"))
+        ).columns
+        test_categorical_columns = lazy_df_test.select(cs.contains("_encoded")).columns
+        test_continuous_columns = lazy_df_test.select(
+            cs.exclude(cs.contains("_encoded"))
+        ).columns
+        train_all_columns = train_categorical_columns + train_continuous_columns
+        test_all_columns = test_categorical_columns + test_continuous_columns
+
+        # Check if the model is distance, gradient, or scale-sensitive
+        if self.config.model_type in standardize_categorical:
+            print(
+                f"Model type '{self.config.model_type}' detected. Normalizing categorical columns as well."
+            )
+
+            # Normalize categorical encoded columns (if using SVM, KNN, or PCA)
+            train_standardized = lazy_df_train.select(
+                [
+                    (pl.col(col) - pl.col(col).mean()) / pl.col(col).std()
+                    for col in train_all_columns
+                ]
+            )
+            test_standardized = lazy_df_test.select(
+                [
+                    (pl.col(col) - pl.col(col).mean()) / pl.col(col).std()
+                    for col in test_all_columns
+                ]
+            )
+        else:
+            print(
+                f"Model type '{self.config.model_type}' detected. Skipping normalization for categorical columns."
+            )
+            train_standardized = lazy_df_train.select(
+                [
+                    (pl.col(col) - pl.col(col).mean()) / pl.col(col).std()
+                    for col in train_continuous_columns
+                ]
+                + [
+                    pl.col(c)
+                    for c in lazy_df_train.columns
+                    if c not in train_continuous_columns
+                ]
+            )
+            test_standardized = lazy_df_test.select(
+                [
+                    (pl.col(col) - pl.col(col).min()) / pl.col(col).std()
+                    for col in test_continuous_columns
+                ]
+                + [
+                    pl.col(c)
+                    for c in lazy_df_test.columns
+                    if c not in test_continuous_columns
+                ]
+            )
+
+            # Save the normalized dataset
+        train_standardized.sink_csv(
+            self.config.transformed_standardized_df_path_train_x
         )
-        lazy_standardize_test_X.sink_csv(
-            self.config.transformed_standarized_df_path_train_X
-        )
+        test_standardized.sink_csv(self.config.transformed_standardized_df_path_test_x)
 
-    def random_search_feature_engineering(self) -> None:
-        """Performs random feature engineering for the dataframe"""
-        pass
+    def _apply_feature_search(self, search_class) -> None:
+        """
+        General function to apply any feature search method (RandomizedSearch, GridSearch, or BayesSearch).
 
-    def grid_search_feature_engineering(self) -> None:
-        """Performs grid search feature engineering for the dataframe"""
-        pass
+        Args:
+            search_class (class): The search class to use (RandomizedSearchCV, GridSearchCV, or BayesSearchCV).
 
-    def bayesian_feature_engineering(self) -> None:
-        """Performs Bayesian Optimization for the dataframe"""
-        pass
+        Raises:
+            ValueError: If no model is provided.
+        """
+        if self.model is not None and self.search_class is not None:
+            clf = search_class(self.model, self.config.tuned_parameters)
+            if self.config.standarized_df:
+                search = clf.fit(
+                    self.config.transformed_standarized_df_path_train_X,
+                    self.config.transformed_train_df_path_y,
+                )
+            elif self.config.normalize:
+                search = clf.fit(
+                    self.config.transformed_normalized_df_path_test_X,
+                    self.config.transformed_train_df_path_y,
+                )
 
-    def run(
-        self,
-    ) -> None:
-        """This function runs the full pipeline."""
+            else:
+                search = clf.fit(
+                    self.config.transformed_train_df_path_x,
+                    self.config.transformed_train_df_path_y,
+                )
+
+            with open(
+                self.config.tunable_parameters_path, "w"
+            ) as tunable_parameters_file:
+                json.dump(search.best_params_, tunable_parameters_file)
+        else:
+            raise ValueError(
+                f"You need to specify a model of classification. You can find the the accepted types in the DataTransformationConfig class, in the attribute {self.config.ML_type}."
+            )
+        search.fit(self.config.transformed_train_df_path_x)
+
+        best_params = search.best_params_
+        with open(self.config.best_model_params_path, "w") as f:
+            json.dump(best_params, f)
+        print(f"Best hyperparameters saved at {self.config.best_model_params_path}.")
+
+    def apply_feature_engineering(self) -> None:
+        """
+        Applies the specified feature engineering method.
+        """
+        mode = self.config.feature_mode
+        if mode == "RandomSearch":
+            self._apply_feature_search(RandomizedSearchCV)
+        elif mode == "GridSearch":
+            self._apply_feature_search(GridSearchCV)
+        else:
+            self._apply_feature_search(BayesSearchCV)
+
+    def run(self) -> None:
+        """
+        Executes the full pipeline, including categorical transformation, splitting,
+        normalization/standardization, and feature engineering.
+        """
         print("Pipeline running...")
 
         self.df_categorical_to_numerical()
+        print("Categorical Data Transformed and saved")
+
         self.split_train_test()
+        print("Split Data Transformed and saved")
+
         if self.config.normalize_df:
             self.normalize()
-            if self.config.feature_mode == "RandomSearch":
-                self.random_search_feature_engineering()
-                print("Completed random search feature engineering")
-            elif self.config.feature_mode == "GridSearch":
-                self.grid_search_feature_engineering()
-                print("Completed grid search feature engineering")
-            else:
-                self.bayesian_feature_engineering()
-                print("Completed bayesian feature engineering")
+            print("Normalization applied.")
 
-        elif self.config.standardize_df:
+        if self.config.standardize_df:
             self.standardize()
-            print("Completed categorical transformation")
-            if self.config.feature_mode == "RandomSearch":
-                self.random_search_feature_engineering()
-                print("Completed random search feature engineering")
-            elif self.config.feature_mode == "GridSearch":
-                self.grid_search_feature_engineering()
-                print("Completed grid search feature engineering")
-            else:
-                self.bayesian_feature_engineering()
-                print("Completed bayesian feature engineering")
-        else:
-            print("Completed categorical transformation")
-            if self.config.feature_mode == "RandomSearch":
-                self.random_search_feature_engineering()
-                print("Completed random search feature engineering")
-            elif self.config.feature_mode == "GridSearch":
-                self.grid_search_feature_engineering()
-                print("Completed grid search feature engineering")
-            else:
-                self.bayesian_feature_engineering()
-                print("Completed bayesian feature engineering")
+            print("Standardization applied.")
 
-        return  # TODO WE NEED TO CREATE A NEW JUPYTERNOTEBOOK TO TEST THE CLASS
+        if self.config.feature_mode:
+            self.apply_feature_engineering()
+            print("Feature engineering applied.")
+
+        print("Done.")
