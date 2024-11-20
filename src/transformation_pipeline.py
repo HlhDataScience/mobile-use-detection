@@ -25,7 +25,7 @@ from pydantic import BaseModel, Field, FilePath
 from pydantic.class_validators import root_validator
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from skopt import BayesSearchCV
-
+# TODO CHANGE FILEPATH TO PATH TO CREATE AUTOMATIC NAMING FOR CSV AND JSON FILES PRODUCED BY THE LazyTransformationPipeline class
 # TODO TESTING THE CLASSES WITHIN THE NOTEBOOK
 # Created Hyperparameters tuning methods
 # Notebook Created
