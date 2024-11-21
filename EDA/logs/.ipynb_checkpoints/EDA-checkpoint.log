@@ -1,0 +1,3 @@
+2024-11-21 18:02:36 - root - INFO - Logging system initialized.
+2024-11-21 18:02:37 - hydra.core.utils - DEBUG - Setting JobRuntime:name=EDA_functions
+2024-11-21 18:03:17 - hydra.core.utils - DEBUG - Setting JobRuntime:name=notebook

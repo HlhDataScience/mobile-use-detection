@@ -29,7 +29,7 @@ from pydantic.class_validators import root_validator
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from skopt import BayesSearchCV
 
-from logger import setup_logging
+from src.logger import setup_logging
 
 # TODO TESTING THE CLASSES WITHIN THE NOTEBOOK
 # Changed the filepath to Path to take advantage of the trainconfig.yalm file
