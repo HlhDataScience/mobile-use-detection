@@ -25,7 +25,7 @@ categorical_columns_to_transform:
 columns_to_drop:
   - "User ID"
 
-mapping_file_path: "/home/tensorboard/PycharmProjects/mobile_usage_detection/src/intermediate_data/mapping.json"
+mapping_file_path: "/home/tensorboard/PycharmProjects/mobile_usage_detection/src/intermediate_data"
 target_column: "UserBehaviorClass"
 
 normalize_df: true
