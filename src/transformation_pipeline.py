@@ -15,6 +15,7 @@ Modules used:
 - Skopt for Bayesian optimization
 """
 import json
+import logging
 from pathlib import Path
 from typing import Dict, List, Literal, Union
 
@@ -27,7 +28,6 @@ from pydantic import BaseModel, Field, FilePath
 from pydantic.class_validators import root_validator
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from skopt import BayesSearchCV
-from sqlalchemy.testing.plugin.plugin_base import logging
 
 from logger import setup_logging
 
@@ -42,8 +42,8 @@ from logger import setup_logging
 # CONSTANTS
 LOG_FILE = Path("./logs/application.log")
 setup_logging(LOG_FILE)
-initialize(config_path="conf/trainconfig")
-HYDRA_CONFIG = compose(config_name="trainconfig")
+initialize(config_path="./conf/transformation_config/")
+HYDRA_CONFIG = compose(config_name="transformation_config")
 CONFIG_DICT = OmegaConf.to_object(HYDRA_CONFIG)
 
 
@@ -173,7 +173,9 @@ class DataTransformationConfig(BaseModel):
 
     standardized_df: bool = Field(..., description="Whether to standardize the data")
 
-    feature_engineering_dict: Dict[str, Union[float, int, str]] = Field(
+    feature_engineering_dict: Dict[
+        str, List[float | int | str] | float | int | str
+    ] = Field(
         ...,
         description="Feature engineering dictionary specifying transformations for columns",
     )
@@ -248,7 +250,7 @@ class LazyTransformationPipeline:
         Raises:
             SchemaError: If the dataframe schema does not match the expected schema defined in the configuration.
         """
-        self.df_validation: DataValidationConfig = DataValidationConfig()
+        self.df_validation: DataValidationConfig = DataValidationConfig
         self.hydra_config: DictConfig = HYDRA_CONFIG
         self.model = None
         self.search_class = None
@@ -259,14 +261,14 @@ class LazyTransformationPipeline:
 
             logging.info("Valid transformation configuration found.")
         except ValueError as e:
-            logging.error(f"Failed transformation configuration yalm file at {e}")
+            logging.error(f"Failed transformation configuration yalm file with {e}")
             raise e
         try:
             pl.scan_csv(self.config.original_datapath).pipe(self.df_validation.validate)
 
             logging.info("DataFrame Validation is correct")
         except pa.errors.SchemaError as e:
-            logging.error(f"Dataframe validation failed at {e}")
+            logging.error(f"Dataframe validation failed with {e}")
             raise e
 
     def df_categorical_to_numerical(self) -> None:

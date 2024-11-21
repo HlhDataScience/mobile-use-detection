@@ -1,0 +1,329 @@
+2024-11-21 15:03:15 - root - INFO - Logging system initialized.
+2024-11-21 15:03:15 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-21 15:03:15 - hydra.core.utils - DEBUG - Setting JobRuntime:name=transformation_pipeline
+2024-11-21 15:04:50 - root - INFO - Logging system initialized.
+2024-11-21 15:04:50 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-21 15:04:50 - hydra.core.utils - DEBUG - Setting JobRuntime:name=transformation_pipeline
+2024-11-21 15:10:10 - root - INFO - Logging system initialized.
+2024-11-21 15:10:10 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-21 15:10:10 - hydra.core.utils - DEBUG - Setting JobRuntime:name=transformation_pipeline
+2024-11-21 15:12:16 - root - INFO - Logging system initialized.
+2024-11-21 15:12:16 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-21 15:12:16 - hydra.core.utils - DEBUG - Setting JobRuntime:name=transformation_pipeline
+2024-11-21 15:14:00 - root - INFO - Logging system initialized.
+2024-11-21 15:14:00 - root - INFO - Logging system initialized.
+2024-11-21 15:15:37 - root - INFO - Logging system initialized.
+2024-11-21 15:15:37 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-21 15:15:37 - hydra.core.utils - DEBUG - Setting JobRuntime:name=transformation_pipeline
+2024-11-21 15:15:42 - root - ERROR - Failed transformation configuration yalm file at 5 validation errors for DataTransformationConfig
+tuned_parameters
+  Field required [type=missing, input_value={'original_datapath': '/h...age_detection/src/test'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+transformed_normalized_df_path_train_x
+  Field required [type=missing, input_value={'original_datapath': '/h...age_detection/src/test'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+transformed_standardized_df_path_train_x
+  Field required [type=missing, input_value={'original_datapath': '/h...age_detection/src/test'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+transformed_normalized_df_path_test_x
+  Field required [type=missing, input_value={'original_datapath': '/h...age_detection/src/test'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+transformed_standardized_df_path_test_x
+  Field required [type=missing, input_value={'original_datapath': '/h...age_detection/src/test'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+2024-11-21 15:20:57 - root - INFO - Logging system initialized.
+2024-11-21 15:20:57 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-21 15:20:57 - hydra.core.utils - DEBUG - Setting JobRuntime:name=transformation_pipeline
+2024-11-21 15:21:04 - root - ERROR - Failed transformation configuration yalm file with 5 validation errors for DataTransformationConfig
+tuned_parameters
+  Field required [type=missing, input_value={'original_datapath': '/h...age_detection/src/test'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+transformed_normalized_df_path_train_x
+  Field required [type=missing, input_value={'original_datapath': '/h...age_detection/src/test'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+transformed_standardized_df_path_train_x
+  Field required [type=missing, input_value={'original_datapath': '/h...age_detection/src/test'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+transformed_normalized_df_path_test_x
+  Field required [type=missing, input_value={'original_datapath': '/h...age_detection/src/test'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+transformed_standardized_df_path_test_x
+  Field required [type=missing, input_value={'original_datapath': '/h...age_detection/src/test'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+2024-11-21 15:31:11 - root - INFO - Logging system initialized.
+2024-11-21 15:31:11 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-21 15:31:11 - hydra.core.utils - DEBUG - Setting JobRuntime:name=transformation_pipeline
+2024-11-21 15:31:15 - root - ERROR - Failed transformation configuration yalm file with 2 validation errors for DataTransformationConfig
+feature_engineering_dict
+  Field required [type=missing, input_value={'original_datapath': '/h...age_detection/src/test'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.9/v/missing
+tuned_parameters
+  Input is not a valid path for <class 'pathlib.Path'> [type=path_type, input_value={'degree': [1, 2, 3, 4, 5...linear', 'poly', 'rbf']}, input_type=DictConfig]
+2024-11-21 15:33:40 - root - INFO - Logging system initialized.
+2024-11-21 15:33:40 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-21 15:33:40 - hydra.core.utils - DEBUG - Setting JobRuntime:name=transformation_pipeline
+2024-11-21 15:33:49 - root - ERROR - Failed transformation configuration yalm file with 6 validation errors for DataTransformationConfig
+feature_engineering_dict.degree.float
+  Input should be a valid number [type=float_type, input_value=[1, 2, 3, 4, 5, 6, 7, 8], input_type=ListConfig]
+    For further information visit https://errors.pydantic.dev/2.9/v/float_type
+feature_engineering_dict.degree.int
+  Input should be a valid integer [type=int_type, input_value=[1, 2, 3, 4, 5, 6, 7, 8], input_type=ListConfig]
+    For further information visit https://errors.pydantic.dev/2.9/v/int_type
+feature_engineering_dict.degree.str
+  Input should be a valid string [type=string_type, input_value=[1, 2, 3, 4, 5, 6, 7, 8], input_type=ListConfig]
+    For further information visit https://errors.pydantic.dev/2.9/v/string_type
+feature_engineering_dict.kernel.float
+  Input should be a valid number [type=float_type, input_value=['linear', 'poly', 'rbf'], input_type=ListConfig]
+    For further information visit https://errors.pydantic.dev/2.9/v/float_type
+feature_engineering_dict.kernel.int
+  Input should be a valid integer [type=int_type, input_value=['linear', 'poly', 'rbf'], input_type=ListConfig]
+    For further information visit https://errors.pydantic.dev/2.9/v/int_type
+feature_engineering_dict.kernel.str
+  Input should be a valid string [type=string_type, input_value=['linear', 'poly', 'rbf'], input_type=ListConfig]
+    For further information visit https://errors.pydantic.dev/2.9/v/string_type
+2024-11-21 15:35:08 - root - INFO - Logging system initialized.
+2024-11-21 15:35:08 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-21 15:35:08 - hydra.core.utils - DEBUG - Setting JobRuntime:name=transformation_pipeline
+2024-11-21 15:35:11 - root - ERROR - Failed transformation configuration yalm file with 3 validation errors for DataTransformationConfig
+feature_engineering_dict.kernel.float
+  Input should be a valid number [type=float_type, input_value=['linear', 'poly', 'rbf'], input_type=ListConfig]
+    For further information visit https://errors.pydantic.dev/2.9/v/float_type
+feature_engineering_dict.kernel.int
+  Input should be a valid integer [type=int_type, input_value=['linear', 'poly', 'rbf'], input_type=ListConfig]
+    For further information visit https://errors.pydantic.dev/2.9/v/int_type
+feature_engineering_dict.kernel.str
+  Input should be a valid string [type=string_type, input_value=['linear', 'poly', 'rbf'], input_type=ListConfig]
+    For further information visit https://errors.pydantic.dev/2.9/v/string_type
+2024-11-21 15:35:50 - root - INFO - Logging system initialized.
+2024-11-21 15:35:50 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-21 15:35:50 - hydra.core.utils - DEBUG - Setting JobRuntime:name=transformation_pipeline
+2024-11-21 15:35:51 - root - INFO - Valid transformation configuration found.
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_column_values_are_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:35:51 - root - INFO - DataFrame Validation is correct
+2024-11-21 15:46:24 - root - INFO - Logging system initialized.
+2024-11-21 15:46:24 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-21 15:46:24 - hydra.core.utils - DEBUG - Setting JobRuntime:name=transformation_pipeline
+2024-11-21 15:46:26 - root - INFO - Logging system initialized.
+2024-11-21 15:46:26 - root - INFO - Logging system initialized.
+2024-11-21 15:46:31 - root - INFO - Valid transformation configuration found.
+2024-11-21 15:46:31 - root - INFO - Valid transformation configuration found.
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_column_values_are_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_column_values_are_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:31 - root - INFO - DataFrame Validation is correct
+2024-11-21 15:46:31 - root - INFO - DataFrame Validation is correct
+2024-11-21 15:46:47 - root - INFO - Valid transformation configuration found.
+2024-11-21 15:46:47 - root - INFO - Valid transformation configuration found.
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_column_values_are_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_column_values_are_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:46:47 - root - INFO - DataFrame Validation is correct
+2024-11-21 15:46:47 - root - INFO - DataFrame Validation is correct
+2024-11-21 15:47:38 - root - INFO - Logging system initialized.
+2024-11-21 15:47:38 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-21 15:47:38 - hydra.core.utils - DEBUG - Setting JobRuntime:name=transformation_pipeline
+2024-11-21 15:47:40 - root - INFO - Valid transformation configuration found.
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_column_values_are_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-21 15:47:40 - root - INFO - DataFrame Validation is correct
