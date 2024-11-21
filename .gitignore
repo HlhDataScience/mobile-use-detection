@@ -3,3 +3,4 @@ api_access.txt
 EDA/__pycache__/EDA_functions.cpython-311.pyc
 /rawdata
 .idea
+/src/__pycache__/
