@@ -16,6 +16,7 @@ Modules used:
 """
 
 import json
+from pathlib import Path
 from typing import Dict, List, Literal, Union
 
 import pandera.polars as pa
@@ -25,12 +26,19 @@ from pydantic import BaseModel, Field, FilePath
 from pydantic.class_validators import root_validator
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from skopt import BayesSearchCV
-# TODO CHANGE FILEPATH TO PATH TO CREATE AUTOMATIC NAMING FOR CSV AND JSON FILES PRODUCED BY THE LazyTransformationPipeline class
+from sqlalchemy.testing.plugin.plugin_base import logging
+
+from logger import setup_logging
+
 # TODO TESTING THE CLASSES WITHIN THE NOTEBOOK
+# Changed the filepath to Path to take advantage of the trainconfig.yalm file
 # Created Hyperparameters tuning methods
 # Notebook Created
 # DataValidationConfig has been updated to use Pandera for schema validation.
 # Further integration with Polars and/or Pydantic is under consideration.
+
+log_file = Path("./logs/application.log")
+setup_logging(log_file)
 
 
 class DataValidationConfig(pa.DataFrameModel):
@@ -70,6 +78,16 @@ class DataTransformationConfig(BaseModel):
 
     Attributes:
         original_datapath (FilePath): Path to the original data file.
+        mapping_name (str): Name of transformation mapping.
+        intermediate_df_name (str): Name of intermediate data file.
+        x_train_name (str): Name of training data file.
+        y_train_name (str): Name of training data file.
+        x_test_name (str): Name of testing data file.
+        y_test_name (str): Name of testing data file.
+        x_train_normalized (str): Name of training data file.
+        x_test_normalized (str): Name of testing data file.
+        x_train_standardized (str): Name of training data file.
+        x_test_standardized (str): Name of testing data file.
         categorical_columns_to_transform (List[str]): Columns to transform from categorical to numeric.
         columns_to_drop (List[str]): Columns to drop from the DataFrame.
         mapping_file_path (FilePath): Path to the mapping file.
@@ -97,12 +115,47 @@ class DataTransformationConfig(BaseModel):
     original_datapath: FilePath = Field(
         ..., description="Path to the original data folder"
     )
+
+    mapping_name: str = Field(
+        ..., description="Name of the mapping file categorical transformation."
+    )
+    intermediate_df_name: str = Field(
+        ..., description="Name of transformed intermediate data file."
+    )
+    x_train_name: str = Field(
+        ..., description="Name of the train data file after splitting."
+    )
+    y_train_name: str = Field(
+        ..., description="Name of the train data file after splitting."
+    )
+    x_test_name: str = Field(
+        ..., description="Name of the test data file after splitting."
+    )
+    y_test_name: str = Field(
+        ..., description="Name of the test data file after splitting."
+    )
+
+    x_train_normalized: str = Field(
+        ..., description="Name of the train data file after normalization."
+    )
+    x_test_normalized: str = Field(
+        ..., description="Name of the test data file after normalization."
+    )
+    x_train_standardized: str = Field(
+        ..., description="Name of the train data file after standardization."
+    )
+    x_test_standardized: str = Field(
+        ..., description="Name of the test data file after standardization."
+    )
+    best_parameters_name: str = Field(
+        ..., description="Name of tuned parameters json file created."
+    )
     categorical_columns_to_transform: List[str] = Field(
         ...,
         description="List of columns to transform from categorical string to numerical",
     )
     columns_to_drop: List[str] = Field(..., description="List of columns to drop")
-    mapping_file_path: FilePath = Field(
+    mapping_file_path: Path = Field(
         ..., description="JSON file path for the categorical mapping."
     )
 
@@ -119,36 +172,36 @@ class DataTransformationConfig(BaseModel):
         description="Feature engineering dictionary specifying transformations for columns",
     )
 
-    tuned_parameters: FilePath = Field(
+    tuned_parameters: Path = Field(
         ...,
         description="Path to the tuned parameters json file created after feature engineering is performed.",
     )
 
-    transformed_intermediate_df_path: FilePath = Field(
+    transformed_intermediate_df_path: Path = Field(
         ..., description="Path to save the transformed intermediate DataFrame"
     )
-    transformed_train_df_path_x: FilePath = Field(
+    transformed_train_df_path_x: Path = Field(
         ..., description="Path to the transformed train data X folder"
     )
-    transformed_train_df_path_y: FilePath = Field(
+    transformed_train_df_path_y: Path = Field(
         ..., description="Path to the transformed train data y folder"
     )
-    transformed_test_df_path_x: FilePath = Field(
+    transformed_test_df_path_x: Path = Field(
         ..., description="Path to the transformed test data X folder"
     )
-    transformed_test_df_path_y: FilePath = Field(
+    transformed_test_df_path_y: Path = Field(
         ..., description="Path to the transformed test data Y folder"
     )
-    transformed_normalized_df_path_train_x: FilePath = Field(
+    transformed_normalized_df_path_train_x: Path = Field(
         ..., description="Path to save the transformed normalized train DataFrame"
     )
-    transformed_standardized_df_path_train_x: FilePath = Field(
+    transformed_standardized_df_path_train_x: Path = Field(
         ..., description="Path to save the transformed standardized train DataFrame"
     )
-    transformed_normalized_df_path_test_X: FilePath = Field(
+    transformed_normalized_df_path_test_x: Path = Field(
         ..., description="Path to save the transformed normalized test DataFrame"
     )
-    transformed_standardized_df_path_test_x: FilePath = Field(
+    transformed_standardized_df_path_test_x: Path = Field(
         ..., description="Path to save the transformed standardized test DataFrame"
     )
     target_column: str = Field(..., description="Name of the target column")
@@ -196,9 +249,9 @@ class LazyTransformationPipeline:
         try:
             pl.scan_csv(self.config.original_datapath).pipe(self.df_validation.validate)
 
-            print("DataFrame Validation is correct")
+            logging.info("DataFrame Validation is correct")
         except pa.errors.SchemaError as e:
-            print(e)
+            logging.error(e)
 
     def df_categorical_to_numerical(self) -> None:
         """
@@ -232,13 +285,16 @@ class LazyTransformationPipeline:
         lf = lf.drop(category_columns + self.config.columns_to_drop)
 
         # Save the transformed LazyFrame
-        lf.sink_csv(self.config.transformed_intermediate_df_path)
+        lf.sink_csv(
+            self.config.transformed_intermediate_df_path
+            / self.config.intermediate_df_name
+        )
 
-        with open(self.config.mapping_file_path, "w") as f:
+        with open(self.config.mapping_file_path / self.config.mapping_name, "w") as f:
             json.dump(mappings, f)
 
-        print(
-            f"Categorical columns transformed and saved at {self.config.transformed_intermediate_df_path}."
+        logging.info(
+            f"Categorical columns transformed and saved at {self.config.transformed_intermediate_df_path / self.config.intermediate_df_name}."
         )
 
     def split_train_test(
@@ -279,10 +335,22 @@ class LazyTransformationPipeline:
         y_train = train_lazy_df.select(self.config.target_column)
         y_test = test_lazy_df.select(self.config.target_column)
 
-        x_train.sink_csv(self.config.transformed_train_df_path_x, index=False)
-        x_test.sink_csv(self.config.transformed_test_df_path_X, index=False)
-        y_train.sink_csv(self.config.transformed_train_df_path_y, index=False)
-        y_test.sink_csv(self.config.transformed_test_df_path_y, index=False)
+        x_train.sink_csv(
+            self.config.transformed_train_df_path_x / self.config.x_train_name,
+            index=False,
+        )
+        x_test.sink_csv(
+            self.config.transformed_test_df_path_x / self.config.x_test_name,
+            index=False,
+        )
+        y_train.sink_csv(
+            self.config.transformed_train_df_path_y / self.config.y_train_name,
+            index=False,
+        )
+        y_test.sink_csv(
+            self.config.transformed_test_df_path_y / self.config.y_test_name,
+            index=False,
+        )
 
     def normalize(self) -> None:
         """
@@ -297,8 +365,12 @@ class LazyTransformationPipeline:
         normalize_categorical = ["SVM", "KNN", "PCA"]
 
         # Read data lazily
-        lazy_df_train = pl.scan_csv(self.config.transformed_train_df_path_x)
-        lazy_df_test = pl.scan_csv(self.config.transformed_test_df_path_x)
+        lazy_df_train = pl.scan_csv(
+            self.config.transformed_train_df_path_x / self.config.x_train_name
+        )
+        lazy_df_test = pl.scan_csv(
+            self.config.transformed_test_df_path_x / self.config.x_test_name
+        )
 
         # Create variables
         train_categorical_columns = lazy_df_train.select(
@@ -316,7 +388,7 @@ class LazyTransformationPipeline:
 
         # Check if the model is distance, gradient, or scale-sensitive
         if self.config.model_type in normalize_categorical:
-            print(
+            logging.info(
                 f"Model type '{self.config.model_type}' detected. Normalizing categorical columns as well."
             )
 
@@ -336,7 +408,7 @@ class LazyTransformationPipeline:
                 ]
             )
         else:
-            print(
+            logging.info(
                 f"Model type '{self.config.model_type}' detected. Skipping normalization for categorical columns."
             )
             train_normalized = lazy_df_train.select(
@@ -365,8 +437,14 @@ class LazyTransformationPipeline:
             )
 
         # Save the normalized dataset
-        train_normalized.sink_csv(self.config.transformed_normalized_df_path_train_x)
-        test_normalized.sink_csv(self.config.transformed_normalized_df_path_test_x)
+        train_normalized.sink_csv(
+            self.config.transformed_normalized_df_path_train_x
+            / self.config.x_train_normalized
+        )
+        test_normalized.sink_csv(
+            self.config.transformed_normalized_df_path_test_x
+            / self.config.x_test_normalized
+        )
 
     def standardize(self) -> None:
         """
@@ -381,8 +459,12 @@ class LazyTransformationPipeline:
         standardize_categorical: list[str] = ["SVM", "KNN", "PCA"]
 
         # Read data lazily
-        lazy_df_train = pl.scan_csv(self.config.transformed_train_df_path_x)
-        lazy_df_test = pl.scan_csv(self.config.transformed_test_df_path_x)
+        lazy_df_train = pl.scan_csv(
+            self.config.transformed_train_df_path_x / self.config.x_train_name
+        )
+        lazy_df_test = pl.scan_csv(
+            self.config.transformed_test_df_path_x / self.config.x_test_name
+        )
 
         # Create variables
         train_categorical_columns = lazy_df_train.select(
@@ -400,7 +482,7 @@ class LazyTransformationPipeline:
 
         # Check if the model is distance, gradient, or scale-sensitive
         if self.config.model_type in standardize_categorical:
-            print(
+            logging.info(
                 f"Model type '{self.config.model_type}' detected. Normalizing categorical columns as well."
             )
 
@@ -418,7 +500,7 @@ class LazyTransformationPipeline:
                 ]
             )
         else:
-            print(
+            logging.info(
                 f"Model type '{self.config.model_type}' detected. Skipping normalization for categorical columns."
             )
             train_standardized = lazy_df_train.select(
@@ -447,8 +529,12 @@ class LazyTransformationPipeline:
             # Save the normalized dataset
         train_standardized.sink_csv(
             self.config.transformed_standardized_df_path_train_x
+            / self.config.x_train_standardized
         )
-        test_standardized.sink_csv(self.config.transformed_standardized_df_path_test_x)
+        test_standardized.sink_csv(
+            self.config.transformed_standardized_df_path_test_x
+            / self.config.x_test_standardized
+        )
 
     def _apply_feature_search(self, search_class) -> None:
         """
@@ -480,19 +566,29 @@ class LazyTransformationPipeline:
                 )
 
             with open(
-                self.config.tunable_parameters_path, "w"
+                self.config.tunable_parameters_path
+                / f"{self.config.best_parameters_name}{self.config.feature_mode}_{self.config.ML_type}.json",
+                "w",
             ) as tunable_parameters_file:
                 json.dump(search.best_params_, tunable_parameters_file)
         else:
-            raise ValueError(
-                f"You need to specify a model of classification. You can find the the accepted types in the DataTransformationConfig class, in the attribute {self.config.ML_type}."
+            raise logging.error(
+                ValueError(
+                    f"You need to specify a model of classification. You can find the the accepted types in the DataTransformationConfig class, in the attribute {self.config.ML_type}."
+                )
             )
         search.fit(self.config.transformed_train_df_path_x)
 
         best_params = search.best_params_
-        with open(self.config.best_model_params_path, "w") as f:
+        with open(
+            self.config.tunable_parameters_path
+            / f"{self.config.best_parameters_name}{self.config.feature_mode}_{self.config.ML_type}.json",
+            "w",
+        ) as f:
             json.dump(best_params, f)
-        print(f"Best hyperparameters saved at {self.config.best_model_params_path}.")
+        logging.info(
+            f"Best hyperparameters saved at {self.config.best_model_params_path}/ {self.config.best_parameters_name}{self.config.feature_mode}_{self.config.ML_type}.json."
+        )
 
     def apply_feature_engineering(self) -> None:
         """
@@ -511,24 +607,24 @@ class LazyTransformationPipeline:
         Executes the full pipeline, including categorical transformation, splitting,
         normalization/standardization, and feature engineering.
         """
-        print("Pipeline running...")
+        logging.info("Pipeline running...")
 
         self.df_categorical_to_numerical()
-        print("Categorical Data Transformed and saved")
+        logging.info("Categorical Data Transformed and saved")
 
         self.split_train_test()
-        print("Split Data Transformed and saved")
+        logging.info("Split Data Transformed and saved")
 
         if self.config.normalize_df:
             self.normalize()
-            print("Normalization applied.")
+            logging.info("Normalization applied.")
 
         if self.config.standardize_df:
             self.standardize()
-            print("Standardization applied.")
+            logging.info("Standardization applied.")
 
         if self.config.feature_mode:
             self.apply_feature_engineering()
-            print("Feature engineering applied.")
+            logging.info("Feature engineering applied.")
 
-        print("Done.")
+        logging.info("Done.")
