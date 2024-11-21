@@ -9,7 +9,8 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - We have completed the data validation & serialization classes
   - We have completed the optim search models within the LazyTransformationPipeline
   - We have changed the FilePath to take advantage of pathlib
-  - WE have created the logger.py file that handles logging across the files.
+  - We have created the logger.py file that handles logging across the files.
+  - We have completed the Hydra config to handle yalm automatization o the pipeline.
 
 ## TODOs related to train section
   - We need to test all the classes developed on transformation_pipeline within the jupyter notebook. 
