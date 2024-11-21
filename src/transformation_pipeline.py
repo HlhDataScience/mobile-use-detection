@@ -17,7 +17,7 @@ Modules used:
 import json
 import logging
 from pathlib import Path
-from typing import Dict, List, Literal, Union
+from typing import Dict, List, Literal, Tuple, Union
 
 import pandera.polars as pa
 import polars as pl
@@ -188,6 +188,9 @@ class DataTransformationConfig(BaseModel):
     transformed_intermediate_df_path: Path = Field(
         ..., description="Path to save the transformed intermediate DataFrame"
     )
+    transformed_test_df_path_y: Path = Field(
+        ..., description="Path to the transformed test data Y folder"
+    )
     transformed_train_df_path_x: Path = Field(
         ..., description="Path to the transformed train data X folder"
     )
@@ -196,9 +199,6 @@ class DataTransformationConfig(BaseModel):
     )
     transformed_test_df_path_x: Path = Field(
         ..., description="Path to the transformed test data X folder"
-    )
-    transformed_test_df_path_y: Path = Field(
-        ..., description="Path to the transformed test data Y folder"
     )
     transformed_normalized_df_path_train_x: Path = Field(
         ..., description="Path to save the transformed normalized train DataFrame"
@@ -372,18 +372,10 @@ class LazyTransformationPipeline:
             index=False,
         )
 
-    def normalize(self) -> None:
-        """
-        Performs column-wise normalization [0, 1] for continuous columns only.
-        If the model is SVM, KNN, or PCA, normalizes categorical encoded columns as well.
-        Otherwise, skips normalization for categorical columns.
-
-        Args:
-        model_type (str): The model type used for prediction (e.g., "SVM", "KNN", "PCA").
-        """
-        # Specify models that will normalize the categorical columns already converted
-        normalize_categorical = ["SVM", "KNN", "PCA"]
-
+    def prepare_for_normalize_or_standardize(
+        self,
+    ) -> Tuple[List[str], List[str], List[str], List[str]]:
+        """Prepares the data to be used in normalization or standardization."""
         # Read data lazily
         lazy_df_train = pl.scan_csv(
             self.config.transformed_train_df_path_x / self.config.x_train_name
@@ -406,6 +398,39 @@ class LazyTransformationPipeline:
         train_all_columns = train_categorical_columns + train_continuous_columns
         test_all_columns = test_categorical_columns + test_continuous_columns
 
+        return (
+            train_continuous_columns,
+            test_continuous_columns,
+            train_all_columns,
+            test_all_columns,
+        )
+
+    def normalize(self) -> None:
+        """
+        Performs column-wise normalization [0, 1] for continuous columns only.
+        If the model is SVM, KNN, or PCA, normalizes categorical encoded columns as well.
+        Otherwise, skips normalization for categorical columns.
+
+        Args:
+        model_type (str): The model type used for prediction (e.g., "SVM", "KNN", "PCA").
+        """
+        # Specify models that will normalize the categorical columns already converted
+        normalize_categorical = ["SVM", "KNN", "PCA"]
+
+        # Read data lazily
+        lazy_df_train = pl.scan_csv(
+            self.config.transformed_train_df_path_x / self.config.x_train_name
+        )
+        lazy_df_test = pl.scan_csv(
+            self.config.transformed_test_df_path_x / self.config.x_test_name
+        )
+
+        (
+            train_continuous_columns,
+            test_continuous_columns,
+            train_all_columns,
+            test_all_columns,
+        ) = self.prepare_for_normalize_or_standardize()
         # Check if the model is distance, gradient, or scale-sensitive
         if self.config.model_type in normalize_categorical:
             logging.info(
@@ -485,20 +510,12 @@ class LazyTransformationPipeline:
         lazy_df_test = pl.scan_csv(
             self.config.transformed_test_df_path_x / self.config.x_test_name
         )
-
-        # Create variables
-        train_categorical_columns = lazy_df_train.select(
-            cs.contains("_encoded")
-        ).columns
-        train_continuous_columns = lazy_df_train.select(
-            cs.exclude(cs.contains("_encoded"))
-        ).columns
-        test_categorical_columns = lazy_df_test.select(cs.contains("_encoded")).columns
-        test_continuous_columns = lazy_df_test.select(
-            cs.exclude(cs.contains("_encoded"))
-        ).columns
-        train_all_columns = train_categorical_columns + train_continuous_columns
-        test_all_columns = test_categorical_columns + test_continuous_columns
+        (
+            train_continuous_columns,
+            test_continuous_columns,
+            train_all_columns,
+            test_all_columns,
+        ) = self.prepare_for_normalize_or_standardize()
 
         # Check if the model is distance, gradient, or scale-sensitive
         if self.config.model_type in standardize_categorical:
@@ -620,23 +637,29 @@ class LazyTransformationPipeline:
         normalization/standardization, and feature engineering.
         """
         logging.info("Pipeline running...")
+        try:
+            self.df_categorical_to_numerical()
+            logging.info("Categorical Data Transformed and saved")
 
-        self.df_categorical_to_numerical()
-        logging.info("Categorical Data Transformed and saved")
+            self.split_train_test()
+            logging.info("Split Data Transformed and saved")
 
-        self.split_train_test()
-        logging.info("Split Data Transformed and saved")
+            # Directly call normalization and standardization methods
 
-        # Directly call normalization and standardization methods
-        if self.config.normalize_df:
-            self.normalize()
-            logging.info("Normalization applied.")
+            if self.config.normalize_df:
+                self.normalize()
+                logging.info("Normalization applied.")
 
-        elif self.config.standarized_df:
-            self.standardize()
-            logging.info("Standardization applied.")
+            if self.config.standarized_df:
+                self.standardize()
+                logging.info("Standardization applied.")
+            else:
+                logging.info("Skipped Normalization / Standardization.")
 
-        self.apply_feature_engineering()
-        logging.info("Feature engineering applied.")
+            self.apply_feature_engineering()
+            logging.info("Feature engineering applied.")
 
-        logging.info("Done.")
+            logging.info("Pipeline Finished.")
+        except Exception as e:
+            logging.error(f"Pipeline failure at {e}")
+            raise e
