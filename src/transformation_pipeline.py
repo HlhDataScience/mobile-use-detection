@@ -80,41 +80,41 @@ class DataValidationConfig(pa.DataFrameModel):
 
 class DataTransformationConfig(BaseModel):
     """
-    Configuration for LazyTransformationPipeline class.
+        Configuration for LazyTransformationPipeline class.
 
-    Attributes:
-        original_datapath (FilePath): Path to the original data file.
-        mapping_name (str): Name of transformation mapping.
-        intermediate_df_name (str): Name of intermediate data file.
-        x_train_name (str): Name of training data file.
-        y_train_name (str): Name of training data file.
-        x_test_name (str): Name of testing data file.
-        y_test_name (str): Name of testing data file.
-        x_train_normalized (str): Name of training data file.
-        x_test_normalized (str): Name of testing data file.
-        x_train_standardized (str): Name of training data file.
-        x_test_standardized (str): Name of testing data file.
-        categorical_columns_to_transform (List[str]): Columns to transform from categorical to numeric.
-        columns_to_drop (List[str]): Columns to drop from the DataFrame.
-        mapping_file_path (Path): Path to the mapping file.
-        ML_type (Literal[ "SVM","KNN","PCA","Gradient","Tree-Based","Naive"]): Model type to perform normalization just into numerical values or into categorical as well,
-        normalize_df (bool): Whether to normalize the DataFrame.
-        standardized_df (bool): Whether to standardize the DataFrame.
-        feature_engineering_dict (Dict[str, Union[float, int, str]]): Dictionary for feature engineering.
-        tuned_parameters (FilePath): Path to the tuned parameters json file created after feature engineering is performed.
-        transformed_intermediate_df_path (Path): Path to the transformed intermediate data file.
-        transformed_train_df_path_x (Path): Path to save the transformed train X DataFrame.
-        transformed_train_df_path_y (Path): Path to save the transformed train y DataFrame.
-        transformed_test_df_path_x(Path): Path to save the transformed test X DataFrame.
-        transformed_test_df_path_y (Path): Path to save the transformed test y DataFrame.
-        target_column (str): Name of the target column.
-        feature_mode (Literal['RandomSearch', "GridSearch", "BayesianOptim"]): The feature selection mode, which can be one of 'RandomSearch', 'GridSearch', or 'BayesianOptim'.
-        transformed_normalized_df_path_train_x (Path): Path to save the transformed normalized train X DataFrame.
-        transformed_standardized_df_path_train_x (Path): Path to save the transformed standardized train X DataFrame.
-        transformed_normalized_df_path_test_x(Path): Path to save the transformed normalized test X DataFrame.
-        transformed_standardized_df_path_test_x (Path): Path to save the transformed standardized test X DataFrame.
+        Attributes:
+            original_datapath (FilePath): Path to the original data file.
+            mapping_name (str): Name of transformation mapping.
+            intermediate_df_name (str): Name of intermediate data file.
+            x_train_name (str): Name of training data file.
+            y_train_name (str): Name of training data file.
+            x_test_name (str): Name of testing data file.
+            y_test_name (str): Name of testing data file.
+            x_train_normalized (str): Name of training data file.
+            x_test_normalized (str): Name of testing data file.
+            x_train_standardized (str): Name of training data file.
+            x_test_standardized (str): Name of testing data file.
+            categorical_columns_to_transform (List[str]): Columns to transform from categorical to numeric.
+            columns_to_drop (List[str]): Columns to drop from the DataFrame.
+            mapping_file_path (Path): Path to the mapping file.
+            ML_type (Literal[ "SVM","KNN","PCA","Gradient","Tree-Based","Naive"]): Model type to perform normalization just into numerical values or into categorical as well,
+            normalize_df (bool): Whether to normalize the DataFrame.
+            standardized_df (bool): Whether to standardize the DataFrame.
+            feature_engineering_dict (Dict[str, Union[float, int, str]]): Dictionary for feature engineering.
+            tuned_parameters (FilePath): Path to the tuned parameters json file created after feature engineering is performed.
+            transformed_intermediate_df_path (Path): Path to the transformed intermediate data file.
+            transformed_train_df_path_x (Path): Path to save the transformed train X DataFrame.
+            transformed_train_df_path_y (Path): Path to save the transformed train y DataFrame.
+            transformed_test_df_path_x(Path): Path to save the transformed test X DataFrame.
+            transformed_test_df_path_y (Path): Path to save the transformed test y DataFrame.
+            target_column (str): Name of the target column.
+            feature_mode (Literal['RandomSearch', "GridSearch", "BayesianOptim"]): The feature selection mode, which can be one of 'RandomSearch', 'GridSearch', or 'BayesianOptim'.
+            transformed_normalized_df_path_train_x (Path): Path to save the transformed normalized train X DataFrame.
+            transformed_standardized_df_path_train_x (Path): Path to save the transformed standardized train X DataFrame.
+            transformed_normalized_df_path_test_x(Path): Path to save the transformed normalized test X DataFrame.
+            transformed_standardized_df_path_test_x (Path): Path to save the transformed standardized test X DataFrame.
 
-
+    git
 
     """
 
