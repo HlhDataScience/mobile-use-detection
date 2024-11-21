@@ -14,7 +14,6 @@ Modules used:
 - Scikit-learn for hyperparameter tuning
 - Skopt for Bayesian optimization
 """
-
 import json
 from pathlib import Path
 from typing import Dict, List, Literal, Union
@@ -22,6 +21,8 @@ from typing import Dict, List, Literal, Union
 import pandera.polars as pa
 import polars as pl
 import polars.selectors as cs
+from hydra import compose, initialize
+from omegaconf import DictConfig, OmegaConf
 from pydantic import BaseModel, Field, FilePath
 from pydantic.class_validators import root_validator
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
@@ -37,8 +38,13 @@ from logger import setup_logging
 # DataValidationConfig has been updated to use Pandera for schema validation.
 # Further integration with Polars and/or Pydantic is under consideration.
 
-log_file = Path("./logs/application.log")
-setup_logging(log_file)
+
+# CONSTANTS
+LOG_FILE = Path("./logs/application.log")
+setup_logging(LOG_FILE)
+initialize(config_path="conf/trainconfig")
+HYDRA_CONFIG = compose(config_name="trainconfig")
+CONFIG_DICT = OmegaConf.to_object(HYDRA_CONFIG)
 
 
 class DataValidationConfig(pa.DataFrameModel):
@@ -242,16 +248,26 @@ class LazyTransformationPipeline:
         Raises:
             SchemaError: If the dataframe schema does not match the expected schema defined in the configuration.
         """
-        self.config: DataTransformationConfig = DataTransformationConfig()
         self.df_validation: DataValidationConfig = DataValidationConfig()
+        self.hydra_config: DictConfig = HYDRA_CONFIG
         self.model = None
         self.search_class = None
+        try:
+            self.config: DataTransformationConfig = DataTransformationConfig(
+                **self.hydra_config
+            )
+
+            logging.info("Valid transformation configuration found.")
+        except ValueError as e:
+            logging.error(f"Failed transformation configuration yalm file at {e}")
+            raise e
         try:
             pl.scan_csv(self.config.original_datapath).pipe(self.df_validation.validate)
 
             logging.info("DataFrame Validation is correct")
         except pa.errors.SchemaError as e:
-            logging.error(e)
+            logging.error(f"Dataframe validation failed at {e}")
+            raise e
 
     def df_categorical_to_numerical(self) -> None:
         """
@@ -316,6 +332,8 @@ class LazyTransformationPipeline:
         Returns:
             None
         """
+        if not (0 <= train_fraction <= 1):
+            raise ValueError("train_fraction must be between 0 and 1.")
 
         lazy_df = (
             pl.scan_csv(self.config.transformed_intermediate_df_path)
@@ -564,31 +582,23 @@ class LazyTransformationPipeline:
                     self.config.transformed_train_df_path_x,
                     self.config.transformed_train_df_path_y,
                 )
-
+            best_params = search.best_params_
             with open(
                 self.config.tunable_parameters_path
                 / f"{self.config.best_parameters_name}{self.config.feature_mode}_{self.config.ML_type}.json",
                 "w",
-            ) as tunable_parameters_file:
-                json.dump(search.best_params_, tunable_parameters_file)
-        else:
-            raise logging.error(
-                ValueError(
-                    f"You need to specify a model of classification. You can find the the accepted types in the DataTransformationConfig class, in the attribute {self.config.ML_type}."
-                )
+            ) as f:
+                json.dump(best_params, f)
+            logging.info(
+                f"Best hyperparameters saved at {self.config.best_model_params_path}/ {self.config.best_parameters_name}{self.config.feature_mode}_{self.config.ML_type}.json."
             )
-        search.fit(self.config.transformed_train_df_path_x)
 
-        best_params = search.best_params_
-        with open(
-            self.config.tunable_parameters_path
-            / f"{self.config.best_parameters_name}{self.config.feature_mode}_{self.config.ML_type}.json",
-            "w",
-        ) as f:
-            json.dump(best_params, f)
-        logging.info(
-            f"Best hyperparameters saved at {self.config.best_model_params_path}/ {self.config.best_parameters_name}{self.config.feature_mode}_{self.config.ML_type}.json."
-        )
+        else:
+            with ValueError as e:
+                logging.error(
+                    f"You need to specify a model of classification. You can find the the accepted types in the DataTransformationConfig class, in the attribute {self.config.ML_type} The error:\n{e}."
+                )
+                raise ValueError(e)
 
     def apply_feature_engineering(self) -> None:
         """
@@ -615,16 +625,16 @@ class LazyTransformationPipeline:
         self.split_train_test()
         logging.info("Split Data Transformed and saved")
 
+        # Directly call normalization and standardization methods
         if self.config.normalize_df:
             self.normalize()
             logging.info("Normalization applied.")
 
-        if self.config.standardize_df:
+        elif self.config.standarized_df:
             self.standardize()
             logging.info("Standardization applied.")
 
-        if self.config.feature_mode:
-            self.apply_feature_engineering()
-            logging.info("Feature engineering applied.")
+        self.apply_feature_engineering()
+        logging.info("Feature engineering applied.")
 
         logging.info("Done.")
