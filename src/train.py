@@ -2,6 +2,8 @@
 import dagshub
 import mlflow
 
+from transformation_pipeline import LazyTransformationPipeline
+
 """ THis module will be used to perform the train test pipeline"""
 
 DAGSHUB_REPO_OWNER = "<username>"
