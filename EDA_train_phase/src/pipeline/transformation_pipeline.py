@@ -24,6 +24,7 @@ from omegaconf import DictConfig, OmegaConf
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from skopt import BayesSearchCV
 
+from EDA_train_phase.src import hydra_config
 from EDA_train_phase.src.logging_functions.logger import setup_logging
 from EDA_train_phase.src.validation_classes.validation_configurations import (
     DataTransformationConfig,
@@ -39,11 +40,12 @@ from EDA_train_phase.src.validation_classes.validation_configurations import (
 
 
 # CONSTANTS
-LOG_FILE = Path("../logs/application.log")
+LOG_FILE = Path("../logs/transformation_pipeline.log")
 setup_logging(LOG_FILE)
-initialize(config_path="../../conf/transformation_config/")
-HYDRA_CONFIG = compose(config_name="transformation_config")
-CONFIG_DICT = OmegaConf.to_object(HYDRA_CONFIG)
+CONFIG_PATH = Path(
+    "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/conf/config.yaml"
+)
+CONFIG_ROOT = hydra_config(CONFIG_PATH)
 
 
 class LazyTransformationPipeline:
@@ -69,7 +71,7 @@ class LazyTransformationPipeline:
             SchemaError: If the dataframe schema does not match the expected schema defined in the configuration.
         """
         self.df_validation: DataValidationConfig = DataValidationConfig
-        self.hydra_config: DictConfig = HYDRA_CONFIG
+        self.hydra_config: DictConfig = CONFIG_ROOT["transformation_config"]
         self.model = None
         self.search_class = None
         try:

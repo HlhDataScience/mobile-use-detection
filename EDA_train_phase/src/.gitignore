@@ -3,4 +3,10 @@
 .jupyter/
 EDA/.ipynb_checkpoints/
 src/.ipynb_checkpoints/
-
+.ipynb_checkpoints/
+.jupyter/
+EDA_train_phase/.ipynb_checkpoints/
+EDA_train_phase/__pycache__/
+EDA_train_phase/src/logging_functions/__pycache__/
+EDA_train_phase/src/pipeline/__pycache__/
+EDA_train_phase/src/validation_classes/__pycache__/

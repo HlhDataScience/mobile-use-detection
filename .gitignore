@@ -6,3 +6,5 @@ EDA_train_phase/EDA/__pycache__/EDA_functions.cpython-311.pyc
 EDA_train_phase/.jupyter/
 EDA_train_phase/EDA/.ipynb_checkpoints/
 EDA_train_phase/src/.ipynb_checkpoints/
+/EDA_testing.ipynb
+/pipeline_testing.ipynb
