@@ -3,7 +3,7 @@ This module contains classes and functions for data validation, transformation, 
 
 - DataValidationConfig: A Pandera-based configuration class for validating incoming data and ensuring it adheres to an expected schema.
 - DataTransformationConfig: A Pydantic-based configuration class for managing transformation settings, including data file paths, model configurations, and feature engineering modes.
-- LazyTransformationPipeline: A class that orchestrates the data transformation pipeline using Polars' lazy API. This class handles tasks such as categorical encoding, splitting data into train/test sets, applying normalization or standardization, and performing feature engineering.
+- LazyTransformationPipeline: A class that orchestrates the data transformation pipeline using Polars' lazy API. This class handles tasks such as categorical encoding, splitting data into train_data/test_data sets, applying normalization or standardization, and performing feature engineering.
 
 The pipeline supports various machine learning models, including SVM, KNN, PCA, and tree-based models, and provides mechanisms for hyperparameter tuning using RandomSearch, GridSearch, or Bayesian Optimization.
 
@@ -32,7 +32,7 @@ from skopt import BayesSearchCV
 from src.logger import setup_logging
 
 # TODO TESTING THE CLASSES WITHIN THE NOTEBOOK
-# Changed the filepath to Path to take advantage of the trainconfig.yalm file
+# Changed the filepath to Path to take advantage of the train_config.yalm file
 # Created Hyperparameters tuning methods
 # Notebook Created
 # DataValidationConfig has been updated to use Pandera for schema validation.
@@ -42,7 +42,7 @@ from src.logger import setup_logging
 # CONSTANTS
 LOG_FILE = Path("./logs/application.log")
 setup_logging(LOG_FILE)
-initialize(config_path="./conf/transformation_config/")
+initialize(config_path="../conf/transformation_config/")
 HYDRA_CONFIG = compose(config_name="transformation_config")
 CONFIG_DICT = OmegaConf.to_object(HYDRA_CONFIG)
 
@@ -103,16 +103,16 @@ class DataTransformationConfig(BaseModel):
             feature_engineering_dict (Dict[str, Union[float, int, str]]): Dictionary for feature engineering.
             tuned_parameters (FilePath): Path to the tuned parameters json file created after feature engineering is performed.
             transformed_intermediate_df_path (Path): Path to the transformed intermediate data file.
-            transformed_train_df_path_x (Path): Path to save the transformed train X DataFrame.
-            transformed_train_df_path_y (Path): Path to save the transformed train y DataFrame.
-            transformed_test_df_path_x(Path): Path to save the transformed test X DataFrame.
-            transformed_test_df_path_y (Path): Path to save the transformed test y DataFrame.
+            transformed_train_df_path_x (Path): Path to save the transformed train_data X DataFrame.
+            transformed_train_df_path_y (Path): Path to save the transformed train_data y DataFrame.
+            transformed_test_df_path_x(Path): Path to save the transformed test_data X DataFrame.
+            transformed_test_df_path_y (Path): Path to save the transformed test_data y DataFrame.
             target_column (str): Name of the target column.
             feature_mode (Literal['RandomSearch', "GridSearch", "BayesianOptim"]): The feature selection mode, which can be one of 'RandomSearch', 'GridSearch', or 'BayesianOptim'.
-            transformed_normalized_df_path_train_x (Path): Path to save the transformed normalized train X DataFrame.
-            transformed_standardized_df_path_train_x (Path): Path to save the transformed standardized train X DataFrame.
-            transformed_normalized_df_path_test_x(Path): Path to save the transformed normalized test X DataFrame.
-            transformed_standardized_df_path_test_x (Path): Path to save the transformed standardized test X DataFrame.
+            transformed_normalized_df_path_train_x (Path): Path to save the transformed normalized train_data X DataFrame.
+            transformed_standardized_df_path_train_x (Path): Path to save the transformed standardized train_data X DataFrame.
+            transformed_normalized_df_path_test_x(Path): Path to save the transformed normalized test_data X DataFrame.
+            transformed_standardized_df_path_test_x (Path): Path to save the transformed standardized test_data X DataFrame.
 
     git
 
@@ -129,29 +129,29 @@ class DataTransformationConfig(BaseModel):
         ..., description="Name of transformed intermediate data file."
     )
     x_train_name: str = Field(
-        ..., description="Name of the train data file after splitting."
+        ..., description="Name of the train_data data file after splitting."
     )
     y_train_name: str = Field(
-        ..., description="Name of the train data file after splitting."
+        ..., description="Name of the train_data data file after splitting."
     )
     x_test_name: str = Field(
-        ..., description="Name of the test data file after splitting."
+        ..., description="Name of the test_data data file after splitting."
     )
     y_test_name: str = Field(
-        ..., description="Name of the test data file after splitting."
+        ..., description="Name of the test_data data file after splitting."
     )
 
     x_train_normalized: str = Field(
-        ..., description="Name of the train data file after normalization."
+        ..., description="Name of the train_data data file after normalization."
     )
     x_test_normalized: str = Field(
-        ..., description="Name of the test data file after normalization."
+        ..., description="Name of the test_data data file after normalization."
     )
     x_train_standardized: str = Field(
-        ..., description="Name of the train data file after standardization."
+        ..., description="Name of the train_data data file after standardization."
     )
     x_test_standardized: str = Field(
-        ..., description="Name of the test data file after standardization."
+        ..., description="Name of the test_data data file after standardization."
     )
     best_parameters_name: str = Field(
         ..., description="Name of tuned parameters json file created."
@@ -189,28 +189,29 @@ class DataTransformationConfig(BaseModel):
         ..., description="Path to save the transformed intermediate DataFrame"
     )
     transformed_test_df_path_y: Path = Field(
-        ..., description="Path to the transformed test data Y folder"
+        ..., description="Path to the transformed test_data data Y folder"
     )
     transformed_train_df_path_x: Path = Field(
-        ..., description="Path to the transformed train data X folder"
+        ..., description="Path to the transformed train_data data X folder"
     )
     transformed_train_df_path_y: Path = Field(
-        ..., description="Path to the transformed train data y folder"
+        ..., description="Path to the transformed train_data data y folder"
     )
     transformed_test_df_path_x: Path = Field(
-        ..., description="Path to the transformed test data X folder"
+        ..., description="Path to the transformed test_data data X folder"
     )
     transformed_normalized_df_path_train_x: Path = Field(
-        ..., description="Path to save the transformed normalized train DataFrame"
+        ..., description="Path to save the transformed normalized train_data DataFrame"
     )
     transformed_standardized_df_path_train_x: Path = Field(
-        ..., description="Path to save the transformed standardized train DataFrame"
+        ...,
+        description="Path to save the transformed standardized train_data DataFrame",
     )
     transformed_normalized_df_path_test_x: Path = Field(
-        ..., description="Path to save the transformed normalized test DataFrame"
+        ..., description="Path to save the transformed normalized test_data DataFrame"
     )
     transformed_standardized_df_path_test_x: Path = Field(
-        ..., description="Path to save the transformed standardized test DataFrame"
+        ..., description="Path to save the transformed standardized test_data DataFrame"
     )
     target_column: str = Field(..., description="Name of the target column")
     feature_mode: Literal["RandomSearch", "GridSearch", "BayesianOptim"] = Field(

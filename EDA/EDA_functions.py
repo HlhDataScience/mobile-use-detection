@@ -20,8 +20,8 @@ from src.transformation_pipeline import DataValidationConfig
 # CONSTANTS
 LOG_FILE = Path("./logs/EDA.log")
 setup_logging(LOG_FILE)
-initialize(config_path="./dataconfig/")
-HYDRA_CONFIG = compose(config_name="dataconfig")
+initialize(config_path="../conf/Eda_config/")
+HYDRA_CONFIG = compose(config_name="Eda_config")
 CONFIG_DICT = OmegaConf.to_object(HYDRA_CONFIG)
 
 
