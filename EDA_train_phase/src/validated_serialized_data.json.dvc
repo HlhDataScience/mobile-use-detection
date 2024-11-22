@@ -1,5 +1,0 @@
-outs:
-- md5: b3ea61e6eeee944645dba7aaea35344d
-  size: 192688
-  hash: md5
-  path: validated_serialized_data.json

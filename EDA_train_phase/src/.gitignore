@@ -1,5 +1,3 @@
-/json_schema.json
-/validated_serialized_data.json
 /EDA_train_phase/testing.ipynb
 /__pycache__/
 .jupyter/
