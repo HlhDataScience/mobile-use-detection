@@ -1,3 +1,5 @@
+"""Module to provide logging functionality"""
+
 import logging
 from pathlib import Path
 
