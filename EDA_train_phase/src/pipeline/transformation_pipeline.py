@@ -24,8 +24,8 @@ from omegaconf import DictConfig, OmegaConf
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from skopt import BayesSearchCV
 
-from src.logging_functions.logger import setup_logging
-from src.validation_classes.validation_configurations import (
+from EDA_train_phase.src.logging_functions.logger import setup_logging
+from EDA_train_phase.src.validation_classes.validation_configurations import (
     DataTransformationConfig,
     DataValidationConfig,
 )

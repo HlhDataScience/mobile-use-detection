@@ -9,6 +9,7 @@ Modules used:
 - Pydantic for configuration management and validation
 
 """
+
 from pathlib import Path
 from typing import Dict, List, Literal, Union
 
@@ -143,11 +144,11 @@ class DataTransformationConfig(BaseModel):
 
     standardized_df: bool = Field(..., description="Whether to standardize the data")
 
-    feature_engineering_dict: Dict[
-        str, List[float | int | str] | float | int | str
-    ] = Field(
-        ...,
-        description="Feature engineering dictionary specifying transformations for columns",
+    feature_engineering_dict: Dict[str, List[float | int | str] | float | int | str] = (
+        Field(
+            ...,
+            description="Feature engineering dictionary specifying transformations for columns",
+        )
     )
 
     tuned_parameters: Path = Field(

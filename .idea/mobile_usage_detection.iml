@@ -2,10 +2,10 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/.dvc/cache" />
-      <excludeFolder url="file://$MODULE_DIR$/.dvc/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
-      <excludeFolder url="file://$MODULE_DIR$/data/rawdata" />
+      <excludeFolder url="file://$MODULE_DIR$/EDA_train_phase/.dvc/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/EDA_train_phase/.dvc/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/EDA_train_phase/data/rawdata" />
     </content>
     <orderEntry type="jdk" jdkName="Poetry (mobile_usage_detection)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

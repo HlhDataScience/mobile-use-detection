@@ -14,11 +14,13 @@ from hydra import compose, initialize
 from omegaconf import DictConfig, OmegaConf
 from pydantic import BaseModel, Field, FilePath
 
-from src.logging_functions.logger import setup_logging
-from src.pipeline.transformation_pipeline import DataValidationConfig
+from EDA_train_phase.src.logging_functions.logger import setup_logging
+from EDA_train_phase.src.pipeline.transformation_pipeline import (
+    DataValidationConfig,
+)
 
 # CONSTANTS
-LOG_FILE = Path("./logs/EDA.log")
+LOG_FILE = Path("logs/EDA.log")
 setup_logging(LOG_FILE)
 initialize(config_path="../conf/Eda_config/")
 HYDRA_CONFIG = compose(config_name="Eda_config")
