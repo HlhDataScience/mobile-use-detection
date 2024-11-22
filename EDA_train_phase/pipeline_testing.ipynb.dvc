@@ -1,0 +1,5 @@
+outs:
+- md5: c2b7548516e355a5f5a9d751d382768e
+  size: 8391
+  hash: md5
+  path: pipeline_testing.ipynb
