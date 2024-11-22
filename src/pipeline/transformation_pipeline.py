@@ -10,10 +10,12 @@ Modules used:
 - Scikit-learn for hyperparameter tuning
 - Skopt for Bayesian optimization
 """
+
 import json
 import logging
 from pathlib import Path
 from typing import List, Tuple
+
 import pandera.polars as pa
 import polars as pl
 import polars.selectors as cs
@@ -21,11 +23,14 @@ from hydra import compose, initialize
 from omegaconf import DictConfig, OmegaConf
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from skopt import BayesSearchCV
+
 from src.logging_functions.logger import setup_logging
 from src.validation_classes.validation_configurations import (
-    DataTransformationConfig, DataValidationConfig)
+    DataTransformationConfig,
+    DataValidationConfig,
+)
 
-# TODO TESTING THE CLASSES WITHIN THE NOTEBOOK
+# TODO TESTING THE CLASSES WITHIN THE NOTEBOOK test if precommit works
 # Changed the filepath to Path to take advantage of the train_config.yalm file
 # Created Hyperparameters tuning methods
 # Notebook Created

@@ -32,3 +32,9 @@ interrogate = "^1.5.0"  # Add interrogate to match the version from the pre-comm
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+atomic = true
+profile = "black"
+line_length = 79
+skip_gitignore = true
