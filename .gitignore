@@ -4,3 +4,6 @@ EDA/__pycache__/EDA_functions.cpython-311.pyc
 /rawdata
 .idea
 /src/__pycache__/
+.jupyter/
+EDA/.ipynb_checkpoints/
+src/.ipynb_checkpoints/
