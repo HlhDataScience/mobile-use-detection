@@ -5,6 +5,7 @@
 This repository is a small sample of how we can leverage MLOps workflow with simple tools and good results. We use GitHub and dvc to version control both our code and our data. We also use pydantic to ensure good data input serialization (for EDA and training steps) as well as backend with FastAPI. Finally, we have a gradio powered app and a Docker image to use it in cloud computing.
 
 ## Done related to EDA_train_phase
+  - Refactored the whole directory to work with Hydra general config
   - We have performed the EDA analysis
   - We have completed the data validation & serialization classes
   - We have completed the optim search models within the LazyTransformationPipeline
@@ -23,8 +24,7 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
 
 
 ## Done related to production_phase
-  - Refactored the whole project to work with Hydra general config
-  - Refactored structure of the project to work with the 2 main phases of MLOps
+  - Refactored structure of the project to work with the 2 development and production phases of MLOps
 
 ## toDOs related to production_phase
 
