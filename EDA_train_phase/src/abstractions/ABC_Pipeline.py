@@ -47,45 +47,53 @@ import polars as pl
 import pydantic
 from pandera import polars
 
+from EDA_train_phase.src.abstractions.ABC_validations import (
+    IConfigModel,
+    IConfigurationLoader,
+    IValidationModel,
+)
+
 
 class BasicPipeline(ABC):
     """
     Abstract base class for defining data pipelines with built-in support for validation
-    and configuration management using Hydra, Pydantic, and Pandera.
+    and configuration management using abstraction layers for various libraries.
 
     This class is designed to:
-    - Validate input dataframes using Pandera's validation models.
-    - Parse and validate pipeline configurations using Pydantic models.
-    - Automate the management of configurations through Hydra (e.g., YAML files).
+    - Validate input dataframes using an abstraction of validation models.
+    - Parse and validate pipeline configurations using an abstraction of configuration models.
+    - Automate the management of configurations through an abstraction of configuration loaders.
     - Enforce a structured and extensible workflow through abstract methods.
 
     Constructor:
     -------------
     __init__(
-        validation_model: Union[pandera.polars.DataFrameModel, pandera.DataFrameModel],
-        config_model: type[pydantic.BaseModel],
-        config_data: omegaconf.DictConfig,
+        validation_model: IValidationModel,
+        config_model: IConfigModel,
+        config_loader: IConfigurationLoader,
+        config_path: str,
         apply_custom_function: bool
     )
 
     Args:
     -----
-    - validation_model (Union[pandera.polars.DataFrameModel, pandera.DataFrameModel]):
-        A Pandera model for validating input dataframes.
-    - config_model (type[pydantic.BaseModel]):
-        A Pydantic model subclass to parse and validate pipeline configuration.
-    - config_data (omegaconf.DictConfig):
-        Configuration data loaded via Hydra or equivalent YAML management tool.
-        **Note**: This must include a field `original_datapath` specifying the dataset path.
+    - validation_model (IValidationModel):
+        An abstraction for validating input dataframes.
+    - config_model (IConfigModel):
+        An abstraction for parsing and validating pipeline configuration.
+    - config_loader (IConfigurationLoader):
+        An abstraction for loading configuration data from specified paths.
+    - config_path (str):
+        The path to the configuration file to be loaded.
     - apply_custom_function (bool):
         Determines whether to use a custom validation function (`custom_validate`).
 
     Key Features:
     -------------
     - **Built-in Validation**: Ensures configuration validity and data integrity
-      through Pydantic and Pandera, reducing manual errors.
-    - **Hydra Integration**: Simplifies configuration handling for scalable and
-      reproducible workflows.
+      through the use of validation abstractions, reducing manual errors.
+    - **Flexible Configuration Handling**: Simplifies configuration handling for scalable and
+      reproducible workflows using configuration abstractions.
     - **Extensibility**: Abstract methods define a flexible framework for custom
       pipeline logic, enabling developers to implement transformations, scaling,
       and other operations.
@@ -98,10 +106,10 @@ class BasicPipeline(ABC):
     --------------------
     - **Error Handling and Logging**: Comprehensive error handling ensures that the
       pipeline fails gracefully during validation and configuration parsing.
-    - **Reproducibility and Scalability**: Using configuration-driven design (Hydra
-      and Pydantic) allows the pipeline to adapt to new workflows with minimal code changes.
-    - **Integration Points**: The class is compatible with libraries like Polars, Pandera,
-      and Hydra, making it easy to integrate with existing data processing tools.
+    - **Reproducibility and Scalability**: Using configuration-driven design allows the pipeline
+      to adapt to new workflows with minimal code changes.
+    - **Integration Points**: The class is compatible with libraries through abstractions,
+      making it easy to integrate with existing data processing tools.
     - **Target Audience**: Designed for data scientists and ML engineers seeking
       validation, configuration management, and scalable workflows.
 
@@ -117,7 +125,8 @@ class BasicPipeline(ABC):
     - `_apply_feature_search`: Applying feature search techniques.
     - `apply_feature_engineering`: Implementing feature engineering.
 
-    WARNING: calling these methods without implementation will raise a NotImplementedError.
+    WARNING: Calling these methods without implementation will raise a NotImplementedError.
+
     Abstract Methods:
     -----------------
     Subclasses must implement the following:
@@ -127,22 +136,19 @@ class BasicPipeline(ABC):
 
     def __init__(
         self,
-        validation_model: Union[pandera.polars.DataFrameModel | pandera.DataFrameModel],
-        config_model: type[pydantic.BaseModel],
-        config_data: omegaconf.DictConfig,
+        validation_model: IValidationModel,
+        config_model: IConfigModel,
+        config_loader: IConfigurationLoader,
+        config_path: str,
         apply_custom_function: bool,
     ):
-
-        if not issubclass(config_model, pydantic.BaseModel):
-            raise TypeError("'Config' must be a subclass of 'pydantic.BaseModel'")
-
         self.validation_model = validation_model
         self.config_model = config_model
-        self.config_data = config_data
+        self.config_data = config_loader.load(config_path)
         self.apply_custom_function = apply_custom_function
 
         try:
-            self.valid_config = self.config_model(**self.config_data)
+            self.valid_config = self.config_model.parse(self.config_data)
             logging.info(
                 "Data Pipeline configuration was successfully loaded and validated"
             )
@@ -155,16 +161,16 @@ class BasicPipeline(ABC):
                 logging.info("Validation of the dataframe was successful!")
             except ValueError as e:
                 logging.error(f"The validation failed at:\n{e}")
-
         else:
             try:
                 self._validate_dataframe()
-                logging.info("Validation of the dataframe was sucessful!")
+                logging.info("Validation of the dataframe was successful!")
             except ValueError as e:
                 logging.error(f"The validation of the Dataframe failed at:\n{e}")
 
     def _validate_dataframe(self) -> None:
-        """Default implementation of the pandera.polars validation using csv."""
+        """Default implementation of the pandera validation."""
+        # Assuming `self.valid_config.original_datapath` is still valid.
         pl.scan_csv(self.valid_config.original_datapath).pipe(
             self.validation_model.validate
         )

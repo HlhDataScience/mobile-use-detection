@@ -5,7 +5,8 @@
 This repository is a small sample of how we can leverage MLOps workflow with simple tools and good results. We use GitHub and dvc to version control both our code and our data. We also use pydantic to ensure good data input serialization (for EDA and training steps) as well as backend with FastAPI. Finally, we have a gradio powered app and a Docker image to use it in cloud computing.
 
 ## Done related to EDA_train_phase
-  - Created and ABC  Pipeline classs to be aligned with SOLID principles.
+  - Created ABC validation classes and its interfaces for data and configuration validation
+  - Created and ABC Pipeline class to be aligned with SOLID principles.
   - Refactored the whole directory to work with Hydra general config
   - We have performed the EDA analysis
   - We have completed the data validation & serialization classes
