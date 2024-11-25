@@ -5,6 +5,7 @@
 This repository is a small sample of how we can leverage MLOps workflow with simple tools and good results. We use GitHub and dvc to version control both our code and our data. We also use pydantic to ensure good data input serialization (for EDA and training steps) as well as backend with FastAPI. Finally, we have a gradio powered app and a Docker image to use it in cloud computing.
 
 ## Done related to EDA_train_phase
+  - Created and ABC  Pipeline classs to be aligned with SOLID principles.
   - Refactored the whole directory to work with Hydra general config
   - We have performed the EDA analysis
   - We have completed the data validation & serialization classes
@@ -17,7 +18,8 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
 
 
 ## TODOs related to train section
-  - We need to do test 2: Check the run method
+  - We need to do test 2: Check the run method of the LazyTransformationPipeline
+  - We need to change the class to be a subclass of BasicPipeline and do test 2 again.
   - We need to complete the train.py and generate the Makefiles to automate the process.
   - We need to create a deviating branch(or several) to test other classic machine learning models.
   - Suggested test duplicating the data until we reach 3 million rows. We can use this as stress test for speed in the data pipeline
