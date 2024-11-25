@@ -2,7 +2,7 @@
 # Load the data
 
 
-original_datapath: "/home/tensorboard/PycharmProjects/mobile_usage_detection/rawdata/user_behavior_dataset.csv"
+original_datapath: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/rawdata/user_behavior_dataset.csv"
 
 # File naming
 mapping_name: "categorical_mapping.json"
@@ -18,8 +18,8 @@ x_test_standardized: "X_test_standardized.csv"
 best_parameters_name: "Best_parameters_model_"
 # Transformations
 categorical_columns_to_transform:
-  - "Device Model"
-  - "Operating System"
+  - "DeviceModel"
+  - "OperatingSystem"
   - "Gender"
 
 columns_to_drop:

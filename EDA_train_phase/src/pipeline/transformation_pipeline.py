@@ -23,8 +23,9 @@ from hydra import compose, initialize
 from omegaconf import DictConfig, OmegaConf
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from skopt import BayesSearchCV
+from torch.utils.hipify.hipify_python import mapping
 
-from EDA_train_phase.src import hydra_config
+from EDA_train_phase.src.hydra_config import load_hydra_config_from_root
 from EDA_train_phase.src.logging_functions.logger import setup_logging
 from EDA_train_phase.src.validation_classes.validation_configurations import (
     DataTransformationConfig,
@@ -42,10 +43,9 @@ from EDA_train_phase.src.validation_classes.validation_configurations import (
 # CONSTANTS
 LOG_FILE = Path("../logs/transformation_pipeline.log")
 setup_logging(LOG_FILE)
-CONFIG_PATH = Path(
-    "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/conf/config.yaml"
-)
-CONFIG_ROOT = hydra_config(CONFIG_PATH)
+CONFIG_PATH = "../conf"
+
+CONFIG_ROOT = load_hydra_config_from_root(CONFIG_PATH)
 
 
 class LazyTransformationPipeline:
@@ -112,20 +112,24 @@ class LazyTransformationPipeline:
         mappings = {}
         for col in category_columns:
             unique_values = lf.select(pl.col(col).unique()).collect()
-            mapping = {
-                value: idx for idx, value in enumerate(unique_values.to_series())
-            }
-            mappings[col] = mapping
-            lf = lf.with_columns(
-                pl.col(col).map_elements(mapping).alias(f"{col}_encoded")
+            mapped = {value: idx for idx, value in enumerate(unique_values.to_series())}
+            mappings[col] = mapped
+
+        lf = (
+            lf.with_columns(
+                [
+                    pl.col(col)
+                    .replace(mappings[col])
+                    .cast(pl.UInt8)
+                    .alias(f"{col}_encoded")
+                    for col in category_columns
+                ]
             )
-
-        lf = lf.drop(category_columns + self.config.columns_to_drop)
-
-        # Save the transformed LazyFrame
-        lf.sink_csv(
-            self.config.transformed_intermediate_df_path
-            / self.config.intermediate_df_name
+            .drop(category_columns + self.config.columns_to_drop)
+            .sink_csv(
+                self.config.transformed_intermediate_df_path
+                / self.config.intermediate_df_name
+            )
         )
 
         with open(self.config.mapping_file_path / self.config.mapping_name, "w") as f:
