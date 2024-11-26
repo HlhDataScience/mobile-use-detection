@@ -9,7 +9,6 @@ Modules used:
 - Polars for efficient data manipulation and transformation
 - Scikit-learn for hyperparameter tuning
 - Skopt for Bayesian optimization
-
 """
 
 import json
@@ -25,7 +24,6 @@ from sklearn.svm import SVC
 from skopt import BayesSearchCV
 
 from EDA_train_phase.src.abstractions.ABC_Pipeline import BasicPipeline
-from EDA_train_phase.src.hydra_config import load_hydra_config_from_root
 from EDA_train_phase.src.logging_functions.logger import setup_logging
 from EDA_train_phase.src.validation_classes.validation_configurations import (
     DataTransformationConfig,
