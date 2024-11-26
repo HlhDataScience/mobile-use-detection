@@ -61,18 +61,20 @@ class DataTransformationConfig(BaseModel):
             y_train_name (str): Name of training data file.
             x_test_name (str): Name of testing data file.
             y_test_name (str): Name of testing data file.
-            x_train_normalized (str): Name of training data file.
-            x_test_normalized (str): Name of testing data file.
-            x_train_standardized (str): Name of training data file.
-            x_test_standardized (str): Name of testing data file.
+            x_train_normalized_name (str): Name of training data file.
+            x_test_normalized_name (str): Name of testing data file.
+            x_train_standardized_name (str): Name of training data file.
+            x_test_standardized_name (str): Name of testing data file.
             categorical_columns_to_transform (List[str]): Columns to transform from categorical to numeric.
             columns_to_drop (List[str]): Columns to drop from the DataFrame.
             mapping_file_path (Path): Path to the mapping file.
             ML_type (Literal[ "SVM","KNN","PCA","Gradient","Tree-Based","Naive"]): Model type to perform normalization just into numerical values or into categorical as well,
             normalize_df (bool): Whether to normalize the DataFrame.
             standardized_df (bool): Whether to standardize the DataFrame.
+            number_iterations (int): Number of iterations performed by the cross validation model.
+            cross_validation: (int): Number of cross validators.
             feature_engineering_dict (Dict[str, Union[float, int, str]]): Dictionary for feature engineering.
-            tuned_parameters (FilePath): Path to the tuned parameters json file created after feature engineering is performed.
+            tuned_parameters_path (Path): Path to the tuned parameters json file created after feature engineering is performed.
             transformed_intermediate_df_path (Path): Path to the transformed intermediate data file.
             transformed_train_df_path_x (Path): Path to save the transformed train_data X DataFrame.
             transformed_train_df_path_y (Path): Path to save the transformed train_data y DataFrame.
@@ -112,16 +114,16 @@ class DataTransformationConfig(BaseModel):
         ..., description="Name of the test_data data file after splitting."
     )
 
-    x_train_normalized: str = Field(
+    x_train_normalized_name: str = Field(
         ..., description="Name of the train_data data file after normalization."
     )
-    x_test_normalized: str = Field(
+    x_test_normalized_name: str = Field(
         ..., description="Name of the test_data data file after normalization."
     )
-    x_train_standardized: str = Field(
+    x_train_standardized_name: str = Field(
         ..., description="Name of the train_data data file after standardization."
     )
-    x_test_standardized: str = Field(
+    x_test_standardized_name: str = Field(
         ..., description="Name of the test_data data file after standardization."
     )
     best_parameters_name: str = Field(
@@ -144,6 +146,15 @@ class DataTransformationConfig(BaseModel):
 
     standardized_df: bool = Field(..., description="Whether to standardize the data")
 
+    number_iterations: int = (
+        Field(
+            ...,
+            description="Number of iterations performed by the cross validation model.",
+        ),
+    )
+
+    cross_validation: int = Field(..., description="Number of cross validators")
+
     feature_engineering_dict: Dict[str, List[float | int | str] | float | int | str] = (
         Field(
             ...,
@@ -151,7 +162,7 @@ class DataTransformationConfig(BaseModel):
         )
     )
 
-    tuned_parameters: Path = Field(
+    tuned_parameters_path: Path = Field(
         ...,
         description="Path to the tuned parameters json file created after feature engineering is performed.",
     )

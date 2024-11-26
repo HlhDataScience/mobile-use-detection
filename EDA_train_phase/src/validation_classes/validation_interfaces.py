@@ -6,6 +6,9 @@ import omegaconf
 import pandera
 import pandera.polars
 import pydantic
+from hydra import compose, initialize
+from hydra.core.global_hydra import GlobalHydra
+from omegaconf import DictConfig, OmegaConf
 
 from EDA_train_phase.src.abstractions.ABC_validations import (
     IConfigModel,
@@ -39,8 +42,15 @@ class PydanticConfigModel(IConfigModel):
         return self.config_model(**config_data)
 
 
-class OmegaConfLoader(IConfigurationLoader):
-    """wrapper for OmegaConf"""
+class HydraConfLoader(IConfigurationLoader):
+    """wrapper for OmegaConf using Hydra"""
 
-    def load(self, config_path: str) -> Any:
-        return omegaconf.OmegaConf.load(config_path)
+    def load(self, config_path: str, config_name: str) -> Any:
+        if GlobalHydra().is_initialized():
+            GlobalHydra.instance().clear()
+
+        initialize(config_path=config_path, job_name="load_config")
+
+        hydra_config = compose(config_name=config_name)
+        config_dict = OmegaConf.to_object(hydra_config)
+        return config_dict

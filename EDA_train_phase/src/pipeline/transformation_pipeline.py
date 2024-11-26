@@ -17,9 +17,11 @@ import logging
 from pathlib import Path
 from typing import List, Tuple
 
+import numpy as np
 import polars as pl
 import polars.selectors as cs
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn.svm import SVC
 from skopt import BayesSearchCV
 
 from EDA_train_phase.src.abstractions.ABC_Pipeline import BasicPipeline
@@ -30,7 +32,7 @@ from EDA_train_phase.src.validation_classes.validation_configurations import (
     DataValidationConfig,
 )
 from EDA_train_phase.src.validation_classes.validation_interfaces import (
-    OmegaConfLoader,
+    HydraConfLoader,
     PanderaValidationModel,
     PydanticConfigModel,
 )
@@ -38,14 +40,12 @@ from EDA_train_phase.src.validation_classes.validation_interfaces import (
 # CONSTANTS
 LOG_FILE = Path("../logs/transformation_pipeline.log")
 setup_logging(LOG_FILE)
-CONFIG_PATH = "../conf"
-
-CONFIG_ROOT = load_hydra_config_from_root(CONFIG_PATH)
+CONFIG_PATH = "../../conf"
 
 # INTERFACES LOADED
 vali_model = PanderaValidationModel(validation_model=DataValidationConfig)
 confi_model = PydanticConfigModel(config_model=DataTransformationConfig)
-omega_loader_conf = OmegaConfLoader()
+hydra_loader_conf = HydraConfLoader()
 
 
 class LazyTransformationPipeline(BasicPipeline):
@@ -67,9 +67,12 @@ class LazyTransformationPipeline(BasicPipeline):
         self,
         validation_model: PanderaValidationModel = vali_model,
         config_model: PydanticConfigModel = confi_model,
-        config_loader: OmegaConfLoader = omega_loader_conf,
-        config_path: str = CONFIG_ROOT["transformation_config"],
+        config_loader: HydraConfLoader = hydra_loader_conf,
+        config_path: str = CONFIG_PATH,
+        config_name: str = "config",
+        config_section: str = "transformation_config",
         apply_custom_function: bool = False,
+        model=SVC(),
     ):
         """
         Initializes the LazyTransformationPipeline subclass with default super configurations for data transformation,
@@ -84,9 +87,11 @@ class LazyTransformationPipeline(BasicPipeline):
             config_model=config_model,
             config_loader=config_loader,
             config_path=config_path,
+            config_name=config_name,
+            config_section=config_section,
             apply_custom_function=apply_custom_function,
         )
-        self.model = self.valid_config.ML_type
+        self.model = model
         self.search_class = self.valid_config.feature_mode
 
     def categorical_encoding(self) -> None:
@@ -118,13 +123,14 @@ class LazyTransformationPipeline(BasicPipeline):
                 [
                     pl.col(col)
                     .replace(mappings[col])
-                    .cast(pl.UInt8)
+                    .cast(pl.Int32)
                     .alias(f"{col}_encoded")
                     for col in category_columns
                 ]
             )
             .drop(category_columns + self.valid_config.columns_to_drop)
-            .sink_csv(
+            .collect()
+            .write_csv(
                 self.valid_config.transformed_intermediate_df_path
                 / self.valid_config.intermediate_df_name
             )
@@ -162,7 +168,10 @@ class LazyTransformationPipeline(BasicPipeline):
             raise ValueError("train_fraction must be between 0 and 1.")
 
         lazy_df = (
-            pl.scan_csv(self.valid_config.transformed_intermediate_df_path)
+            pl.scan_csv(
+                self.valid_config.transformed_intermediate_df_path
+                / self.valid_config.intermediate_df_name
+            )
             .with_columns(pl.arange(0, pl.count()).alias("row_nr"))
             .with_columns(pl.all().shuffle(seed=random_state))
         )
@@ -178,26 +187,21 @@ class LazyTransformationPipeline(BasicPipeline):
         x_test = test_lazy_df.drop([self.valid_config.target_column, "row_nr"])
         y_train = train_lazy_df.select(self.valid_config.target_column)
         y_test = test_lazy_df.select(self.valid_config.target_column)
-
-        x_train.sink_csv(
+        x_train.collect().write_csv(
             self.valid_config.transformed_train_df_path_x
             / self.valid_config.x_train_name,
-            index=False,
         )
-        x_test.sink_csv(
+        x_test.collect().write_csv(
             self.valid_config.transformed_test_df_path_x
             / self.valid_config.x_test_name,
-            index=False,
         )
-        y_train.sink_csv(
+        y_train.collect().write_csv(
             self.valid_config.transformed_train_df_path_y
             / self.valid_config.y_train_name,
-            index=False,
         )
-        y_test.sink_csv(
+        y_test.collect().write_csv(
             self.valid_config.transformed_test_df_path_y
             / self.valid_config.y_test_name,
-            index=False,
         )
 
     def custom_validate(self):
@@ -215,16 +219,22 @@ class LazyTransformationPipeline(BasicPipeline):
         )
 
         # Create variables
-        train_categorical_columns = lazy_df_train.select(
-            cs.contains("_encoded")
-        ).columns
-        train_continuous_columns = lazy_df_train.select(
-            cs.exclude(cs.contains("_encoded"))
-        ).columns
-        test_categorical_columns = lazy_df_test.select(cs.contains("_encoded")).columns
-        test_continuous_columns = lazy_df_test.select(
-            cs.exclude(cs.contains("_encoded"))
-        ).columns
+        train_categorical_columns = (
+            lazy_df_train.select(cs.contains("_encoded")).collect_schema().names()
+        )
+        train_continuous_columns = (
+            lazy_df_train.select(cs.exclude(cs.contains("_encoded")))
+            .collect_schema()
+            .names()
+        )
+        test_categorical_columns = (
+            lazy_df_test.select(cs.contains("_encoded")).collect_schema().names()
+        )
+        test_continuous_columns = (
+            lazy_df_test.select(cs.exclude(cs.contains("_encoded")))
+            .collect_schema()
+            .names()
+        )
         train_all_columns = train_categorical_columns + train_continuous_columns
         test_all_columns = test_categorical_columns + test_continuous_columns
 
@@ -246,81 +256,88 @@ class LazyTransformationPipeline(BasicPipeline):
         """
         # Specify models that will normalize the categorical columns already converted
         normalize_categorical = ["SVM", "KNN", "PCA"]
-
-        # Read data lazily
-        lazy_df_train = pl.scan_csv(
-            self.valid_config.transformed_train_df_path_x
-            / self.valid_config.x_train_name
-        )
-        lazy_df_test = pl.scan_csv(
-            self.valid_config.transformed_test_df_path_x / self.valid_config.x_test_name
-        )
-
-        (
-            train_continuous_columns,
-            test_continuous_columns,
-            train_all_columns,
-            test_all_columns,
-        ) = self.scaling()
-        # Check if the model is distance, gradient, or scale-sensitive
-        if self.valid_config.model_type in normalize_categorical:
-            logging.info(
-                f"Model type '{self.valid_config.model_type}' detected. Normalizing categorical columns as well."
+        # Raise error if the method is not specified in the transformation cofig.
+        if not self.valid_config.normalize_df:
+            logging.error(
+                f"The value of normalized_df is {self.valid_config.normalize_df} You need to set True to use it"
             )
-
-            # Normalize categorical encoded columns (if using SVM, KNN, or PCA)
-            train_normalized = lazy_df_train.select(
-                [
-                    (pl.col(col) - pl.col(col).min())
-                    / (pl.col(col).max() - pl.col(col).min())
-                    for col in train_all_columns
-                ]
-            )
-            test_normalized = lazy_df_test.select(
-                [
-                    (pl.col(col) - pl.col(col).min())
-                    / (pl.col(col).max() - pl.col(col).min())
-                    for col in test_all_columns
-                ]
-            )
+            raise ValueError
         else:
-            logging.info(
-                f"Model type '{self.valid_config.model_type}' detected. Skipping normalization for categorical columns."
+            # Read data lazily
+            lazy_df_train = pl.scan_csv(
+                self.valid_config.transformed_train_df_path_x
+                / self.valid_config.x_train_name
             )
-            train_normalized = lazy_df_train.select(
-                [
-                    (pl.col(col) - pl.col(col).min())
-                    / (pl.col(col).max() - pl.col(col).min())
-                    for col in train_continuous_columns
-                ]
-                + [
-                    pl.col(c)
-                    for c in lazy_df_train.columns
-                    if c not in train_continuous_columns
-                ]
-            )
-            test_normalized = lazy_df_test.select(
-                [
-                    (pl.col(col) - pl.col(col).min())
-                    / (pl.col(col).max() - pl.col(col).min())
-                    for col in test_continuous_columns
-                ]
-                + [
-                    pl.col(c)
-                    for c in lazy_df_test.columns
-                    if c not in test_continuous_columns
-                ]
+            lazy_df_test = pl.scan_csv(
+                self.valid_config.transformed_test_df_path_x
+                / self.valid_config.x_test_name
             )
 
-        # Save the normalized dataset
-        train_normalized.sink_csv(
-            self.valid_config.transformed_normalized_df_path_train_x
-            / self.valid_config.x_train_normalized
-        )
-        test_normalized.sink_csv(
-            self.valid_config.transformed_normalized_df_path_test_x
-            / self.valid_config.x_test_normalized
-        )
+            (
+                train_continuous_columns,
+                test_continuous_columns,
+                train_all_columns,
+                test_all_columns,
+            ) = self.scaling()
+            # Check if the model is distance, gradient, or scale-sensitive
+            if self.valid_config.ML_type in normalize_categorical:
+                logging.info(
+                    f"Model type '{self.valid_config.ML_type}' detected. Normalizing categorical columns as well."
+                )
+
+                # Normalize categorical encoded columns (if using SVM, KNN, or PCA)
+                train_normalized = lazy_df_train.select(
+                    [
+                        (pl.col(col) - pl.col(col).min())
+                        / (pl.col(col).max() - pl.col(col).min())
+                        for col in train_all_columns
+                    ]
+                )
+                test_normalized = lazy_df_test.select(
+                    [
+                        (pl.col(col) - pl.col(col).min())
+                        / (pl.col(col).max() - pl.col(col).min())
+                        for col in test_all_columns
+                    ]
+                )
+            else:
+                logging.info(
+                    f"Model type '{self.valid_config.ML_type}' detected. Skipping normalization for categorical columns."
+                )
+                train_normalized = lazy_df_train.select(
+                    [
+                        (pl.col(col) - pl.col(col).min())
+                        / (pl.col(col).max() - pl.col(col).min())
+                        for col in train_continuous_columns
+                    ]
+                    + [
+                        pl.col(c).cast(pl.Float32)
+                        for c in lazy_df_train.columns
+                        if c not in train_continuous_columns
+                    ]
+                )
+                test_normalized = lazy_df_test.select(
+                    [
+                        (pl.col(col) - pl.col(col).min())
+                        / (pl.col(col).max() - pl.col(col).min())
+                        for col in train_continuous_columns
+                    ]
+                    + [
+                        pl.col(c)
+                        for c in lazy_df_test.columns
+                        if c not in test_continuous_columns
+                    ]
+                )
+
+            # Save the normalized dataset
+            train_normalized.cast(pl.Float32).callect().write_csv(
+                self.valid_config.transformed_normalized_df_path_train_x
+                / self.valid_config.x_train_normalized_name
+            )
+            test_normalized.cast(pl.Float32).callect().write_csv(
+                self.valid_config.transformed_normalized_df_path_test_x
+                / self.valid_config.x_test_normalized_name
+            )
 
     def standardize(self) -> None:
         """
@@ -334,76 +351,84 @@ class LazyTransformationPipeline(BasicPipeline):
         # Specify models that will standardize the categorical columns already converted
         standardize_categorical: list[str] = ["SVM", "KNN", "PCA"]
 
-        # Read data lazily
-        lazy_df_train = pl.scan_csv(
-            self.valid_config.transformed_train_df_path_x
-            / self.valid_config.x_train_name
-        )
-        lazy_df_test = pl.scan_csv(
-            self.valid_config.transformed_test_df_path_x / self.valid_config.x_test_name
-        )
-        (
-            train_continuous_columns,
-            test_continuous_columns,
-            train_all_columns,
-            test_all_columns,
-        ) = self.scaling()
-
-        # Check if the model is distance, gradient, or scale-sensitive
-        if self.valid_config.model_type in standardize_categorical:
-            logging.info(
-                f"Model type '{self.valid_config.model_type}' detected. Normalizing categorical columns as well."
+        # Raise error if the method is not specified in the transformation cofig.
+        if not self.valid_config.standardized_df:
+            logging.error(
+                f"The value of standardized_df is {self.valid_config.standardized_df} You need to set True to use it"
             )
-
-            # Normalize categorical encoded columns (if using SVM, KNN, or PCA)
-            train_standardized = lazy_df_train.select(
-                [
-                    (pl.col(col) - pl.col(col).mean()) / pl.col(col).std()
-                    for col in train_all_columns
-                ]
-            )
-            test_standardized = lazy_df_test.select(
-                [
-                    (pl.col(col) - pl.col(col).mean()) / pl.col(col).std()
-                    for col in test_all_columns
-                ]
-            )
+            raise ValueError
         else:
-            logging.info(
-                f"Model type '{self.valid_config.model_type}' detected. Skipping normalization for categorical columns."
+            # Read data lazily
+            lazy_df_train = pl.scan_csv(
+                self.valid_config.transformed_train_df_path_x
+                / self.valid_config.x_train_name
             )
-            train_standardized = lazy_df_train.select(
-                [
-                    (pl.col(col) - pl.col(col).mean()) / pl.col(col).std()
-                    for col in train_continuous_columns
-                ]
-                + [
-                    pl.col(c)
-                    for c in lazy_df_train.columns
-                    if c not in train_continuous_columns
-                ]
+            lazy_df_test = pl.scan_csv(
+                self.valid_config.transformed_test_df_path_x
+                / self.valid_config.x_test_name
             )
-            test_standardized = lazy_df_test.select(
-                [
-                    (pl.col(col) - pl.col(col).min()) / pl.col(col).std()
-                    for col in test_continuous_columns
-                ]
-                + [
-                    pl.col(c)
-                    for c in lazy_df_test.columns
-                    if c not in test_continuous_columns
-                ]
-            )
+            (
+                train_continuous_columns,
+                test_continuous_columns,
+                train_all_columns,
+                test_all_columns,
+            ) = self.scaling()
 
-            # Save the normalized dataset
-        train_standardized.sink_csv(
-            self.valid_config.transformed_standardized_df_path_train_x
-            / self.valid_config.x_train_standardized
-        )
-        test_standardized.sink_csv(
-            self.valid_config.transformed_standardized_df_path_test_x
-            / self.valid_config.x_test_standardized
-        )
+            # Check if the model is distance, gradient, or scale-sensitive
+            if self.valid_config.ML_type in standardize_categorical:
+                logging.info(
+                    f"Model type '{self.valid_config.ML_type}' detected. Normalizing categorical columns as well."
+                )
+
+                # Normalize categorical encoded columns (if using SVM, KNN, or PCA)
+                train_standardized = lazy_df_train.select(
+                    [
+                        (pl.col(col) - pl.col(col).mean()) / pl.col(col).std()
+                        for col in train_all_columns
+                    ]
+                )
+                test_standardized = lazy_df_test.select(
+                    [
+                        (pl.col(col) - pl.col(col).mean()) / pl.col(col).std()
+                        for col in test_all_columns
+                    ]
+                )
+            else:
+                logging.info(
+                    f"Model type '{self.valid_config.ML_type}' detected. Skipping normalization for categorical columns."
+                )
+                train_standardized = lazy_df_train.select(
+                    [
+                        (pl.col(col) - pl.col(col).mean()) / pl.col(col).std()
+                        for col in train_continuous_columns
+                    ]
+                    + [
+                        pl.col(c).cast(pl.Float32)
+                        for c in lazy_df_train.columns
+                        if c not in train_continuous_columns
+                    ]
+                )
+                test_standardized = lazy_df_test.select(
+                    [
+                        (pl.col(col) - pl.col(col).min()) / pl.col(col).std()
+                        for col in test_continuous_columns
+                    ]
+                    + [
+                        pl.col(c)
+                        for c in lazy_df_test.columns
+                        if c not in test_continuous_columns
+                    ]
+                )
+
+                # Save the normalized dataset
+            train_standardized.cast(pl.Float32).collect().write_csv(
+                self.valid_config.transformed_standardized_df_path_train_x
+                / self.valid_config.x_train_standardized_name
+            )
+            test_standardized.cast(pl.Float32).collect().write_csv(
+                self.valid_config.transformed_standardized_df_path_test_x
+                / self.valid_config.x_test_standardized_name
+            )
 
     def _apply_feature_search(self, search_class) -> None:
         """
@@ -416,33 +441,87 @@ class LazyTransformationPipeline(BasicPipeline):
             ValueError: If no model is provided.
         """
         if self.model is not None and self.search_class is not None:
-            clf = search_class(self.model, self.valid_config.tuned_parameters)
-            if self.valid_config.standarized_df:
-                search = clf.fit(
-                    self.valid_config.transformed_standarized_df_path_train_X,
-                    self.valid_config.transformed_train_df_path_y,
+
+            clf = search_class(
+                self.model,
+                self.valid_config.feature_engineering_dict,
+                n_iter=self.valid_config.number_iterations,
+                cv=self.valid_config.cross_validation,
+            )
+            if self.valid_config.standardized_df:
+                x = (
+                    pl.scan_csv(
+                        self.valid_config.transformed_standardized_df_path_train_x
+                        / self.valid_config.x_train_standardized_name
+                    )
+                    .collect()
+                    .to_numpy()
+                    .astype(np.float64)
                 )
-            elif self.valid_config.normalize:
-                search = clf.fit(
-                    self.valid_config.transformed_normalized_df_path_test_X,
-                    self.valid_config.transformed_train_df_path_y,
+                y = (
+                    pl.scan_csv(
+                        self.valid_config.transformed_train_df_path_y
+                        / self.valid_config.y_train_name
+                    )
+                    .collect()
+                    .to_numpy()
+                    .ravel()
+                    .astype(np.int64)
                 )
 
-            else:
-                search = clf.fit(
-                    self.valid_config.transformed_train_df_path_x,
-                    self.valid_config.transformed_train_df_path_y,
+                search = clf.fit(x, y)
+
+            elif self.valid_config.normalize_df:
+                x = (
+                    pl.scan_csv(
+                        self.valid_config.transformed_normalized_df_path_test_x
+                        / self.valid_config.x_train_normalized_name
+                    )
+                    .collect()
+                    .to_numpy()
                 )
+                y = (
+                    pl.scan_csv(
+                        self.valid_config.transformed_train_df_path_y
+                        / self.valid_config.y_train_name
+                    )
+                    .collect()
+                    .to_numpy()
+                    .ravel()
+                )
+                search = clf.fit(x, y)
+
+            else:
+                x = (
+                    pl.scan_csv(
+                        self.valid_config.transformed_train_df_path_x
+                        / self.valid_config.x_train_name
+                    )
+                    .collect()
+                    .to_pandas()
+                    .to_numpy()
+                )
+                y = (
+                    pl.scan_csv(
+                        self.valid_config.transformed_train_df_path_y
+                        / self.valid_config.y_train_name
+                    )
+                    .collect()
+                    .to_pandas()
+                    .to_numpy()
+                    .ravel()
+                )
+                search = clf.fit(x, y)
             best_params = search.best_params_
             with open(
-                self.valid_config.tunable_parameters_path
-                / f"{self.valid_config.best_parameters_name}{self.valid_config.feature_mode}_{self.valid_config.ML_type}.json",
+                self.valid_config.tuned_parameters_path
+                / f"{self.valid_config.best_parameters_name}_{self.valid_config.feature_mode}_{self.valid_config.ML_type}.json",
                 "w",
             ) as f:
                 json.dump(best_params, f)
             logging.info(
-                f"Best hyperparameters saved at {self.valid_config.best_model_params_path}/ "
-                f"{self.valid_config.best_parameters_name}{self.valid_config.feature_mode}_{self.valid_config.ML_type}.json."
+                f"Best hyperparameters saved at {self.valid_config.tuned_parameters_path}/"
+                f"{self.valid_config.best_parameters_name}_{self.valid_config.feature_mode}_{self.valid_config.ML_type}.json."
             )
 
         else:
@@ -479,18 +558,18 @@ class LazyTransformationPipeline(BasicPipeline):
             self.split_train_test()
             logging.info("Split Data Transformed and saved")
 
-            # Directly call normalization and standardization methods
-
             if self.valid_config.normalize_df:
                 self.normalize()
                 logging.info("Normalization applied.")
 
-            if self.valid_config.standarized_df:
+            if self.valid_config.standardized_df:
                 self.standardize()
                 logging.info("Standardization applied.")
             else:
                 logging.info("Skipped Normalization / Standardization.")
-
+            logging.info(
+                f"Stating Feature engineering with {self.valid_config.feature_mode}"
+            )
             self.apply_feature_engineering()
             logging.info("Feature engineering applied.")
 

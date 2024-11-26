@@ -8,21 +8,26 @@ The pipeline integrates several key libraries:
 - **Hydra**: For managing configuration files (e.g., YAML) to automate pipeline setup.
 
 Key Features:
+-------------
 - **Validation and Configuration Parsing**: Built-in mechanisms to ensure the integrity of input data and configurations using Pandera and Pydantic.
 - **YAML Integration**: Designed to work with Hydra for configuration management, requiring a properly defined YAML file to streamline pipeline setup.
+- **Selective Sub-Configuration Parsing**: Supports loading and validating specific sections of the YAML configuration file using the `config_section` parameter.
 - **Reproducibility and Scalability**: Leverages configuration-driven design for reproducible and scalable workflows.
 - **Extensibility**: Abstract methods enforce a standard pipeline structure, enabling custom implementations for specific tasks. Default methods allow for a more customizable pipeline usage.
 
 Mandatory Requirement:
+----------------------
 - The YAML configuration file must include a field named `original_datapath`, specifying the file path of the dataset to be validated. This is required for the `_validate_dataframe` method.
+- If the `config_section` argument is provided, the specified section must exist in the YAML configuration. A `KeyError` will be raised if the section is missing.
 
 Usage:
---------
+------
 Subclasses should implement the abstract methods to define specific pipeline behaviors,
 such as data transformations, scaling, and feature engineering.
 
 Example Subclass:
 
+```python
 class MyPipeline(BasicPipeline):
     def custom_validate(self):
         # Custom validation logic here
@@ -35,6 +40,7 @@ class MyPipeline(BasicPipeline):
     def run(self):
         # Execute pipeline
         pass
+´´´
 """
 
 import logging
@@ -68,7 +74,9 @@ class BasicPipeline(ABC):
         config_model: IConfigModel,
         config_loader: IConfigurationLoader,
         config_path: str,
-        apply_custom_function: bool
+        config_name: str,
+        apply_custom_function: bool,
+        config_section: str = None
     )
 
     Args:
@@ -81,15 +89,20 @@ class BasicPipeline(ABC):
         An abstraction for loading configuration data from specified paths.
     - config_path (str):
         The path to the configuration file to be loaded.
+    - config_name (str):
+        The name of the main configuration file (e.g., 'main').
     - apply_custom_function (bool):
         Determines whether to use a custom validation function (`custom_validate`).
+    - config_section (str, optional):
+        Specifies a sub-configuration section (e.g., `transformation_config`) within the main configuration.
+        If provided, the corresponding section will be extracted and validated. Defaults to `None`.
 
     Key Features:
     -------------
     - **Built-in Validation**: Ensures configuration validity and data integrity
       through the use of validation abstractions, reducing manual errors.
-    - **Flexible Configuration Handling**: Simplifies configuration handling for scalable and
-      reproducible workflows using configuration abstractions.
+    - **Flexible Configuration Handling**: Allows for dynamic selection of specific sub-configurations
+      within a larger configuration file using the `config_section` parameter.
     - **Extensibility**: Abstract methods define a flexible framework for custom
       pipeline logic, enabling developers to implement transformations, scaling,
       and other operations.
@@ -128,6 +141,14 @@ class BasicPipeline(ABC):
     Subclasses must implement the following:
     - `custom_validate`: Custom logic for data validation.
     - `run`: Executing the pipeline end-to-end.
+
+    Updates:
+    --------
+    - **`config_section` Argument**: Enables loading and validating a specific section
+      of the configuration file. This is useful for modular pipelines where each phase
+      (e.g., EDA, transformation, training) has its own configuration.
+    - **Error Handling for Missing Sections**: Raises a `KeyError` if the specified
+      `config_section` does not exist in the configuration file.
     """
 
     def __init__(
@@ -136,12 +157,23 @@ class BasicPipeline(ABC):
         config_model: IConfigModel,
         config_loader: IConfigurationLoader,
         config_path: str,
+        config_name: str,
         apply_custom_function: bool,
+        config_section: str = None,
     ):
         self.validation_model = validation_model
         self.config_model = config_model
-        self.config_data = config_loader.load(config_path)
+        self.config_data = config_loader.load(config_path, config_name)
         self.apply_custom_function = apply_custom_function
+
+        if config_section:
+            if config_section in self.config_data:
+                self.config_data = self.config_data[config_section]
+            else:
+                logging.error(f"Config section '{config_section}' not found.")
+                raise KeyError(
+                    f"Section '{config_section}' not found in the configuration."
+                )
 
         try:
             self.valid_config = self.config_model.parse(self.config_data)
