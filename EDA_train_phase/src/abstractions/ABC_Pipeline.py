@@ -39,13 +39,9 @@ class MyPipeline(BasicPipeline):
 
 import logging
 from abc import ABC, abstractmethod
-from typing import Union
 
-import omegaconf
-import pandera
 import polars as pl
 import pydantic
-from pandera import polars
 
 from EDA_train_phase.src.abstractions.ABC_validations import (
     IConfigModel,
@@ -170,7 +166,6 @@ class BasicPipeline(ABC):
 
     def _validate_dataframe(self) -> None:
         """Default implementation of the pandera validation."""
-        # Assuming `self.valid_config.original_datapath` is still valid.
         pl.scan_csv(self.valid_config.original_datapath).pipe(
             self.validation_model.validate
         )
@@ -180,7 +175,7 @@ class BasicPipeline(ABC):
         """Custom mandatory validation method."""
         pass
 
-    def categorical_to_numerical(self):
+    def categorical_encoding(self):
         """Default implementation for categorical to numerical transformation."""
         logging.warning("categorical_to_numerical method is not implemented")
         raise NotImplementedError()

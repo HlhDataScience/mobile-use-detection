@@ -1,9 +1,10 @@
-"""This moduels handle the wrappers for the validation and configuration yalm files."""
+"""This modules handle the wrappers for the validation and configuration yalm files."""
 
 from typing import Any, Union
 
 import omegaconf
 import pandera
+import pandera.polars
 import pydantic
 
 from EDA_train_phase.src.abstractions.ABC_validations import (
@@ -16,7 +17,12 @@ from EDA_train_phase.src.abstractions.ABC_validations import (
 class PanderaValidationModel(IValidationModel):
     """wrapper for pandera validation"""
 
-    def __init__(self, validation_model: type[Union[ pandera.polars.DataFrameModel | pandera.DataFrameModel]]):
+    def __init__(
+        self,
+        validation_model: type[
+            Union[pandera.polars.DataFrameModel | pandera.DataFrameModel]
+        ],
+    ):
         self.validation_model = validation_model
 
     def validate(self, dataframe: Any) -> Any:

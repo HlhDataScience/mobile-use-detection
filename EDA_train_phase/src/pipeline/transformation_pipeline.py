@@ -10,64 +10,17 @@ Modules used:
 - Scikit-learn for hyperparameter tuning
 - Skopt for Bayesian optimization
 
-
-#### POSSIBLE CHANGE FOR THE LAZYPIPELINE
-
-class BasicPipeline(ABC):
-    def __init__(
-        self,
-        validation_model: IValidationModel,
-        config_model: IConfigModel,
-        config_loader: IConfigurationLoader,
-        config_path: str,
-        apply_custom_function: bool,
-    ):
-        self.validation_model = validation_model
-        self.config_model = config_model
-        self.config_data = config_loader.load(config_path)
-        self.apply_custom_function = apply_custom_function
-
-        try:
-            self.valid_config = self.config_model.parse(self.config_data)
-            logging.info("Data Pipeline configuration was successfully loaded and validated")
-        except pydantic.ValidationError as e:
-            logging.error(f"Validation of the data configuration failed at:\n{e}")
-
-        if self.apply_custom_function:
-            try:
-                self.custom_validate()
-                logging.info("Validation of the dataframe was successful!")
-            except ValueError as e:
-                logging.error(f"The validation failed at:\n{e}")
-        else:
-            try:
-                self._validate_dataframe()
-                logging.info("Validation of the dataframe was successful!")
-            except ValueError as e:
-                logging.error(f"The validation of the Dataframe failed at:\n{e}")
-
-    def _validate_dataframe(self) -> None:
-        Default implementation of the pandera validation
-        # Assuming `self.valid_config.original_datapath` is still valid.
-        pl.scan_csv(self.valid_config.original_datapath).pipe(
-            self.validation_model.validate
-        )
 """
 
 import json
 import logging
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import List, Tuple
 
-import pandera.polars
-import pandera.polars as pa
 import polars as pl
 import polars.selectors as cs
-from hydra import compose, initialize
-from omegaconf import DictConfig, OmegaConf
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from skopt import BayesSearchCV
-from torch.utils.hipify.hipify_python import mapping
 
 from EDA_train_phase.src.abstractions.ABC_Pipeline import BasicPipeline
 from EDA_train_phase.src.hydra_config import load_hydra_config_from_root
@@ -76,14 +29,11 @@ from EDA_train_phase.src.validation_classes.validation_configurations import (
     DataTransformationConfig,
     DataValidationConfig,
 )
-
-# TODO TESTING THE CLASSES WITHIN THE NOTEBOOK test if precommit works
-# Changed the filepath to Path to take advantage of the train_config.yalm file
-# Created Hyperparameters tuning methods
-# Notebook Created
-# DataValidationConfig has been updated to use Pandera for schema validation.
-# Further integration with Polars and/or Pydantic is under consideration.
-
+from EDA_train_phase.src.validation_classes.validation_interfaces import (
+    OmegaConfLoader,
+    PanderaValidationModel,
+    PydanticConfigModel,
+)
 
 # CONSTANTS
 LOG_FILE = Path("../logs/transformation_pipeline.log")
@@ -91,6 +41,11 @@ setup_logging(LOG_FILE)
 CONFIG_PATH = "../conf"
 
 CONFIG_ROOT = load_hydra_config_from_root(CONFIG_PATH)
+
+# INTERFACES LOADED
+vali_model = PanderaValidationModel(validation_model=DataValidationConfig)
+confi_model = PydanticConfigModel(config_model=DataTransformationConfig)
+omega_loader_conf = OmegaConfLoader()
 
 
 class LazyTransformationPipeline(BasicPipeline):
@@ -110,9 +65,10 @@ class LazyTransformationPipeline(BasicPipeline):
 
     def __init__(
         self,
-        validation_model: DataValidationConfig,
-        config_model: DataTransformationConfig,
-        config_data: DictConfig,
+        validation_model: PanderaValidationModel = vali_model,
+        config_model: PydanticConfigModel = confi_model,
+        config_loader: OmegaConfLoader = omega_loader_conf,
+        config_path: str = CONFIG_ROOT["transformation_config"],
         apply_custom_function: bool = False,
     ):
         """
@@ -124,12 +80,16 @@ class LazyTransformationPipeline(BasicPipeline):
             SchemaError: If the dataframe schema does not match the expected schema defined in the configuration.
         """
         super().__init__(
-            validation_model, config_model, config_data, apply_custom_function
+            validation_model=validation_model,
+            config_model=config_model,
+            config_loader=config_loader,
+            config_path=config_path,
+            apply_custom_function=apply_custom_function,
         )
         self.model = self.valid_config.ML_type
         self.search_class = self.valid_config.feature_mode
 
-    def df_categorical_to_numerical(self) -> None:
+    def categorical_encoding(self) -> None:
         """
         Transforms categorical columns into numeric representations using consistent mappings. The transformed
         dataframe is saved to the specified path in the configuration.
@@ -513,7 +473,7 @@ class LazyTransformationPipeline(BasicPipeline):
         """
         logging.info("Pipeline running...")
         try:
-            self.df_categorical_to_numerical()
+            self.categorical_encoding()
             logging.info("Categorical Data Transformed and saved")
 
             self.split_train_test()
