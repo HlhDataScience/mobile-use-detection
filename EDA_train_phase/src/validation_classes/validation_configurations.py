@@ -199,3 +199,7 @@ class DataTransformationConfig(BaseModel):
         if normalize_df and standardized_df:
             raise ValueError("Both methods cannot be True at the same time.")
         return values
+
+
+class TrainerConfig(BaseModel):
+    """pydantic model that handles the trainer pipeline config"""

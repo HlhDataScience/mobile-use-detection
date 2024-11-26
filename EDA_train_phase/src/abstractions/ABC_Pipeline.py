@@ -113,7 +113,7 @@ class BasicPipeline(ABC):
     -----------------
     Subclasses may implement, depending on the needs, the following methods:
 
-    - `categorical_to_numerical`: Conversion of categorical features to numerical.
+    - `categorical_encoding`: Conversion of categorical features to numerical.
     - `split_train_test`: Splitting data into training and test sets.
     - `scaling`: Scaling data features.
     - `normalize`: Normalizing data features.
