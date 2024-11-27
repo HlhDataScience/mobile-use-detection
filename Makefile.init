@@ -21,7 +21,7 @@ pre-commit:  ## Install pre-commit hooks
 	pre-commit install
 
 # Install dependencies and tools, and set up the project
-initialize_all: install-poetry activate git_initialization pre-commit  ## Initialize all
+initialize_all: install-poetry git_initialization pre-commit activate  ## Initialize all
 	@echo "Project successfully initialized."
 
 # Help command to show available options
