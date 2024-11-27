@@ -22,7 +22,7 @@ from EDA_train_phase.src.pipeline.transformation_pipeline import (
 # CONSTANTS
 LOG_FILE = Path("logs/EDA.log")
 setup_logging(LOG_FILE)
-initialize(config_path="../conf/Eda_config/")
+initialize(config_path="../../conf/Eda_config/")
 HYDRA_CONFIG = compose(config_name="Eda_config")
 CONFIG_DICT = OmegaConf.to_object(HYDRA_CONFIG)
 
