@@ -328,11 +328,11 @@ class LazyTransformationPipeline(BasicPipeline):
                 )
 
             # Save the normalized dataset
-            train_normalized.cast(pl.Float32).callect().write_csv(
+            train_normalized.collect().write_csv(
                 self.valid_config.transformed_normalized_df_path_train_x
                 / self.valid_config.x_train_normalized_name
             )
-            test_normalized.cast(pl.Float32).callect().write_csv(
+            test_normalized.collect().write_csv(
                 self.valid_config.transformed_normalized_df_path_test_x
                 / self.valid_config.x_test_normalized_name
             )
@@ -419,11 +419,11 @@ class LazyTransformationPipeline(BasicPipeline):
                 )
 
                 # Save the normalized dataset
-            train_standardized.cast(pl.Float32).collect().write_csv(
+            train_standardized.collect().write_csv(
                 self.valid_config.transformed_standardized_df_path_train_x
                 / self.valid_config.x_train_standardized_name
             )
-            test_standardized.cast(pl.Float32).collect().write_csv(
+            test_standardized.collect().write_csv(
                 self.valid_config.transformed_standardized_df_path_test_x
                 / self.valid_config.x_test_standardized_name
             )
@@ -439,13 +439,19 @@ class LazyTransformationPipeline(BasicPipeline):
             ValueError: If no model is provided.
         """
         if self.model is not None and self.search_class is not None:
-
-            clf = search_class(
-                self.model,
-                self.valid_config.feature_engineering_dict,
-                n_iter=self.valid_config.number_iterations,
-                cv=self.valid_config.cross_validation,
-            )
+            if self.search_class == "GridSearch":
+                clf = search_class(
+                    self.model,
+                    self.valid_config.feature_engineering_dict,
+                    cv=self.valid_config.cross_validation,
+                )
+            else:
+                clf = search_class(
+                    self.model,
+                    self.valid_config.feature_engineering_dict,
+                    n_iter=self.valid_config.number_iterations,
+                    cv=self.valid_config.cross_validation,
+                )
             if self.valid_config.standardized_df:
                 x = (
                     pl.scan_csv(
@@ -472,7 +478,7 @@ class LazyTransformationPipeline(BasicPipeline):
             elif self.valid_config.normalize_df:
                 x = (
                     pl.scan_csv(
-                        self.valid_config.transformed_normalized_df_path_test_x
+                        self.valid_config.transformed_normalized_df_path_train_x
                         / self.valid_config.x_train_normalized_name
                     )
                     .collect()
@@ -560,7 +566,7 @@ class LazyTransformationPipeline(BasicPipeline):
                 self.normalize()
                 logging.info("Normalization applied.")
 
-            if self.valid_config.standardized_df:
+            elif self.valid_config.standardized_df:
                 self.standardize()
                 logging.info("Standardization applied.")
             else:
