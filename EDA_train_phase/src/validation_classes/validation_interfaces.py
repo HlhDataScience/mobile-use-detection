@@ -2,6 +2,7 @@
 
 from typing import Any, Union
 
+import mlflow
 import omegaconf
 import pandera
 import pandera.polars
@@ -13,6 +14,7 @@ from omegaconf import DictConfig, OmegaConf
 from EDA_train_phase.src.abstractions.ABC_validations import (
     IConfigModel,
     IConfigurationLoader,
+    IExperimentTracker,
     IValidationModel,
 )
 
@@ -29,6 +31,7 @@ class PanderaValidationModel(IValidationModel):
         self.validation_model = validation_model
 
     def validate(self, dataframe: Any) -> Any:
+        """Validates the dataframe schema using pandera"""
         return self.validation_model.validate(dataframe)
 
 
@@ -39,6 +42,7 @@ class PydanticConfigModel(IConfigModel):
         self.config_model = config_model
 
     def parse(self, config_data: Any) -> Any:
+        """Validates the configuration yalm file with pydantic"""
         return self.config_model(**config_data)
 
 
@@ -46,6 +50,7 @@ class HydraConfLoader(IConfigurationLoader):
     """wrapper for OmegaConf using Hydra"""
 
     def load(self, config_path: str, config_name: str) -> Any:
+        """Initialize Hydra and loads the configuration from yalm file."""
         if GlobalHydra().is_initialized():
             GlobalHydra.instance().clear()
 
@@ -54,3 +59,15 @@ class HydraConfLoader(IConfigurationLoader):
         hydra_config = compose(config_name=config_name)
         config_dict = OmegaConf.to_object(hydra_config)
         return config_dict
+
+
+class MLFlowTracker(IExperimentTracker):
+    """Wrapper for MLFlow experiment tracking"""
+
+    def get_or_create_experiment_id(self, name: str):
+        """Creates the ID of the expertiment or use the current one."""
+        exp = mlflow.get_experiment_by_name(name)
+        if exp is None:
+            exp_id = mlflow.create_experiment(name)
+            return exp_id
+        return exp.experiment_id
