@@ -148,7 +148,8 @@ class LazyTransformationPipeline(BasicPipeline):
             [pl.col(col) for col in self.valid_config.feature_selection]
         )
         test = test.select([pl.col(col) for col in self.valid_config.feature_selection])
-
+        return  train, test
+        
     def split_train_test(
         self, random_state: int = 42, train_fraction: float = 0.75
     ) -> None:
