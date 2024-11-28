@@ -22,7 +22,7 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
 - Completed test for TrainerPipeline: Everything works properly.
 
 
-## TODOs related to train section
+## TODOs related to EDA_train_phase
   - ~~We need to create Hydra Config to handle yalm automatization~~ 
   - ~~We need to create a logging function to handle the whole program~~
   - ~~We need to create the data and config validation classes~~
