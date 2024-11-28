@@ -2,6 +2,7 @@
 
 import logging
 from pathlib import Path
+import argparse
 
 import dagshub
 
@@ -20,9 +21,8 @@ setup_logging(LOG_FILE)
 
 
 # Main program
-def main() -> None:
-    """Main Program function that handles all the pipelines adn tracks the experiment using MLFlow and dagshub."""
-
+def main(args) -> None:
+    """Main Program function that handles all the pipelines and tracks the experiment using MLFlow and dagshub."""
     logging.info("Initializing Program...")
 
     pipeline = LazyTransformationPipeline()
@@ -32,12 +32,28 @@ def main() -> None:
     logging.info("Running Pipelines")
 
     try:
-        pipeline.run()
-        train.run()
+        if args.pipeline in ["all", "transformation"]:
+            pipeline.run()
+            logging.info("Transformation pipeline completed.")
+
+        if args.pipeline in ["all", "training"]:
+            train.run()
+            logging.info("Training pipeline completed.")
 
     except Exception as e:
-        logging.error(f"An error found at {e}")
+        logging.error(f"An error occurred: {e}")
 
 
 if __name__ == "__main__":
-    main()
+    # Argument parser setup
+    parser = argparse.ArgumentParser(description="Run data transformation and training pipelines.")
+    parser.add_argument(
+        "--pipeline",
+        type=str,
+        choices=["all", "transformation", "training"],
+        default="all",
+        help="Specify which pipeline to run: 'all', 'transformation', or 'training'. Default is 'all'.",
+    )
+    args = parser.parse_args()
+
+    main(args)
