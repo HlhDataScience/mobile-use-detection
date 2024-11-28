@@ -14,7 +14,7 @@ y_test: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phas
 normalized_x_train: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/train_data/X_train_normalize.csv"
 standardized_x_train: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/train_data/X_train_standardized.csv"
 normalized_x_test: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/test_data/X_test_normalized.csv"
-standardized_test: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/test_data/X_test_standardized.csv"
+standardized_x_test: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/test_data/X_test_standardized.csv"
 
 # Bolean parameters
 
@@ -28,5 +28,6 @@ model_path: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_
 # tuned parameters and metrics
 
 tuned_parameters: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/train_data/Best_parameters_model__BayesianOptim_SVM.json"
+average_mode: "micro"
 metrics: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/src/metrics"
 

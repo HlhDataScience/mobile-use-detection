@@ -145,25 +145,31 @@ class TrainerPipeline(BasicTrainer):
             x_train = (
                 pl.scan_csv(self.valid_config.normalized_x_train).collect().to_numpy()
             )
-            y_train = pl.scan_csv(self.valid_config.y_train).collect().to_numpy()
+            y_train = (
+                pl.scan_csv(self.valid_config.y_train).collect().to_numpy().ravel()
+            )
             x_test = (
                 pl.scan_csv(self.valid_config.normalized_x_test).collect().to_numpy()
             )
-            y_test = pl.scan_csv(self.valid_config.y_test).collect().to_numpy()
+            y_test = pl.scan_csv(self.valid_config.y_test).collect().to_numpy().ravel()
         elif self.standardized_df:
             x_train = (
                 pl.scan_csv(self.valid_config.standardized_x_train).collect().to_numpy()
             )
-            y_train = pl.scan_csv(self.valid_config.y_train).collect().to_numpy()
+            y_train = (
+                pl.scan_csv(self.valid_config.y_train).collect().to_numpy().ravel()
+            )
             x_test = (
                 pl.scan_csv(self.valid_config.standardized_x_test).collect().to_numpy()
             )
-            y_test = pl.scan_csv(self.valid_config.y_test).collect().to_numpy()
+            y_test = pl.scan_csv(self.valid_config.y_test).collect().to_numpy().ravel()
         else:
             x_train = pl.scan_csv(self.valid_config.x_train).collect().to_numpy()
-            y_train = pl.scan_csv(self.valid_config.y_train).collect().to_numpy()
+            y_train = (
+                pl.scan_csv(self.valid_config.y_train).collect().to_numpy().ravel()
+            )
             x_test = pl.scan_csv(self.valid_config.x_test).collect().to_numpy()
-            y_test = pl.scan_csv(self.valid_config.y_test).collect().to_numpy()
+            y_test = pl.scan_csv(self.valid_config.y_test).collect().to_numpy().ravel()
 
         return x_train, x_test, y_train, y_test
 
@@ -182,7 +188,9 @@ class TrainerPipeline(BasicTrainer):
             json.JSONDecodeError: If the parameter configuration file cannot be loaded.
             IOError: If the model file cannot be saved.
         """
-        parameters = json.load(self.valid_config.tuned_parameters)
+        with open(self.valid_config.tuned_parameters) as f:
+            parameters = json.load(f)
+            f.close()
         model_ = self.model.set_params(**parameters)
         model_.fit(x, y)
         joblib.dump(
@@ -212,16 +220,26 @@ class TrainerPipeline(BasicTrainer):
         Raises:
             ValueError: If the model does not support `predict_proba` for probability prediction.
         """
-        y_proba = model.predict_proba(x)[:, 1]
         y_predicted = model.predict(x)
         params_dict = {
-            "roc_auc": roc_auc_score(y, y_proba),
-            "average_precision": average_precision_score(y, y_proba),
             "accuracy": accuracy_score(y, y_predicted),
-            "precision": precision_score(y, y_predicted),
-            "recall": recall_score(y, y_predicted),
-            "f1": f1_score(y, y_predicted),
+            "precision": precision_score(
+                y, y_predicted, average=self.valid_config.average_mode
+            ).item(),
+            "recall": recall_score(
+                y, y_predicted, average=self.valid_config.average_mode
+            ).item(),
+            "f1": f1_score(
+                y, y_predicted, average=self.valid_config.average_mode
+            ).item(),
         }
+
+        # Check if the model supports `predict_proba`
+        if hasattr(model, "predict_proba"):
+            y_proba = model.predict_proba(x)[:, 1]
+            params_dict["roc_auc"] = roc_auc_score(y, y_proba)
+            params_dict["average_precision"] = average_precision_score(y, y_proba)
+
         return params_dict
 
     def run(self):
@@ -231,7 +249,7 @@ class TrainerPipeline(BasicTrainer):
 
         Steps:
             1. Loads the training and testing datasets using the configured scaling option.
-            2. Starts an MLflow experiment run.
+            2. Starts an MLFlow experiment run.
             3. Trains the model with the training dataset and logs parameters.
             4. Evaluates the model on both training and testing datasets.
             5. Logs evaluation metrics and saves them to disk.
@@ -249,8 +267,8 @@ class TrainerPipeline(BasicTrainer):
             logging.info("Starting the tracking with MLflow...")
             with mlflow.start_run(experiment_id=exp_id):
                 logging.info("Training model...")
-                ml_model = self.train(x_train, x_test)
-                model_class = {"model_class": type(ml_model).__name__}
+                ml_model = self.train(x_train, y_train)
+                model_class = {"model__class": type(ml_model).__name__}
                 model_parameters = {
                     f"{self.valid_config.experiment_name}__{k}": v
                     for k, v in ml_model.get_params().items()
@@ -262,10 +280,9 @@ class TrainerPipeline(BasicTrainer):
                     "w",
                 ) as f:
                     json.dump(model_and_parameters, f)
-                mlflow.log_param(
-                    key=str(model_class.keys()), value=model_class.values()
-                )
+                mlflow.log_param(key="model__class", value=type(ml_model).__name__)
                 mlflow.log_params(model_parameters)
+                logging.info(f"The paramters saved are:\n{model_and_parameters}")
                 logging.info("Model trained and parameters saved.")
 
                 logging.info("Evaluating model..")

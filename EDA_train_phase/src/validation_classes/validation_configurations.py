@@ -200,7 +200,7 @@ class DataTransformationConfig(BaseModel):
     )
 
     @root_validator(pre=True)
-    def check_normalization_and_standardization(self, values):
+    def check_normalization_and_standardization(cls, values):
         """This function check that normalization and standardization are correctly implemented"""
         normalize_df = values["normalize_df"]
         standardized_df = values["standardized_df"]
@@ -274,13 +274,17 @@ class TrainerConfig(BaseModel):
 
     model_path: Path = Field(..., description="The path to save the ML model trained.")
 
+    average_mode: Literal["micro", "macro", "samples", "weighted", "binary"] = Field(
+        ..., description="The average for classes in precision and recall"
+    )
+
     metrics: Path = Field(
         ...,
         description="The path to the directory that holds the metrics for train and test.",
     )
 
     @root_validator(pre=True)
-    def check_normalization_and_standardization(self, values):
+    def check_normalization_and_standardization(cls, values):
         """This function check that normalization and standardization are correctly implemented"""
         normalize_df = values["normalized_df"]
         standardized_df = values["standardized_df"]

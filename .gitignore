@@ -19,3 +19,4 @@ EDA_train_phase/src/pipeline/__pycache__/
 EDA_train_phase/src/validation_classes/__pycache__/
 EDA_train_phase/src/abstractions/__pycache__/
 /trainer_testing.ipynb
+EDA_train_phase/src/training/__pycache__/
