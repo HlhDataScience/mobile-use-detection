@@ -20,6 +20,7 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
 - Tested the rest of the methods of CV with good results.
 - Completed train.py class.
 - Completed test for TrainerPipeline: Everything works properly.
+- Created Makefile for main.py
 
 
 ## TODOs related to EDA_train_phase
@@ -34,6 +35,7 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - ~~We need to test the other CV methods in the TransformationPipeline~~
   - ~~We need to complete the train.py.~~
   - ~~We need to test the TrainerPipeline to check everything is working properly.~~
+  - ~~We need to create a makefile for the main.py~~
   - We need to use the main.py to run the whole program
   - We need to create a deviating branch(or several) to test other classic machine learning models.
   - Suggested test duplicating the data until we reach 3 million rows. We can use this as stress test for speed in the data pipeline
