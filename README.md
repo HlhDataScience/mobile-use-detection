@@ -9,12 +9,12 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - Production_phase: This directory contains the basic implementation of the app using FastAPI and Gradio to dockerization. In this way can be portable into other systems (local, owned server or cloud computing)
 
 ## Done related to EDA_train_phase
-- We have performed the EDA analysis
-- We have completed the data validation & serialization classes
-- We have created the logger.py file that handles logging across the files.
 - We have completed the Hydra config to handle yalm automatization of the pipeline.
-- Created ABC validation classes and its interfaces for data and configuration validation
+- We have created the logger.py file that handles logging across the files.
+- We have completed the data validation & serialization classes
+- We have performed the EDA analysis
 - Created an ABC Pipeline class to be aligned with SOLID principles.
+- Created ABC validation classes and its interfaces for data and configuration validation
 - Tested LazyTransformationPipeline refactored as a subclass of BasicPipeline(ABC) abstract class.
 - Tested the run method of the pipeline with interfaces and good results.
 - Tested the rest of the methods of CV with good results.
