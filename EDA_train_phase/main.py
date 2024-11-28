@@ -1,10 +1,12 @@
 """main entry point of the program"""
 
+import argparse
 import logging
 from pathlib import Path
-import argparse
 
 import dagshub
+from hydra import initialize
+from hydra.core.global_hydra import GlobalHydra
 
 from EDA_train_phase.src.logging_functions.logger import setup_logging
 from EDA_train_phase.src.pipeline.transformation_pipeline import (
@@ -13,11 +15,22 @@ from EDA_train_phase.src.pipeline.transformation_pipeline import (
 from EDA_train_phase.src.training.train import TrainerPipeline
 
 # CONSTANTS
-DAGSHUB_REPO_OWNER = "<username>"
-DAGSHUB_REPO = "DAGsHub-Tutorial"
-dagshub.init(DAGSHUB_REPO, DAGSHUB_REPO_OWNER)
 LOG_FILE = Path("logs/main_program.log")
+CONFIG_PATH = "conf/"
+DAGSHUB_REPO_OWNER = "data_analitics_HLH"
+DAGSHUB_REPO = "mobile-use-detection"
+
+# Logging and configuration
 setup_logging(LOG_FILE)
+logging.info("Setting up Hydra")
+if GlobalHydra().is_initialized():
+    GlobalHydra.instance().clear()
+
+initialize(config_path=CONFIG_PATH, job_name="load_config")
+logging.info("Completed")
+logging.info("Setting up DagsHUb with MLFlow tracking")
+dagshub.init(DAGSHUB_REPO, DAGSHUB_REPO_OWNER, mlflow=True)
+logging.info("Completed. Ready for main program.")
 
 
 # Main program
@@ -46,7 +59,9 @@ def main(args) -> None:
 
 if __name__ == "__main__":
     # Argument parser setup
-    parser = argparse.ArgumentParser(description="Run data transformation and training pipelines.")
+    parser = argparse.ArgumentParser(
+        description="Run data transformation and training pipelines."
+    )
     parser.add_argument(
         "--pipeline",
         type=str,
@@ -54,6 +69,6 @@ if __name__ == "__main__":
         default="all",
         help="Specify which pipeline to run: 'all', 'transformation', or 'training'. Default is 'all'.",
     )
-    args = parser.parse_args()
+    args_ = parser.parse_args()
 
-    main(args)
+    main(args_)

@@ -26,7 +26,7 @@ class IConfigurationLoader(ABC):
     """Loads the configuration from the specified path."""
 
     @abstractmethod
-    def load(self, config_path: str, config_name: str) -> Any:
+    def load(self, config_name: str) -> Any:
         """Loads the configuration from the specified path."""
         pass
 

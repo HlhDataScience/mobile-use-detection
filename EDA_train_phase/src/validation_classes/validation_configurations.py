@@ -144,6 +144,14 @@ class DataTransformationConfig(BaseModel):
 
     standardized_df: bool = Field(..., description="Whether to standardize the data")
 
+    apply_feature_selection: bool = Field(
+        ..., description="If to apply or not the feature selection"
+    )
+
+    feature_selection: List[str] = Field(
+        ..., description="The columns selected by correlation to y"
+    )
+
     number_iterations: int = (
         Field(
             ...,

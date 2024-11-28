@@ -156,14 +156,13 @@ class BasicPipeline(ABC):
         validation_model: IValidationModel,
         config_model: IConfigModel,
         config_loader: IConfigurationLoader,
-        config_path: str,
         config_name: str,
         apply_custom_function: bool,
         config_section: str = None,
     ):
         self.validation_model = validation_model
         self.config_model = config_model
-        self.config_data = config_loader.load(config_path, config_name)
+        self.config_data = config_loader.load(config_name)
         self.apply_custom_function = apply_custom_function
 
         if config_section:

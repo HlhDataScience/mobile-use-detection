@@ -49,13 +49,8 @@ class PydanticConfigModel(IConfigModel):
 class HydraConfLoader(IConfigurationLoader):
     """wrapper for OmegaConf using Hydra"""
 
-    def load(self, config_path: str, config_name: str) -> Any:
+    def load(self, config_name: str) -> Any:
         """Initialize Hydra and loads the configuration from yalm file."""
-        if GlobalHydra().is_initialized():
-            GlobalHydra.instance().clear()
-
-        initialize(config_path=config_path, job_name="load_config")
-
         hydra_config = compose(config_name=config_name)
         config_dict = OmegaConf.to_object(hydra_config)
         return config_dict

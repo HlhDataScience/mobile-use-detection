@@ -31,6 +31,13 @@ target_column: "UserBehaviorClass"
 normalize_df: true
 
 standardized_df: false
+apply_feature_selection: false
+feature_selection:
+  - "AppUsageTime_min_day"
+  - "ScreenOnTime_hours_day"
+  - "BatteryDrain_mAh_day"
+  - "NumberOfAppsInstalled"
+  - "DataUsage_MB_day"
 
 # Model selection and hyperparameter tuning
 ML_type: "SVM"
@@ -40,13 +47,13 @@ cross_validation: 3
 feature_engineering_dict:
   C:
     - 1e-6
-    - 1e+6
+    - 10
   gamma:
     - scale
     - auto
   degree:
     - 1
-    - 8
+    - 3
   kernel:
     - linear
     - poly

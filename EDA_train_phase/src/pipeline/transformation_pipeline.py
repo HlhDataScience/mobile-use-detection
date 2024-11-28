@@ -24,7 +24,6 @@ from sklearn.svm import SVC
 from skopt import BayesSearchCV
 
 from EDA_train_phase.src.abstractions.ABC_Pipeline import BasicPipeline
-from EDA_train_phase.src.logging_functions.logger import setup_logging
 from EDA_train_phase.src.validation_classes.validation_configurations import (
     DataTransformationConfig,
     DataValidationConfig,
@@ -36,8 +35,6 @@ from EDA_train_phase.src.validation_classes.validation_interfaces import (
 )
 
 # CONSTANTS
-LOG_FILE = Path("../logs/transformation_pipeline.log")
-setup_logging(LOG_FILE)
 CONFIG_PATH = "../../conf"
 
 # INTERFACES LOADED
@@ -84,7 +81,6 @@ class LazyTransformationPipeline(BasicPipeline):
             validation_model=validation_model,
             config_model=config_model,
             config_loader=config_loader,
-            config_path=config_path,
             config_name=config_name,
             config_section=config_section,
             apply_custom_function=apply_custom_function,
@@ -143,6 +139,16 @@ class LazyTransformationPipeline(BasicPipeline):
             f"Categorical columns transformed and saved at {self.valid_config.transformed_intermediate_df_path / self.valid_config.intermediate_df_name}."
         )
 
+    def _feature_selection(
+        self, train: pl.LazyFrame, test: pl.LazyFrame
+    ) -> Tuple[pl.LazyFrame, pl.LazyFrame]:
+        """Selects the columns especifed to be part of the train and test split."""
+
+        train = train.select(
+            [pl.col(col) for col in self.valid_config.feature_selection]
+        )
+        test = test.select([pl.col(col) for col in self.valid_config.feature_selection])
+
     def split_train_test(
         self, random_state: int = 42, train_fraction: float = 0.75
     ) -> None:
@@ -180,11 +186,17 @@ class LazyTransformationPipeline(BasicPipeline):
         test_lazy_df = lazy_df.filter(
             pl.col("row_nr") >= pl.col("row_nr").max() * train_fraction
         )
-
+        if self.valid_config.feature_mode:
+            train_lazy_df, test_lazy_df = self._feature_selection(
+                train_lazy_df, test_lazy_df
+            )
         x_train = train_lazy_df.drop([self.valid_config.target_column, "row_nr"])
         x_test = test_lazy_df.drop([self.valid_config.target_column, "row_nr"])
         y_train = train_lazy_df.select(self.valid_config.target_column)
         y_test = test_lazy_df.select(self.valid_config.target_column)
+        if self.valid_config.apply_feature_selection:
+            x_train, x_test = self._feature_selection(x_train, x_test)
+
         x_train.collect().write_csv(
             self.valid_config.transformed_train_df_path_x
             / self.valid_config.x_train_name,

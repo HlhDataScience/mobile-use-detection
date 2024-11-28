@@ -32,11 +32,7 @@ from EDA_train_phase.src.validation_classes.validation_interfaces import (
 )
 
 # CONSTANTS
-LOG_FILE = Path("../logs/train_pipeline.log")
-setup_logging(LOG_FILE)
 CONFIG_PATH = "../../conf"
-
-
 # INTERFACES LOADED
 
 confi_model = PydanticConfigModel(config_model=TrainerConfig)
