@@ -3,12 +3,13 @@
 import json
 import logging
 from pathlib import Path
-from typing import Any, Tuple
+from typing import Any, Dict, Tuple
 
 import joblib
 import mlflow
 import numpy as np
 import polars as pl
+from sklearn.base import BaseEstimator
 from sklearn.metrics import (
     accuracy_score,
     average_precision_score,
@@ -46,42 +47,45 @@ exp_tracker = MLFlowTracker()
 class TrainerPipeline(BasicTrainer):
     """
     TrainerPipeline is a concrete implementation of the BasicTrainer abstract base class.
-    It provides the functionality to perform a train-test pipeline, including scaling, training, evaluation, and logging
-    with MLFlow integration.
+    It orchestrates the end-to-end training pipeline, including data scaling, model training, evaluation,
+    and logging metrics with MLFlow integration. The pipeline is designed to adhere to SOLID principles
+    and supports configuration-driven workflows.
 
     Attributes:
-        normalized_df (bool): Indicates whether the data should be normalized.
-        standardized_df (bool): Indicates whether the data should be standardized.
+        normalized_df (bool): Indicates whether the training and testing data should be normalized.
+        standardized_df (bool): Indicates whether the training and testing data should be standardized.
 
     Constructor Parameters:
-        config_model (PydanticConfigModel): The configuration model for validation. Defaults to a predefined `PydanticConfigModel`.
-        config_loader (HydraConfLoader): The configuration loader. Defaults to a predefined `HydraConfLoader`.
-        experiment_tracker (MLFlowTracker): The MLFlow experiment tracker. Defaults to a predefined `MLFlowTracker`.
-        config_path (str): The path to the configuration directory. Defaults to `../../conf`.
-        config_name (str): The name of the configuration file. Defaults to `"config"`.
-        config_section (str): The section of the configuration to load. Defaults to `"train_config"`.
-        model (Any): The machine learning model to use. Defaults to `SVC()`.
+        config_model (PydanticConfigModel): The Pydantic configuration model for validation and consistency checks.
+        config_loader (HydraConfLoader): The Hydra-based configuration loader for managing YAML configurations.
+        experiment_tracker (MLFlowTracker): An MLFlow tracker for managing experiments and runs.
+        config_path (str): Path to the directory containing configuration files. Defaults to `../../conf`.
+        config_name (str): Name of the configuration file. Defaults to `"config"`.
+        config_section (str): Section of the configuration file to load. Defaults to `"train_config"`.
+        model (BaseEstimator): The scikit-learn-compatible machine learning model. Defaults to `SVC()`.
 
     Methods:
         scaling_selection() -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-            Selects and loads the appropriate scaled datasets (normalized or standardized) based on the configuration.
+            Selects and loads scaled datasets (normalized, standardized, or raw) based on configuration settings.
 
-        train(self, x, y) -> Any:
-            Trains the machine learning model with the provided training data and saves the model.
+        train(x, y) -> BaseEstimator:
+            Trains the machine learning model using the provided training data and saves the trained model to disk.
 
-        eval(self, model, x, y) -> dict:
-            Evaluates the model on the provided data and calculates various metrics.
+        eval(model, x, y) -> Dict[str, float]:
+            Evaluates the trained model on the given dataset and computes various performance metrics.
 
-        run(self):
-            Executes the full training pipeline, including scaling selection, training, evaluation,
-            parameter logging, and metric storage.
+        run():
+            Executes the complete pipeline, including scaling selection, training, evaluation,
+            and logging of parameters and metrics via MLFlow.
 
     Usage:
-        Instantiate this class and call the `run` method to perform the end-to-end train-test pipeline.
+        Instantiate the `TrainerPipeline` class and call the `run` method to execute the pipeline.
 
     Raises:
-        KeyError: If the specified configuration section is not found.
-        pydantic.ValidationError: If the configuration validation fails.
+        KeyError: If the specified configuration section is missing or incorrect.
+        pydantic.ValidationError: If configuration validation fails.
+        FileNotFoundError: If dataset files are missing.
+        ValueError: If an invalid scaling option is specified or model compatibility issues arise.
     """
 
     def __init__(
@@ -92,8 +96,23 @@ class TrainerPipeline(BasicTrainer):
         config_path: str = CONFIG_PATH,
         config_name: str = "config",
         config_section: str = "train_config",
-        model: Any = SVC(),
+        model: BaseEstimator = SVC(),
     ):
+        """
+        Initializes the TrainerPipeline with configuration, experiment tracking, and model.
+
+        Parameters:
+            config_model (PydanticConfigModel): The configuration model for validation.
+            config_loader (HydraConfLoader): The Hydra configuration loader for handling YAML files.
+            experiment_tracker (MLFlowTracker): An instance for tracking ML experiments.
+            config_path (str): The path to the configuration directory. Defaults to `../../conf`.
+            config_name (str): The name of the configuration file. Defaults to "config".
+            config_section (str): The configuration section to load. Defaults to "train_config".
+            model (BaseEstimator): A scikit-learn model to train. Defaults to `SVC()`.
+
+        Raises:
+            pydantic.ValidationError: If the configuration validation fails.
+        """
 
         super().__init__(
             config_model=config_model,
@@ -110,7 +129,18 @@ class TrainerPipeline(BasicTrainer):
     def scaling_selection(
         self,
     ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-        """Select the type of data based on if is needed to be normalized, standardized or None"""
+        """
+        Selects the type of data scaling to apply based on configuration.
+
+        Returns:
+            Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+            A tuple containing the training and testing sets:
+            (x_train, x_test, y_train, y_test).
+
+        Raises:
+            FileNotFoundError: If the specified dataset files are not found.
+            ValueError: If no scaling option is specified.
+        """
         if self.normalized_df:
             x_train = (
                 pl.scan_csv(self.valid_config.normalized_x_train).collect().to_numpy()
@@ -137,10 +167,23 @@ class TrainerPipeline(BasicTrainer):
 
         return x_train, x_test, y_train, y_test
 
-    def train(self, x, y):
-        """Placeholder at the moment"""
+    def train(self, x, y) -> BaseEstimator:
+        """
+        Trains the machine learning model with the provided data and saves the trained model.
+
+        Parameters:
+            x (np.ndarray): The training input data.
+            y (np.ndarray): The training target labels.
+
+        Returns:
+            BaseEstimator: The trained scikit-learn model.
+
+        Raises:
+            json.JSONDecodeError: If the parameter configuration file cannot be loaded.
+            IOError: If the model file cannot be saved.
+        """
         parameters = json.load(self.valid_config.tuned_parameters)
-        model_ = self.model(**parameters)
+        model_ = self.model.set_params(**parameters)
         model_.fit(x, y)
         joblib.dump(
             model_,
@@ -148,11 +191,30 @@ class TrainerPipeline(BasicTrainer):
         )
         return model_
 
-    def eval(self, model, x, y):
-        """Placeholder at the moment"""
+    def eval(self, model, x, y) -> Dict[str, float]:
+        """
+        Evaluates the model's performance on the given dataset and computes evaluation metrics.
+
+        Parameters:
+            model (BaseEstimator): The trained scikit-learn model to evaluate.
+            x (np.ndarray): The input data for evaluation.
+            y (np.ndarray): The true labels for evaluation.
+
+        Returns:
+            dict: A dictionary containing the computed evaluation metrics:
+                - roc_auc
+                - average_precision
+                - accuracy
+                - precision
+                - recall
+                - f1
+
+        Raises:
+            ValueError: If the model does not support `predict_proba` for probability prediction.
+        """
         y_proba = model.predict_proba(x)[:, 1]
         y_predicted = model.predict(x)
-        return {
+        params_dict = {
             "roc_auc": roc_auc_score(y, y_proba),
             "average_precision": average_precision_score(y, y_proba),
             "accuracy": accuracy_score(y, y_predicted),
@@ -160,16 +222,33 @@ class TrainerPipeline(BasicTrainer):
             "recall": recall_score(y, y_predicted),
             "f1": f1_score(y, y_predicted),
         }
+        return params_dict
 
     def run(self):
-        """Placeholder at the moment"""
+        """ "
+        Executes the complete training pipeline, including scaling, training, evaluation,
+        and tracking parameters and metrics with MLflow.
+
+        Steps:
+            1. Loads the training and testing datasets using the configured scaling option.
+            2. Starts an MLflow experiment run.
+            3. Trains the model with the training dataset and logs parameters.
+            4. Evaluates the model on both training and testing datasets.
+            5. Logs evaluation metrics and saves them to disk.
+
+        Raises:
+            Exception: Logs and raises any exception encountered during pipeline execution.
+        """
         try:
+            logging.info("Staring the Trainer...")
             x_train, x_test, y_train, y_test = self.scaling_selection()
             exp_id = self.experiment_tracker.get_or_create_experiment_id(
                 name=self.valid_config.experiment_name
             )
-
+            logging.info("Test and train sets loaded and experiment ID created")
+            logging.info("Starting the tracking with MLflow...")
             with mlflow.start_run(experiment_id=exp_id):
+                logging.info("Training model...")
                 ml_model = self.train(x_train, x_test)
                 model_class = {"model_class": type(ml_model).__name__}
                 model_parameters = {
@@ -187,7 +266,9 @@ class TrainerPipeline(BasicTrainer):
                     key=str(model_class.keys()), value=model_class.values()
                 )
                 mlflow.log_params(model_parameters)
+                logging.info("Model trained and parameters saved.")
 
+                logging.info("Evaluating model..")
                 train_metrics = self.eval(model=ml_model, x=x_train, y=y_train)
                 train_metrics_to_save = {
                     f"train__{k}": v for k, v in train_metrics.items()
@@ -212,6 +293,10 @@ class TrainerPipeline(BasicTrainer):
                 ) as f:
                     json.dump(test_metrics_to_save, f)
                 mlflow.log_metrics(test_metrics_to_save)
+                logging.info(
+                    "Model Evaluated and train and test metrics tracked and saved"
+                )
+                logging.info("Train and test completed.")
         except Exception as e:
-            logging.error(f"Pipeline failure at {e}")
+            logging.error(f"Trainer failure at {e}")
             raise e
