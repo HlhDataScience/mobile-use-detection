@@ -1,14 +1,12 @@
-"""This modules handle the wrappers for the validation and configuration yalm files."""
+"""This module handle the wrappers for the validation and configuration yalm files."""
 
 from typing import Any, Union
 
 import mlflow
-import omegaconf
 import pandera
 import pandera.polars
 import pydantic
-from hydra import compose, initialize
-from hydra.core.global_hydra import GlobalHydra
+from hydra import compose
 from omegaconf import DictConfig, OmegaConf
 
 from EDA_train_phase.src.abstractions.ABC_validations import (
@@ -60,7 +58,7 @@ class MLFlowTracker(IExperimentTracker):
     """Wrapper for MLFlow experiment tracking"""
 
     def get_or_create_experiment_id(self, name: str):
-        """Creates the ID of the expertiment or use the current one."""
+        """Creates the ID of the experiment or use the current one."""
         exp = mlflow.get_experiment_by_name(name)
         if exp is None:
             exp_id = mlflow.create_experiment(name)

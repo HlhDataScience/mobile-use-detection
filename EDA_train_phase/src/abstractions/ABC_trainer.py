@@ -1,4 +1,4 @@
-"""This module holds the abstract class for the train and test. It is thought to be instanciated and wotk seemlessly with the other classes defined in this project."""
+"""This module holds the abstract class for the train and test. It is thought to be instantiated and work seamlessly with the other classes defined in this project."""
 
 import logging
 from abc import ABC, abstractmethod

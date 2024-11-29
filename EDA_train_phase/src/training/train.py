@@ -180,7 +180,7 @@ class TrainerPipeline(BasicTrainer):
         return model_
 
     @override
-    def eval(self, model, x, y) -> Dict[str, float]:
+    def eval(self, x, y, model: BaseEstimator = None) -> Dict[str, float]:
         """
         Evaluates the model's performance on the given dataset and computes evaluation metrics.
 
@@ -226,7 +226,7 @@ class TrainerPipeline(BasicTrainer):
     def run(self):
         """ "
         Executes the complete training pipeline, including scaling, training, evaluation,
-        and tracking parameters and metrics with MLflow.
+        and tracking parameters and metrics with MLFlow.
 
         Steps:
             1. Loads the training and testing datasets using the configured scaling option.
@@ -245,7 +245,7 @@ class TrainerPipeline(BasicTrainer):
                 name=self.valid_config.experiment_name
             )
             logging.info("Test and train sets loaded and experiment ID created")
-            logging.info("Starting the tracking with MLflow...")
+            logging.info("Starting the tracking with MLFlow...")
             with mlflow.start_run(experiment_id=exp_id):
                 logging.info("Training model...")
                 ml_model = self.train(x_train, y_train)
@@ -263,7 +263,7 @@ class TrainerPipeline(BasicTrainer):
                     json.dump(model_and_parameters, f)
                 mlflow.log_param(key="model__class", value=type(ml_model).__name__)
                 mlflow.log_params(model_parameters)
-                logging.info(f"The paramters saved are:\n{model_and_parameters}")
+                logging.info(f"The parameters saved are:\n{model_and_parameters}")
                 logging.info("Model trained and parameters saved.")
 
                 logging.info("Evaluating model..")

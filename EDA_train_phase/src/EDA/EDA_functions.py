@@ -15,7 +15,7 @@ from omegaconf import DictConfig, OmegaConf
 from pydantic import BaseModel, Field, FilePath
 
 from EDA_train_phase.src.logging_functions.logger import setup_logging
-from EDA_train_phase.src.pipeline.transformation_pipeline import (
+from EDA_train_phase.src.validation_classes.validation_configurations import (
     DataValidationConfig,
 )
 
@@ -43,7 +43,7 @@ class EdaDataExplorationConfig(BaseModel):
 
 class EdaPipeline:
     def __init__(self):
-        self.df_validation: DataValidationConfig = DataValidationConfig
+        self.df_validation: DataValidationConfig = DataValidationConfig()
         self.hydra_config: DictConfig = HYDRA_CONFIG
 
         try:
