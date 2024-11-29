@@ -1,33 +1,34 @@
 # VARIABLE NAMING
 
-experiment_name: "SVC_BayesianCV"
+experiment_name: ${dynamic_settings.experiment_name}
 
 # Train and test Paths
 
-x_train: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/train_data/X_train.csv"
-x_test: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/test_data/X_test.csv"
-y_train: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/train_data/y_train.csv"
-y_test: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/test_data/y_test.csv"
+x_train: "EDA_train_phase/data/processed_data/train_data/X_train.csv"
+x_test: "EDA_train_phase/data/processed_data/test_data/X_test.csv"
+y_train: "EDA_train_phase/data/processed_data/train_data/y_train.csv"
+y_test: "EDA_train_phase/data/processed_data/test_data/y_test.csv"
 
 #Standardized and Normalized Paths
 
-normalized_x_train: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/train_data/X_train_normalize.csv"
-standardized_x_train: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/train_data/X_train_standardized.csv"
-normalized_x_test: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/test_data/X_test_normalized.csv"
-standardized_x_test: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/test_data/X_test_standardized.csv"
+normalized_x_train: "EDA_train_phase/data/processed_data/train_data/X_train_normalize.csv"
+standardized_x_train: "EDA_train_phase/data/processed_data/train_data/X_train_standardized.csv"
+normalized_x_test: "EDA_train_phase/data/processed_data/test_data/X_test_normalized.csv"
+standardized_x_test: "EDA_train_phase/data/processed_data/test_data/X_test_standardized.csv"
 
 # Bolean parameters
 
-normalized_df: true
-standardized_df: false
+normalized_df: ${dynamic_settings.normalized_df}
+standardized_df: ${dynamic_settings.standardized_df}
 
 # model path
 
-model_path: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/src/models"
+model_path: "EDA_train_phase/src/models"
 
 # tuned parameters and metrics
 
-tuned_parameters: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/train_data/Best_parameters_model__BayesianOptim_SVM.json"
+tuned_parameters: "EDA_train_phase/data/processed_data/train_data/Best_parameters_model__BayesianOptim_SVM.json"
 average_mode: "micro"
-metrics: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/src/metrics"
+metrics: "EDA_train_phase/src/metrics"
+
 
