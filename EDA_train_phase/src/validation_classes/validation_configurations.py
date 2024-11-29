@@ -70,7 +70,7 @@ class DataTransformationConfig(BaseModel):
         mapping_file_path (Path): Path to the mapping file.
         ML_type (Literal[ "SVM","KNN","PCA","Gradient","Tree-Based","Naive"]): Model type to perform normalization just into numerical values or into categorical as well,
         normalize_df (bool): Whether to normalize the DataFrame.
-        standardized_df (bool): Whether to standardize the DataFrame.
+        standardize_df (bool): Whether to standardize the DataFrame.
         number_iterations (int): Number of iterations performed by the cross validation model.
         cross_validation: (int): Number of cross validators.
         feature_engineering_dict (Dict[str, Union[float, int, str]]): Dictionary for feature engineering.
