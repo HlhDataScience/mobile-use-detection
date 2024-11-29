@@ -3,11 +3,10 @@
 from typing import Any, Union
 
 import mlflow
-import pandera
 import pandera.polars
 import pydantic
 from hydra import compose
-from omegaconf import DictConfig, OmegaConf
+from omegaconf import OmegaConf
 
 from EDA_train_phase.src.abstractions.ABC_validations import (
     IConfigModel,
