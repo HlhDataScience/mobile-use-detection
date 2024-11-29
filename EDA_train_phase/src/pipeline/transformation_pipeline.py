@@ -553,7 +553,7 @@ class LazyTransformationPipeline(BasicPipeline):
                 self.normalize()
                 logging.info("Normalization applied.")
 
-            elif self.valid_config.standardized_df:
+            elif self.valid_config.standardize_df:
                 self.standardize()
                 logging.info("Standardization applied.")
             else:

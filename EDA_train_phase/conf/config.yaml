@@ -29,6 +29,8 @@ dynamic_settings:
     - "DataUsage_MB_day"
   # Model selection and hyperparameter tuning
   ML_type: "Tree-Based" # Literal["SVM", "KNN", "PCA", "Gradient", "Tree-Based", "Naive"]
+  number_iterations: 3
+  cross_validation: 3
   feature_engineering_dict:
     criterion:
       - "gini"
@@ -38,7 +40,6 @@ dynamic_settings:
       - "best"
       - "random"
     max_depth:
-      - null  # No limit
       - 5
       - 10
       - 20
@@ -51,11 +52,9 @@ dynamic_settings:
       - 2
       - 4
     max_features:
-      - null  # No limit
       - "sqrt"
       - "log2"
     class_weight:
-      - null
       - "balanced"
 
   feature_mode: "GridSearch"
@@ -63,5 +62,5 @@ dynamic_settings:
   model_path: "EDA_train_phase/src/models"
   normalized_df: true #to use the normalized dataframe for training and testing.
   standardized_df: false #to use the standardized dataframe for training and testing
-  tuned_parameters: "EDA_train_phase/data/processed_data/train_data/Best_parameters_model__GridSearch_Tree_Classifier.json"
+  tuned_parameters: "EDA_train_phase/data/processed_data/train_data/Best_parameters_model__GridSearch_Tree-Based.json"
   average_mode: "micro"
