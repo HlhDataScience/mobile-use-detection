@@ -1,6 +1,6 @@
 """This module handle the wrappers for the validation and configuration yalm files."""
 
-from typing import Any, Union
+from typing import Any, Dict, Union
 
 import mlflow
 import pandera.polars
@@ -46,7 +46,7 @@ class PydanticConfigModel(IConfigModel):
 class HydraConfLoader(IConfigurationLoader):
     """wrapper for OmegaConf using Hydra"""
 
-    def load(self, config_name: str) -> Any:
+    def load(self, config_name: str) -> Dict:
         """Initialize Hydra and loads the configuration from yalm file."""
         hydra_config = compose(config_name=config_name)
         config_dict = OmegaConf.to_object(hydra_config)
@@ -56,7 +56,7 @@ class HydraConfLoader(IConfigurationLoader):
 class MLFlowTracker(IExperimentTracker):
     """Wrapper for MLFlow experiment tracking"""
 
-    def get_or_create_experiment_id(self, name: str):
+    def get_or_create_experiment_id(self, name: str) -> str:
         """Creates the ID of the experiment or use the current one."""
         exp = mlflow.get_experiment_by_name(name)
         if exp is None:
