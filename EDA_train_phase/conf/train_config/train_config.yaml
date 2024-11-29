@@ -27,8 +27,8 @@ model_path: "EDA_train_phase/src/models"
 
 # tuned parameters and metrics
 
-tuned_parameters: "EDA_train_phase/data/processed_data/train_data/Best_parameters_model__BayesianOptim_SVM.json"
-average_mode: "micro"
+tuned_parameters: ${dynamic_settings.tuned_parameters}
+average_mode: ${dynamic_settings.average_mode}
 metrics: "EDA_train_phase/src/metrics"
 
 

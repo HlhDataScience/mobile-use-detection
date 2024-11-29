@@ -201,7 +201,7 @@ class TrainerPipeline(BasicTrainer):
         Raises:
             ValueError: If the model does not support `predict_proba` for probability prediction.
         """
-        y_predicted = model.predict(x)
+        y_predicted = model.predict(x)  # type: ignore
         params_dict = {
             "accuracy": accuracy_score(y, y_predicted),
             "precision": precision_score(
@@ -260,7 +260,7 @@ class TrainerPipeline(BasicTrainer):
                     / f"{self.valid_config.experiment_name}_parameters",
                     "w",
                 ) as f:
-                    json.dump(model_and_parameters, f)
+                    json.dump(model_and_parameters, f)  # type: ignore
                 mlflow.log_param(key="model__class", value=type(ml_model).__name__)
                 mlflow.log_params(model_parameters)
                 logging.info(f"The parameters saved are:\n{model_and_parameters}")
@@ -276,7 +276,7 @@ class TrainerPipeline(BasicTrainer):
                     / f"{self.valid_config.experiment_name}_Train_metrics",
                     "w",
                 ) as f:
-                    json.dump(train_metrics_to_save, f)
+                    json.dump(train_metrics_to_save, f)  # type: ignore
 
                 mlflow.log_metrics(train_metrics_to_save)
 
@@ -289,7 +289,7 @@ class TrainerPipeline(BasicTrainer):
                     / f"{self.valid_config.experiment_name}_Test_metrics",
                     "w",
                 ) as f:
-                    json.dump(test_metrics_to_save, f)
+                    json.dump(test_metrics_to_save, f)  # type: ignore
                 mlflow.log_metrics(test_metrics_to_save)
                 logging.info(
                     "Model Evaluated and train and test metrics tracked and saved"

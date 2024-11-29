@@ -20,7 +20,7 @@ dynamic_settings:
   target_column: "UserBehaviorClass"
   normalize_df: true # To normalize the dataframe (TransformationPipeline Setting)
   standardize_df: false # to standardize the dataframe (TransformationPipeline Setting)
-  apply_feature_selection: false
+  apply_feature_selection: true
   feature_selection:
     - "AppUsageTime_min_day"
     - "ScreenOnTime_hours_day"
@@ -29,23 +29,26 @@ dynamic_settings:
     - "DataUsage_MB_day"
   # Model selection and hyperparameter tuning
   ML_type: "SVM"
-  number_iterations: 32
+  number_iterations: 10
   cross_validation: 3
   feature_engineering_dict:
     C:
       - 1e-6
-      - 10
+      - 0.025
     gamma:
-      - scale
-      - auto
+      - "scale"
+      - "auto"
     degree:
       - 1
       - 3
     kernel:
-      - linear
-      - poly
-      - rbf
+      - "linear"
+      - "poly"
+      - "rbf"
   feature_mode: "GridSearch"
+  #trainer settings
   model_path: "EDA_train_phase/src/models"
   normalized_df: true #to use the normalized dataframe for training and testing.
   standardized_df: false #to use the standardized dataframe for training and testing
+  tuned_parameters: "EDA_train_phase/data/processed_data/train_data/Best_parameters_model__GridSearch_SVM.json"
+  average_mode: "micro"
