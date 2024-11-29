@@ -217,8 +217,8 @@ class TrainerPipeline(BasicTrainer):
 
         # Check if the model supports `predict_proba`
         if hasattr(model, "predict_proba"):
-            y_proba = model.predict_proba(x)[:, 1]
-            params_dict["roc_auc"] = roc_auc_score(y, y_proba)
+            y_proba = model.predict_proba(x)
+            params_dict["roc_auc"] = roc_auc_score(y, y_proba, multi_class="ovr")
             params_dict["average_precision"] = average_precision_score(y, y_proba)
 
         return params_dict

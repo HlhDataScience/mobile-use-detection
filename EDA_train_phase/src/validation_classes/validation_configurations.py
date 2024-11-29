@@ -11,7 +11,7 @@ Modules used:
 """
 
 from pathlib import Path
-from typing import Dict, List, Literal, Union
+from typing import Dict, List, Literal, Optional, Union
 
 import pandera.polars as pa
 from pydantic import BaseModel, Field, FilePath
@@ -259,18 +259,19 @@ class TrainerConfig(BaseModel):
         ..., description="Path to the transformed test_data data Y folder"
     )
 
-    normalized_x_train: FilePath = Field(
-        ..., description="Path to save the transformed normalized train_data DataFrame"
+    normalized_x_train: Optional[FilePath] = Field(
+        None, description="Path to save the transformed normalized train_data DataFrame"
     )
-    standardized_x_train: FilePath = Field(
-        ...,
+    standardized_x_train: Optional[FilePath] = Field(
+        None,
         description="Path to save the transformed standardized train_data DataFrame",
     )
-    normalized_x_test: FilePath = Field(
-        ..., description="Path to save the transformed normalized test_data DataFrame"
+    normalized_x_test: Optional[FilePath] = Field(
+        None, description="Path to save the transformed normalized test_data DataFrame"
     )
-    standardized_x_test: FilePath = Field(
-        ..., description="Path to save the transformed standardized test_data DataFrame"
+    standardized_x_test: Optional[FilePath] = Field(
+        None,
+        description="Path to save the transformed standardized test_data DataFrame",
     )
     normalized_df: bool = Field(..., description="Whether to normalize the data")
 

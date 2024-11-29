@@ -65,27 +65,30 @@ def main(args) -> None:
         apply_custom_function=False,
         model=SVC(),
     )
+    logging.info("Data Transformation instantiated")
 
-    train_pipeline = TrainerPipeline(
-        config_model=confi_model_trainer,
-        config_loader=hydra_loader_conf,
-        experiment_tracker=exp_tracker,
-        config_name="config",
-        config_section="train_config",
-        model=SVC(),
-    )
-
-    logging.info("Data Transformation and Trainer instantiated")
-    logging.info("Running Pipelines")
-
+    logging.info("Pipelines running")
     try:
         if args.pipeline in ["all", "transformation"]:
             transformation_pipeline.run()
             logging.info("Transformation pipeline completed.")
 
+        # Instantiate the TrainerPipeline only after the transformation pipeline has run successfully
         if args.pipeline in ["all", "training"]:
-            train_pipeline.run()
-            logging.info("Training pipeline completed.")
+            try:
+                train_pipeline = TrainerPipeline(
+                    config_model=confi_model_trainer,
+                    config_loader=hydra_loader_conf,
+                    experiment_tracker=exp_tracker,
+                    config_name="config",
+                    config_section="train_config",
+                    model=SVC(),
+                )
+                logging.info("Trainer instantiated")
+                train_pipeline.run()
+                logging.info("Training pipeline completed.")
+            except Exception as e:
+                logging.error(f"Failed instantiating Trainer: {e}")
 
     except Exception as e:
         logging.exception(f"An error occurred during pipeline execution:\n{e}.")
