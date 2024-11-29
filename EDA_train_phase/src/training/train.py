@@ -2,8 +2,7 @@
 
 import json
 import logging
-from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Dict, Tuple, override
 
 import joblib
 import mlflow
@@ -18,26 +17,13 @@ from sklearn.metrics import (
     recall_score,
     roc_auc_score,
 )
-from sklearn.svm import SVC
 
 from EDA_train_phase.src.abstractions.ABC_trainer import BasicTrainer
-from EDA_train_phase.src.logging_functions.logger import setup_logging
-from EDA_train_phase.src.validation_classes.validation_configurations import (
-    TrainerConfig,
-)
 from EDA_train_phase.src.validation_classes.validation_interfaces import (
     HydraConfLoader,
     MLFlowTracker,
     PydanticConfigModel,
 )
-
-# CONSTANTS
-CONFIG_PATH = "../../conf"
-# INTERFACES LOADED
-
-confi_model = PydanticConfigModel(config_model=TrainerConfig)
-hydra_loader_conf = HydraConfLoader()
-exp_tracker = MLFlowTracker()
 
 
 class TrainerPipeline(BasicTrainer):
@@ -86,13 +72,12 @@ class TrainerPipeline(BasicTrainer):
 
     def __init__(
         self,
-        config_model: PydanticConfigModel = confi_model,
-        config_loader: HydraConfLoader = hydra_loader_conf,
-        experiment_tracker: MLFlowTracker = exp_tracker,
-        config_path: str = CONFIG_PATH,
-        config_name: str = "config",
-        config_section: str = "train_config",
-        model: BaseEstimator = SVC(),
+        config_model: PydanticConfigModel,
+        config_loader: HydraConfLoader,
+        experiment_tracker: MLFlowTracker,
+        config_name: str,
+        config_section: str,
+        model: BaseEstimator,
     ):
         """
         Initializes the TrainerPipeline with configuration, experiment tracking, and model.
@@ -101,7 +86,6 @@ class TrainerPipeline(BasicTrainer):
             config_model (PydanticConfigModel): The configuration model for validation.
             config_loader (HydraConfLoader): The Hydra configuration loader for handling YAML files.
             experiment_tracker (MLFlowTracker): An instance for tracking ML experiments.
-            config_path (str): The path to the configuration directory. Defaults to `../../conf`.
             config_name (str): The name of the configuration file. Defaults to "config".
             config_section (str): The configuration section to load. Defaults to "train_config".
             model (BaseEstimator): A scikit-learn model to train. Defaults to `SVC()`.
@@ -114,7 +98,6 @@ class TrainerPipeline(BasicTrainer):
             config_model=config_model,
             config_loader=config_loader,
             experiment_tracker=experiment_tracker,
-            config_path=config_path,
             config_name=config_name,
             config_section=config_section,
             model=model,
@@ -169,7 +152,7 @@ class TrainerPipeline(BasicTrainer):
 
         return x_train, x_test, y_train, y_test
 
-    def train(self, x, y) -> BaseEstimator:
+    def train(self, x: np.ndarray, y: np.ndarray) -> BaseEstimator:
         """
         Trains the machine learning model with the provided data and saves the trained model.
 
@@ -195,6 +178,7 @@ class TrainerPipeline(BasicTrainer):
         )
         return model_
 
+    @override
     def eval(self, model, x, y) -> Dict[str, float]:
         """
         Evaluates the model's performance on the given dataset and computes evaluation metrics.

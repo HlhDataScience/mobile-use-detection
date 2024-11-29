@@ -7,12 +7,24 @@ from pathlib import Path
 import dagshub
 from hydra import initialize
 from hydra.core.global_hydra import GlobalHydra
+from sklearn.svm import SVC
 
 from EDA_train_phase.src.logging_functions.logger import setup_logging
 from EDA_train_phase.src.pipeline.transformation_pipeline import (
     LazyTransformationPipeline,
 )
 from EDA_train_phase.src.training.train import TrainerPipeline
+from EDA_train_phase.src.validation_classes.validation_configurations import (
+    DataTransformationConfig,
+    DataValidationConfig,
+    TrainerConfig,
+)
+from EDA_train_phase.src.validation_classes.validation_interfaces import (
+    HydraConfLoader,
+    MLFlowTracker,
+    PanderaValidationModel,
+    PydanticConfigModel,
+)
 
 # CONSTANTS
 LOG_FILE = Path("logs/main_program.log")
@@ -25,12 +37,18 @@ setup_logging(LOG_FILE)
 logging.info("Setting up Hydra")
 if GlobalHydra().is_initialized():
     GlobalHydra.instance().clear()
-
 initialize(config_path=CONFIG_PATH, job_name="load_config")
 logging.info("Completed")
 logging.info("Setting up DagsHUb with MLFlow tracking")
 dagshub.init(DAGSHUB_REPO, DAGSHUB_REPO_OWNER, mlflow=True)
 logging.info("Completed. Ready for main program.")
+
+# Loading interfaces and validations
+vali_model = PanderaValidationModel(validation_model=DataValidationConfig)
+confi_model_data = PydanticConfigModel(config_model=DataTransformationConfig)
+confi_model_trainer = PydanticConfigModel(config_model=TrainerConfig)
+hydra_loader_conf = HydraConfLoader()
+exp_tracker = MLFlowTracker()
 
 
 # Main program
@@ -38,23 +56,39 @@ def main(args) -> None:
     """Main Program function that handles all the pipelines and tracks the experiment using MLFlow and dagshub."""
     logging.info("Initializing Program...")
 
-    pipeline = LazyTransformationPipeline()
-    train = TrainerPipeline()
+    transformation_pipeline = LazyTransformationPipeline(
+        validation_model=vali_model,
+        config_model=confi_model_data,
+        config_loader=hydra_loader_conf,
+        config_name="config",
+        config_section="transformation_config",
+        apply_custom_function=False,
+        model=SVC(),
+    )
+
+    train_pipeline = TrainerPipeline(
+        config_model=confi_model_trainer,
+        config_loader=hydra_loader_conf,
+        experiment_tracker=exp_tracker,
+        config_name="config",
+        config_section="train_config",
+        model=SVC(),
+    )
 
     logging.info("Data Transformation and Trainer instantiated")
     logging.info("Running Pipelines")
 
     try:
         if args.pipeline in ["all", "transformation"]:
-            pipeline.run()
+            transformation_pipeline.run()
             logging.info("Transformation pipeline completed.")
 
         if args.pipeline in ["all", "training"]:
-            train.run()
+            train_pipeline.run()
             logging.info("Training pipeline completed.")
 
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
+        logging.exception(f"An error occurred during pipeline execution:\n{e}.")
 
 
 if __name__ == "__main__":

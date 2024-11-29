@@ -13,34 +13,21 @@ Modules used:
 
 import json
 import logging
-from pathlib import Path
-from typing import List, Tuple
+from typing import List, Tuple, override
 
 import numpy as np
 import polars as pl
 import polars.selectors as cs
+from sklearn.base import BaseEstimator
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
-from sklearn.svm import SVC
 from skopt import BayesSearchCV
 
 from EDA_train_phase.src.abstractions.ABC_Pipeline import BasicPipeline
-from EDA_train_phase.src.validation_classes.validation_configurations import (
-    DataTransformationConfig,
-    DataValidationConfig,
-)
 from EDA_train_phase.src.validation_classes.validation_interfaces import (
     HydraConfLoader,
     PanderaValidationModel,
     PydanticConfigModel,
 )
-
-# CONSTANTS
-CONFIG_PATH = "../../conf"
-
-# INTERFACES LOADED
-vali_model = PanderaValidationModel(validation_model=DataValidationConfig)
-confi_model = PydanticConfigModel(config_model=DataTransformationConfig)
-hydra_loader_conf = HydraConfLoader()
 
 
 class LazyTransformationPipeline(BasicPipeline):
@@ -60,14 +47,13 @@ class LazyTransformationPipeline(BasicPipeline):
 
     def __init__(
         self,
-        validation_model: PanderaValidationModel = vali_model,
-        config_model: PydanticConfigModel = confi_model,
-        config_loader: HydraConfLoader = hydra_loader_conf,
-        config_path: str = CONFIG_PATH,
-        config_name: str = "config",
-        config_section: str = "transformation_config",
-        apply_custom_function: bool = False,
-        model=SVC(),
+        validation_model: PanderaValidationModel,
+        config_model: PydanticConfigModel,
+        config_loader: HydraConfLoader,
+        config_name: str,
+        config_section: str,
+        apply_custom_function: bool,
+        model: BaseEstimator,
     ):
         """
         Initializes the LazyTransformationPipeline subclass with default super configurations for data transformation,
@@ -148,8 +134,8 @@ class LazyTransformationPipeline(BasicPipeline):
             [pl.col(col) for col in self.valid_config.feature_selection]
         )
         test = test.select([pl.col(col) for col in self.valid_config.feature_selection])
-        return  train, test
-        
+        return train, test
+
     def split_train_test(
         self, random_state: int = 42, train_fraction: float = 0.75
     ) -> None:
@@ -441,6 +427,7 @@ class LazyTransformationPipeline(BasicPipeline):
                 / self.valid_config.x_test_standardized_name
             )
 
+    @override
     def _apply_feature_search(self, search_class) -> None:
         """
         General function to apply any feature search method (RandomizedSearch, GridSearch, or BayesSearch).

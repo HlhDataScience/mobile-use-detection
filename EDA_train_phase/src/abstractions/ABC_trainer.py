@@ -57,14 +57,13 @@ class BasicTrainer(ABC):
         config_model: IConfigModel,
         config_loader: IConfigurationLoader,
         experiment_tracker: IExperimentTracker,
-        config_path: str,
         config_name: str,
         config_section: str = None,
         model: Any = None,
     ):
         self.experiment_tracker = experiment_tracker
         self.config_model = config_model
-        self.config_data = config_loader.load(config_path, config_name)
+        self.config_data = config_loader.load(config_name)
         self.model = model
         if config_section:
             if config_section in self.config_data:
