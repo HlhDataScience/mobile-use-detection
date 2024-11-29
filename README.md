@@ -21,6 +21,8 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
 - Completed train.py class.
 - Completed test for TrainerPipeline: Everything works properly.
 - Created Makefile for main.py
+- Tested main.py. It works without problem.
+- Created KNN deviating branch to test different experiments.
 
 
 ## TODOs related to EDA_train_phase
@@ -36,9 +38,10 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - ~~We need to complete the train.py.~~
   - ~~We need to test the TrainerPipeline to check everything is working properly.~~
   - ~~We need to create a makefile for the main.py~~
-  - We need to use the main.py to run the whole program
-  - We need to create a deviating branch(or several) to test other classic machine learning models.
-  - Suggested test duplicating the data until we reach 3 million rows. We can use this as stress test for speed in the data pipeline
+  - ~~We need to use the main.py to run the whole program~~
+  - ~~We need to create a deviating branch(or several) to test other classic machine learning models.~~
+  - We need to create test for every class and method with pytest
+  - We need to experiment with different parameters and save the different models.
 
 
 ## Done related to production_phase

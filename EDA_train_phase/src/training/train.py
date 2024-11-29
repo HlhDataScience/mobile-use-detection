@@ -2,7 +2,7 @@
 
 import json
 import logging
-from typing import Dict, Tuple, override
+from typing import Dict, Tuple
 
 import joblib
 import mlflow
@@ -17,6 +17,7 @@ from sklearn.metrics import (
     recall_score,
     roc_auc_score,
 )
+from typing_extensions import override
 
 from EDA_train_phase.src.abstractions.ABC_trainer import BasicTrainer
 from EDA_train_phase.src.validation_classes.validation_interfaces import (

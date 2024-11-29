@@ -13,7 +13,7 @@ Modules used:
 
 import json
 import logging
-from typing import List, Tuple, override
+from typing import List, Tuple
 
 import numpy as np
 import polars as pl
@@ -21,6 +21,7 @@ import polars.selectors as cs
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from skopt import BayesSearchCV
+from typing_extensions import override
 
 from EDA_train_phase.src.abstractions.ABC_Pipeline import BasicPipeline
 from EDA_train_phase.src.validation_classes.validation_interfaces import (
@@ -173,16 +174,15 @@ class LazyTransformationPipeline(BasicPipeline):
         test_lazy_df = lazy_df.filter(
             pl.col("row_nr") >= pl.col("row_nr").max() * train_fraction
         )
-        if self.valid_config.feature_mode:
-            train_lazy_df, test_lazy_df = self._feature_selection(
-                train_lazy_df, test_lazy_df
-            )
+
         x_train = train_lazy_df.drop([self.valid_config.target_column, "row_nr"])
         x_test = test_lazy_df.drop([self.valid_config.target_column, "row_nr"])
         y_train = train_lazy_df.select(self.valid_config.target_column)
         y_test = test_lazy_df.select(self.valid_config.target_column)
         if self.valid_config.apply_feature_selection:
-            x_train, x_test = self._feature_selection(x_train, x_test)
+            x_train, x_test = self._feature_selection(
+                x_train.collect(), x_test.collect()
+            )
 
         x_train.collect().write_csv(
             self.valid_config.transformed_train_df_path_x

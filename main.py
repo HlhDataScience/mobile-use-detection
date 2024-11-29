@@ -28,7 +28,7 @@ from EDA_train_phase.src.validation_classes.validation_interfaces import (
 
 # CONSTANTS
 LOG_FILE = Path("logs/main_program.log")
-CONFIG_PATH = "conf/"
+CONFIG_PATH = "EDA_train_phase/conf/"
 DAGSHUB_REPO_OWNER = "data_analitics_HLH"
 DAGSHUB_REPO = "mobile-use-detection"
 
