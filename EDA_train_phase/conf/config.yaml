@@ -5,7 +5,7 @@ defaults:
 
 dynamic_settings:
   ##GENERAL SETTINGS:
-  experiment_name: "SVC_GridSearchCV"
+  experiment_name: "KNN_GridSearchCV"
   ##SETTINGS FOR TRANSFORMATION AND TRAINING
   # load the original data
   original_datapath: "EDA_train_phase/data/rawdata/user_behavior_dataset.csv"
@@ -28,27 +28,30 @@ dynamic_settings:
     - "NumberOfAppsInstalled"
     - "DataUsage_MB_day"
   # Model selection and hyperparameter tuning
-  ML_type: "SVM"
+  ML_type: "KNN" # Literal["SVM", "KNN", "PCA", "Gradient", "Tree-Based", "Naive"]
   number_iterations: 10
   cross_validation: 3
   feature_engineering_dict:
-    C:
-      - 1e-6
-      - 0.025
-    gamma:
-      - "scale"
-      - "auto"
-    degree:
-      - 1
+    n_neighbors:
       - 3
-    kernel:
-      - "linear"
-      - "poly"
-      - "rbf"
+      - 5
+      - 7
+      - 10
+    weights:
+      - "uniform"
+      - "distance"
+    algorithm:
+      - "auto"
+      - "ball_tree"
+      - "kd_tree"
+      - "brute"
+    p:
+      - 1  # Manhattan distance
+      - 2  # Euclidean distance
   feature_mode: "GridSearch"
   #trainer settings
   model_path: "EDA_train_phase/src/models"
   normalized_df: true #to use the normalized dataframe for training and testing.
   standardized_df: false #to use the standardized dataframe for training and testing
-  tuned_parameters: "EDA_train_phase/data/processed_data/train_data/Best_parameters_model__GridSearch_SVM.json"
+  tuned_parameters: "EDA_train_phase/data/processed_data/train_data/Best_parameters_model__GridSearch_KNN.json"
   average_mode: "micro"
