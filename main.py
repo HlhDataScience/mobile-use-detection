@@ -7,7 +7,7 @@ from pathlib import Path
 import dagshub
 from hydra import initialize
 from hydra.core.global_hydra import GlobalHydra
-from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
 
 from EDA_train_phase.src.logging_functions.logger import setup_logging
 from EDA_train_phase.src.pipeline.transformation_pipeline import (
@@ -63,7 +63,7 @@ def main(args) -> None:
         config_name="config",
         config_section="transformation_config",
         apply_custom_function=False,
-        model=SVC(),
+        model=DecisionTreeClassifier(),
     )
     logging.info("Data Transformation instantiated")
 
@@ -82,7 +82,7 @@ def main(args) -> None:
                     experiment_tracker=exp_tracker,
                     config_name="config",
                     config_section="train_config",
-                    model=SVC(),
+                    model=DecisionTreeClassifier(),
                 )
                 logging.info("Trainer instantiated")
                 train_pipeline.run()
