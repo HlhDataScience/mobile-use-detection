@@ -20,7 +20,7 @@ columns_to_drop: ${dynamic_settings.columns_to_drop}
 mapping_file_path: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/intermediate_data"
 target_column: ${dynamic_settings.target_column}
 normalize_df: ${dynamic_settings.normalize_df}
-standardized_df: ${dynamic_settings.standardized_df}
+standardize_df: ${dynamic_settings.standardized_df}
 apply_feature_selection: ${dynamic_settings.apply_feature_selection}
 feature_selection: ${dynamic_settings.feature_selection}
 

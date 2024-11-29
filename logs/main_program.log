@@ -142,3 +142,494 @@
 2024-11-29 13:46:08 - urllib3.connectionpool - DEBUG - https://dagshub.com:443 "GET /data_analitics_HLH/mobile-use-detection.mlflow/api/2.0/mlflow/runs/get?run_uuid=a4d0654497394fcba6ab17057f982296&run_id=a4d0654497394fcba6ab17057f982296 HTTP/11" 200 None
 2024-11-29 13:46:08 - urllib3.connectionpool - DEBUG - https://dagshub.com:443 "POST /data_analitics_HLH/mobile-use-detection.mlflow/api/2.0/mlflow/runs/update HTTP/11" 200 None
 2024-11-29 13:46:08 - root - INFO - Training pipeline completed.
+2024-11-29 14:27:28 - root - INFO - Logging system initialized.
+2024-11-29 14:27:28 - root - INFO - Setting up Hydra
+2024-11-29 14:27:29 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-29 14:27:29 - hydra.core.utils - DEBUG - Setting JobRuntime:name=load_config
+2024-11-29 14:27:29 - root - INFO - Completed
+2024-11-29 14:27:29 - root - INFO - Setting up DagsHUb with MLFlow tracking
+2024-11-29 14:27:29 - dagshub.auth.tokens - DEBUG - Loading token cache from /home/tensorboard/.cache/dagshub/tokens
+2024-11-29 14:27:29 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:27:29 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:27:29 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:27:29 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x71e2680f61d0>
+2024-11-29 14:27:29 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x71e25da46180> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:27:29 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x71e25dbaac10>
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:27:29 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=1c0746f532ea1df1; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=qNAiWQMykZE9wCJxCUN-1iBYbH06MTczMjg4Njg0OTUxODY4MjY0Mg; Path=/; Expires=Sat, 30 Nov 2024 13:27:29 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'243a26e7-45af-421b-81dc-25704bdba51b'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:27:29 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:27:29 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:27:29 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:27:29 - dagshub - INFO - Accessing as data_analitics_HLH
+2024-11-29 14:27:29 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:27:29 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:27:29 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:27:29 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x71e25d95d550>
+2024-11-29 14:27:29 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x71e25da462a0> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:27:29 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x71e25d95dd10>
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:27:29 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:27:30 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=6f86c85c4743f848; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=rcfCxc-0kzTjzdFtpuhCkeX29kg6MTczMjg4Njg1MDAzNDk1ODIzMw; Path=/; Expires=Sat, 30 Nov 2024 13:27:30 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'7fcce11e-b36c-419d-834e-cff722eccf34'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:27:30 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/repos/data_analitics_HLH/mobile-use-detection "HTTP/1.1 200 OK"
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:27:30 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:27:30 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:27:30 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:27:30 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:27:30 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:27:30 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x71e25da17290>
+2024-11-29 14:27:30 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x71e25da46180> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:27:30 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x71e25d962e90>
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:27:30 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=ef0a100cbefc0082; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=L1AyQBmV2EXL3_0dAuaA_SdOgS46MTczMjg4Njg1MDY0MTk3NjkzMA; Path=/; Expires=Sat, 30 Nov 2024 13:27:30 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'd2b9cc40-b893-4d81-bf36-33077dc600d4'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:27:30 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:27:30 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:27:30 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:27:30 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:27:30 - dagshub - INFO - Initialized MLflow to track repo "data_analitics_HLH/mobile-use-detection"
+2024-11-29 14:27:30 - dagshub - INFO - Repository data_analitics_HLH/mobile-use-detection initialized!
+2024-11-29 14:27:30 - root - INFO - Completed. Ready for main program.
+2024-11-29 14:27:30 - root - INFO - Initializing Program...
+2024-11-29 14:33:56 - root - INFO - Logging system initialized.
+2024-11-29 14:33:56 - root - INFO - Setting up Hydra
+2024-11-29 14:33:56 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-29 14:33:56 - hydra.core.utils - DEBUG - Setting JobRuntime:name=load_config
+2024-11-29 14:33:56 - root - INFO - Completed
+2024-11-29 14:33:56 - root - INFO - Setting up DagsHUb with MLFlow tracking
+2024-11-29 14:33:56 - dagshub.auth.tokens - DEBUG - Loading token cache from /home/tensorboard/.cache/dagshub/tokens
+2024-11-29 14:33:56 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:33:56 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:33:56 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:33:57 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x75ec196ee690>
+2024-11-29 14:33:57 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x75ec194fa0f0> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:33:57 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x75ec196edf90>
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:33:57 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=7a339af48e10ab64; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=LWffGesUhpJ7K37Pcxypu_w9L4Q6MTczMjg4NzIzNzExODk0NDE4Mg; Path=/; Expires=Sat, 30 Nov 2024 13:33:57 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'd57893cf-e27d-48ad-a1e4-e9bfdeaf1fd5'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:33:57 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:33:57 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:33:57 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:33:57 - dagshub - INFO - Accessing as data_analitics_HLH
+2024-11-29 14:33:57 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:33:57 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:33:57 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:33:57 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x75ec1967e710>
+2024-11-29 14:33:57 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x75ec194fa210> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:33:57 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x75ec195b65d0>
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:33:57 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=ddda6762a9ff2e75; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=qp8q5riwdHC0oBjnymx_Das3Twk6MTczMjg4NzIzNzcyMTE0Njc0OQ; Path=/; Expires=Sat, 30 Nov 2024 13:33:57 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'ce8d3f86-d124-4748-8a76-5bfbc08a1c7e'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:33:57 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/repos/data_analitics_HLH/mobile-use-detection "HTTP/1.1 200 OK"
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:33:57 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:33:57 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:33:57 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:33:57 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:33:57 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:33:57 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:34:08 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x75ec196d0f10>
+2024-11-29 14:34:08 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x75ec194fa0f0> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:34:08 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x75ec196d0e10>
+2024-11-29 14:34:08 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:34:08 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:34:08 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:34:08 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:34:08 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:34:08 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:34:08 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=f3490c5ad3d11e61; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=Pps9Awkr1SrstisVwD1J3ca4ZJg6MTczMjg4NzI0ODc4MDM0MzQ1Mw; Path=/; Expires=Sat, 30 Nov 2024 13:34:08 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'2cff4316-9258-4852-a0ee-1e5cba7b4b99'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:34:08 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2024-11-29 14:34:08 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:34:08 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:34:08 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:34:08 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:34:08 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:34:08 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:34:08 - dagshub - INFO - Initialized MLflow to track repo "data_analitics_HLH/mobile-use-detection"
+2024-11-29 14:34:08 - dagshub - INFO - Repository data_analitics_HLH/mobile-use-detection initialized!
+2024-11-29 14:34:08 - root - INFO - Completed. Ready for main program.
+2024-11-29 14:34:08 - root - INFO - Initializing Program...
+2024-11-29 14:34:52 - root - INFO - Logging system initialized.
+2024-11-29 14:34:52 - root - INFO - Setting up Hydra
+2024-11-29 14:34:53 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-29 14:34:53 - hydra.core.utils - DEBUG - Setting JobRuntime:name=load_config
+2024-11-29 14:34:53 - root - INFO - Completed
+2024-11-29 14:34:53 - root - INFO - Setting up DagsHUb with MLFlow tracking
+2024-11-29 14:34:53 - dagshub.auth.tokens - DEBUG - Loading token cache from /home/tensorboard/.cache/dagshub/tokens
+2024-11-29 14:34:53 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:34:53 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:34:53 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:34:53 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7d1a7428bd90>
+2024-11-29 14:34:53 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x7d1a6ff02180> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:34:53 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7d1a6ff1fe50>
+2024-11-29 14:34:53 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:34:53 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:34:53 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:34:53 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:34:53 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:34:53 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:34:53 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=9bbef4a783d25321; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=afQZ193Jss8JmjQNepIj8JVKeMA6MTczMjg4NzI5MzUzMTgzMjIzMg; Path=/; Expires=Sat, 30 Nov 2024 13:34:53 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'5d24274d-a39a-42ad-b582-0b626a65e212'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:34:53 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2024-11-29 14:34:53 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:34:53 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:34:53 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:34:53 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:34:53 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:34:53 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:34:53 - dagshub - INFO - Accessing as data_analitics_HLH
+2024-11-29 14:34:53 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:34:53 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:34:53 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:34:54 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7d1a6fe1f510>
+2024-11-29 14:34:54 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x7d1a6ff022a0> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:34:54 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7d1a6fe1f150>
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:34:54 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=a863414263a7881b; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=mMNXhfLLQsyy7VSsiprpVI57x6k6MTczMjg4NzI5NDE0NDIwMzcxOA; Path=/; Expires=Sat, 30 Nov 2024 13:34:54 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'df39d9e7-57bb-4b06-867b-1d35c494a885'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:34:54 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/repos/data_analitics_HLH/mobile-use-detection "HTTP/1.1 200 OK"
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:34:54 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:34:54 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:34:54 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:34:54 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:34:54 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:34:54 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7d1a6ff1ebd0>
+2024-11-29 14:34:54 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x7d1a6ff02330> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:34:54 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7d1a7421d6d0>
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:34:54 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=5d2714be0f66c78c; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=_os8xgcyA1Z4u2awov578WALv5k6MTczMjg4NzI5NDc1NzgwOTQ4NQ; Path=/; Expires=Sat, 30 Nov 2024 13:34:54 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'b0b8331b-d2cf-47a8-88a6-922a1768cbb7'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:34:54 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:34:54 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:34:54 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:34:54 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:34:54 - dagshub - INFO - Initialized MLflow to track repo "data_analitics_HLH/mobile-use-detection"
+2024-11-29 14:34:54 - dagshub - INFO - Repository data_analitics_HLH/mobile-use-detection initialized!
+2024-11-29 14:34:54 - root - INFO - Completed. Ready for main program.
+2024-11-29 14:34:54 - root - INFO - Initializing Program...
+2024-11-29 14:34:54 - root - ERROR - Validation of the data configuration failed at:
+1 validation error for DataTransformationConfig
+standardized_df
+  Field required [type=missing, input_value={'original_datapath': 'ED...ocessed_data/test_data'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+2024-11-29 14:36:54 - root - INFO - Logging system initialized.
+2024-11-29 14:36:54 - root - INFO - Setting up Hydra
+2024-11-29 14:36:54 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-29 14:36:54 - hydra.core.utils - DEBUG - Setting JobRuntime:name=load_config
+2024-11-29 14:36:54 - root - INFO - Completed
+2024-11-29 14:36:54 - root - INFO - Setting up DagsHUb with MLFlow tracking
+2024-11-29 14:36:54 - dagshub.auth.tokens - DEBUG - Loading token cache from /home/tensorboard/.cache/dagshub/tokens
+2024-11-29 14:36:54 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:36:54 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:36:54 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:36:54 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x77b2d10ac450>
+2024-11-29 14:36:54 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x77b2d0d36180> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:36:54 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x77b2d0ff4290>
+2024-11-29 14:36:54 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:36:54 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:36:54 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:36:54 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:36:54 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:36:54 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:36:54 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=f5a2010b4ac90c91; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=P859R2PpUNzwJLmKZxEc--D96QA6MTczMjg4NzQxNDg3Mjk2NDQ5NA; Path=/; Expires=Sat, 30 Nov 2024 13:36:54 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'436949ee-7506-4cd3-9ae2-838493919aa3'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:36:54 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2024-11-29 14:36:54 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:36:54 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:36:54 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:36:54 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:36:54 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:36:54 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:36:54 - dagshub - INFO - Accessing as data_analitics_HLH
+2024-11-29 14:36:54 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:36:54 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:36:55 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:36:55 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x77b2d0c4de90>
+2024-11-29 14:36:55 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x77b2d0d362a0> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:36:55 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x77b2d0c4f5d0>
+2024-11-29 14:36:55 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:36:55 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:36:55 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:36:55 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:36:55 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:36:55 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:36:55 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=a2926dafad74ddd8; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=nTQSR83WGfO43PahEzN_gtEjImk6MTczMjg4NzQxNTQ5MzExNDMwMQ; Path=/; Expires=Sat, 30 Nov 2024 13:36:55 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'eaf79fe4-d52e-4f42-820a-0c932484ac7f'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:36:55 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/repos/data_analitics_HLH/mobile-use-detection "HTTP/1.1 200 OK"
+2024-11-29 14:36:55 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:36:55 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:36:55 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:36:55 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:36:55 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:36:55 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:36:55 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:36:55 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:36:55 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:36:56 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x77b2d0e8f350>
+2024-11-29 14:36:56 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x77b2d0d36180> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:36:56 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x77b2d0c53e50>
+2024-11-29 14:36:56 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:36:56 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:36:56 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:36:56 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:36:56 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:36:56 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:36:56 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=f4aed8f2975acae3; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=MMsQ3k1AkRoDai4qlaiyebAgzJA6MTczMjg4NzQxNjEwMTc4NjU1Nw; Path=/; Expires=Sat, 30 Nov 2024 13:36:56 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'44ae0720-9b3d-4768-9e71-7bed0ccab1d7'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:36:56 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2024-11-29 14:36:56 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:36:56 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:36:56 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:36:56 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:36:56 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:36:56 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:36:56 - dagshub - INFO - Initialized MLflow to track repo "data_analitics_HLH/mobile-use-detection"
+2024-11-29 14:36:56 - dagshub - INFO - Repository data_analitics_HLH/mobile-use-detection initialized!
+2024-11-29 14:36:56 - root - INFO - Completed. Ready for main program.
+2024-11-29 14:36:56 - root - INFO - Initializing Program...
+2024-11-29 14:36:56 - root - INFO - Data Pipeline configuration was successfully loaded and validated
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_column_values_are_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:36:56 - root - INFO - Validation of the dataframe was successful!
+2024-11-29 14:36:56 - root - INFO - Data Pipeline configuration was successfully loaded and validated
+2024-11-29 14:36:56 - root - INFO - Data Transformation and Trainer instantiated
+2024-11-29 14:36:56 - root - INFO - Running Pipelines
+2024-11-29 14:36:56 - root - INFO - Pipeline running...
+2024-11-29 14:36:56 - root - INFO - Categorical columns transformed and saved at EDA_train_phase/data/processed_data/intermediate_data/transformed_df.csv.
+2024-11-29 14:36:56 - root - INFO - Categorical Data Transformed and saved
+2024-11-29 14:36:56 - root - INFO - Split Data Transformed and saved
+2024-11-29 14:36:56 - root - INFO - Model type 'SVM' detected. Normalizing categorical columns as well.
+2024-11-29 14:36:56 - root - INFO - Normalization applied.
+2024-11-29 14:36:56 - root - INFO - Stating Feature engineering with GridSearch
+2024-11-29 14:36:56 - root - ERROR - Pipeline failure at 'DataTransformationConfig' object has no attribute 'standardized_df'
+2024-11-29 14:36:56 - root - ERROR - An error occurred during pipeline execution:
+'DataTransformationConfig' object has no attribute 'standardized_df'.
+Traceback (most recent call last):
+  File "/home/tensorboard/PycharmProjects/mobile_usage_detection/main.py", line 83, in main
+    transformation_pipeline.run()
+  File "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/src/pipeline/transformation_pipeline.py", line 570, in run
+    raise e
+  File "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/src/pipeline/transformation_pipeline.py", line 564, in run
+    self.apply_feature_engineering()
+  File "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/src/pipeline/transformation_pipeline.py", line 535, in apply_feature_engineering
+    self._apply_feature_search(GridSearchCV)
+  File "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/src/pipeline/transformation_pipeline.py", line 442, in _apply_feature_search
+    if self.valid_config.standardized_df:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/pydantic/main.py", line 896, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'DataTransformationConfig' object has no attribute 'standardized_df'
+2024-11-29 14:37:55 - root - INFO - Logging system initialized.
+2024-11-29 14:37:55 - root - INFO - Setting up Hydra
+2024-11-29 14:37:55 - hydra.core.utils - DEBUG - Setting JobRuntime:name=UNKNOWN_NAME
+2024-11-29 14:37:55 - hydra.core.utils - DEBUG - Setting JobRuntime:name=load_config
+2024-11-29 14:37:55 - root - INFO - Completed
+2024-11-29 14:37:55 - root - INFO - Setting up DagsHUb with MLFlow tracking
+2024-11-29 14:37:55 - dagshub.auth.tokens - DEBUG - Loading token cache from /home/tensorboard/.cache/dagshub/tokens
+2024-11-29 14:37:55 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:37:55 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:37:55 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:37:55 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f8699470110>
+2024-11-29 14:37:55 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x7f86994220f0> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:37:55 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f86995dc650>
+2024-11-29 14:37:55 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:37:55 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:37:55 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:37:55 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:37:55 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:37:55 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:37:55 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=9a268eb510e95428; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=oBLseLapGaT812k4X1kYH9OcFzY6MTczMjg4NzQ3NTgwNTA1Nzc0Ng; Path=/; Expires=Sat, 30 Nov 2024 13:37:55 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'6b44bcd8-ca99-48d7-871e-3dc0e30a9c1e'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:37:55 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2024-11-29 14:37:55 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:37:55 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:37:55 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:37:55 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:37:55 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:37:55 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:37:55 - dagshub - INFO - Accessing as data_analitics_HLH
+2024-11-29 14:37:55 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:37:55 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:37:55 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:37:56 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f86996d22d0>
+2024-11-29 14:37:56 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x7f8699422210> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:37:56 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f86996d2b10>
+2024-11-29 14:37:56 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:37:56 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:37:56 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:37:56 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:37:56 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:37:56 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:37:56 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=44dd06f7d1626884; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=ez8pMUs7ig5bZBpv4IAO5vR6jBQ6MTczMjg4NzQ3NjUyODI0Nzc4Nw; Path=/; Expires=Sat, 30 Nov 2024 13:37:56 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'eefc392b-2ed8-4763-b3c4-709855e9e0bc'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:37:56 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/repos/data_analitics_HLH/mobile-use-detection "HTTP/1.1 200 OK"
+2024-11-29 14:37:56 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:37:56 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:37:56 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:37:56 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:37:56 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:37:56 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:37:56 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-11-29 14:37:56 - httpx - DEBUG - load_verify_locations cafile='/home/tensorboard/.cache/pypoetry/virtualenvs/mobile-usage-detection-Q8QOwWql-py3.11/lib/python3.11/site-packages/certifi/cacert.pem'
+2024-11-29 14:37:56 - httpcore.connection - DEBUG - connect_tcp.started host='dagshub.com' port=443 local_address=None timeout=30 socket_options=None
+2024-11-29 14:37:57 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f8699346950>
+2024-11-29 14:37:57 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x7f86994220f0> server_hostname='dagshub.com' timeout=30
+2024-11-29 14:37:57 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f8699346bd0>
+2024-11-29 14:37:57 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
+2024-11-29 14:37:57 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-11-29 14:37:57 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
+2024-11-29 14:37:57 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-11-29 14:37:57 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
+2024-11-29 14:37:57 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx'), (b'Date', b'Fri, 29 Nov 2024 13:37:57 GMT'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Access-Control-Allow-Origin', b'*'), (b'Content-Encoding', b'gzip'), (b'Content-Security-Policy', b"frame-ancestors 'self' https://colab.research.google.com https://*.googleusercontent.com https://console.paperspace.com https://deepnoteworkspace.com https://deepnote.com https://*.mybinder.org; upgrade-insecure-requests;"), (b'Referrer-Policy', b'origin-when-cross-origin'), (b'Set-Cookie', b'lang=en-US; Path=/; Max-Age=2147483647'), (b'Set-Cookie', b'i_like_dags=5ba62a19445dff70; Path=/; Domain=dagshub.com; HttpOnly; Secure; SameSite=Lax'), (b'Set-Cookie', b'_csrf=t0DT3SUMSAdy0AlwzOd3wGnf4ZU6MTczMjg4NzQ3NzEyODcxOTEwNA; Path=/; Expires=Sat, 30 Nov 2024 13:37:57 GMT'), (b'Strict-Transport-Security', b'max-age=600;'), (b'Vary', b'Accept-Encoding'), (b'X-Content-Type-Options', b'nosniff;'), (b'X-Dagshub-Support-Id', b'89cc2244-9118-4ada-9938-3b297555c6d1'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'Via', b'1.1 google'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2024-11-29 14:37:57 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2024-11-29 14:37:57 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
+2024-11-29 14:37:57 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-11-29 14:37:57 - httpcore.http11 - DEBUG - response_closed.started
+2024-11-29 14:37:57 - httpcore.http11 - DEBUG - response_closed.complete
+2024-11-29 14:37:57 - httpcore.connection - DEBUG - close.started
+2024-11-29 14:37:57 - httpcore.connection - DEBUG - close.complete
+2024-11-29 14:37:57 - dagshub - INFO - Initialized MLflow to track repo "data_analitics_HLH/mobile-use-detection"
+2024-11-29 14:37:57 - dagshub - INFO - Repository data_analitics_HLH/mobile-use-detection initialized!
+2024-11-29 14:37:57 - root - INFO - Completed. Ready for main program.
+2024-11-29 14:37:57 - root - INFO - Initializing Program...
+2024-11-29 14:37:57 - root - INFO - Data Pipeline configuration was successfully loaded and validated
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_column_values_are_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_nullable since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check check_unique since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - pandera.validation_depth - DEBUG - Skipping execution of check run_checks since validation depth is set to SCHEMA_ONLY
+2024-11-29 14:37:57 - root - INFO - Validation of the dataframe was successful!
+2024-11-29 14:37:57 - root - INFO - Data Pipeline configuration was successfully loaded and validated
+2024-11-29 14:37:57 - root - INFO - Data Transformation and Trainer instantiated
+2024-11-29 14:37:57 - root - INFO - Running Pipelines
+2024-11-29 14:37:57 - root - INFO - Pipeline running...
+2024-11-29 14:37:57 - root - INFO - Categorical columns transformed and saved at EDA_train_phase/data/processed_data/intermediate_data/transformed_df.csv.
+2024-11-29 14:37:57 - root - INFO - Categorical Data Transformed and saved
+2024-11-29 14:37:57 - root - INFO - Split Data Transformed and saved
+2024-11-29 14:37:57 - root - INFO - Model type 'SVM' detected. Normalizing categorical columns as well.
+2024-11-29 14:37:57 - root - INFO - Normalization applied.
+2024-11-29 14:37:57 - root - INFO - Stating Feature engineering with GridSearch
+2024-11-29 14:37:57 - root - INFO - Best hyperparameters saved at /home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/train_data/Best_parameters_model__GridSearch_SVM.json.
+2024-11-29 14:37:57 - root - INFO - Feature engineering applied.
+2024-11-29 14:37:57 - root - INFO - Pipeline Finished.
+2024-11-29 14:37:57 - root - INFO - Transformation pipeline completed.
+2024-11-29 14:37:57 - root - INFO - Staring the Trainer...
+2024-11-29 14:37:57 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): dagshub.com:443
+2024-11-29 14:37:58 - urllib3.connectionpool - DEBUG - https://dagshub.com:443 "GET /data_analitics_HLH/mobile-use-detection.mlflow/api/2.0/mlflow/experiments/get-by-name?experiment_name=SVC_GridSearchCV HTTP/11" 404 None
+2024-11-29 14:37:58 - urllib3.connectionpool - DEBUG - https://dagshub.com:443 "POST /data_analitics_HLH/mobile-use-detection.mlflow/api/2.0/mlflow/experiments/create HTTP/11" 200 None
+2024-11-29 14:37:58 - root - INFO - Test and train sets loaded and experiment ID created
+2024-11-29 14:37:58 - root - INFO - Starting the tracking with MLFlow...
+2024-11-29 14:37:58 - git.cmd - DEBUG - Popen(['git', 'version'], cwd=/home/tensorboard/PycharmProjects/mobile_usage_detection, stdin=None, shell=False, universal_newlines=False)
+2024-11-29 14:37:58 - git.cmd - DEBUG - Popen(['git', 'version'], cwd=/home/tensorboard/PycharmProjects/mobile_usage_detection, stdin=None, shell=False, universal_newlines=False)
+2024-11-29 14:37:58 - git.cmd - DEBUG - Popen(['git', 'check-ignore', '/home/tensorboard/PycharmProjects/mobile_usage_detection'], cwd=/home/tensorboard/PycharmProjects/mobile_usage_detection, stdin=None, shell=False, universal_newlines=False)
+2024-11-29 14:37:58 - git.cmd - DEBUG - Popen(['git', 'cat-file', '--batch-check'], cwd=/home/tensorboard/PycharmProjects/mobile_usage_detection, stdin=<valid stream>, shell=False, universal_newlines=False)
+2024-11-29 14:37:58 - urllib3.connectionpool - DEBUG - https://dagshub.com:443 "POST /data_analitics_HLH/mobile-use-detection.mlflow/api/2.0/mlflow/runs/create HTTP/11" 200 None
+2024-11-29 14:37:58 - root - INFO - Training model...
+2024-11-29 14:37:58 - urllib3.connectionpool - DEBUG - https://dagshub.com:443 "POST /data_analitics_HLH/mobile-use-detection.mlflow/api/2.0/mlflow/runs/log-parameter HTTP/11" 200 None
+2024-11-29 14:37:59 - urllib3.connectionpool - DEBUG - https://dagshub.com:443 "POST /data_analitics_HLH/mobile-use-detection.mlflow/api/2.0/mlflow/runs/log-batch HTTP/11" 200 None
+2024-11-29 14:37:59 - root - INFO - The parameters saved are:
+{'model__class': 'SVC', 'SVC_GridSearchCV__C': 891.6698683666216, 'SVC_GridSearchCV__break_ties': False, 'SVC_GridSearchCV__cache_size': 200, 'SVC_GridSearchCV__class_weight': None, 'SVC_GridSearchCV__coef0': 0.0, 'SVC_GridSearchCV__decision_function_shape': 'ovr', 'SVC_GridSearchCV__degree': 5, 'SVC_GridSearchCV__gamma': 0.0048811251588164635, 'SVC_GridSearchCV__kernel': 'linear', 'SVC_GridSearchCV__max_iter': -1, 'SVC_GridSearchCV__probability': False, 'SVC_GridSearchCV__random_state': None, 'SVC_GridSearchCV__shrinking': True, 'SVC_GridSearchCV__tol': 0.001, 'SVC_GridSearchCV__verbose': False}
+2024-11-29 14:37:59 - root - INFO - Model trained and parameters saved.
+2024-11-29 14:37:59 - root - INFO - Evaluating model..
+2024-11-29 14:37:59 - urllib3.connectionpool - DEBUG - https://dagshub.com:443 "POST /data_analitics_HLH/mobile-use-detection.mlflow/api/2.0/mlflow/runs/log-batch HTTP/11" 200 None
+2024-11-29 14:37:59 - urllib3.connectionpool - DEBUG - https://dagshub.com:443 "POST /data_analitics_HLH/mobile-use-detection.mlflow/api/2.0/mlflow/runs/log-batch HTTP/11" 200 None
+2024-11-29 14:37:59 - root - INFO - Model Evaluated and train and test metrics tracked and saved
+2024-11-29 14:37:59 - root - INFO - Train and test completed.
+2024-11-29 14:38:00 - urllib3.connectionpool - DEBUG - https://dagshub.com:443 "GET /data_analitics_HLH/mobile-use-detection.mlflow/api/2.0/mlflow/runs/get?run_uuid=12518a14994449b58a3d66f83dc16c66&run_id=12518a14994449b58a3d66f83dc16c66 HTTP/11" 200 None
+2024-11-29 14:38:00 - urllib3.connectionpool - DEBUG - https://dagshub.com:443 "POST /data_analitics_HLH/mobile-use-detection.mlflow/api/2.0/mlflow/runs/update HTTP/11" 200 None
+2024-11-29 14:38:00 - root - INFO - Training pipeline completed.

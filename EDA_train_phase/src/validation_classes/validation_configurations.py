@@ -142,7 +142,7 @@ class DataTransformationConfig(BaseModel):
     )
     normalize_df: bool = Field(..., description="Whether to normalize the data")
 
-    standardized_df: bool = Field(..., description="Whether to standardize the data")
+    standardize_df: bool = Field(..., description="Whether to standardize the data")
 
     apply_feature_selection: bool = Field(
         ..., description="If to apply or not the feature selection"
@@ -211,7 +211,7 @@ class DataTransformationConfig(BaseModel):
     def check_normalization_and_standardization(cls, values):
         """This function check that normalization and standardization are correctly implemented"""
         normalize_df = values["normalize_df"]
-        standardized_df = values["standardized_df"]
+        standardized_df = values["standardize_df"]
 
         if normalize_df and standardized_df:
             raise ValueError("Both methods cannot be True at the same time.")

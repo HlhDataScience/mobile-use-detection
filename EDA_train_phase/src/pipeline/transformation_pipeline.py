@@ -120,7 +120,7 @@ class LazyTransformationPipeline(BasicPipeline):
             self.valid_config.mapping_file_path / self.valid_config.mapping_name,
             mode="w",
         ) as f:
-            json.dump(mappings, f)
+            json.dump(mappings, f)  # type: ignore
 
         logging.info(
             f"Categorical columns transformed and saved at {self.valid_config.transformed_intermediate_df_path / self.valid_config.intermediate_df_name}."
@@ -340,9 +340,9 @@ class LazyTransformationPipeline(BasicPipeline):
         standardize_categorical: list[str] = ["SVM", "KNN", "PCA"]
 
         # Raise error if the method is not specified in the transformation config.
-        if not self.valid_config.standardized_df:
+        if not self.valid_config.standardize_df:
             logging.error(
-                f"The value of standardized_df is {self.valid_config.standardized_df} You need to set True to use it"
+                f"The value of standardize_df is {self.valid_config.standardize_df} You need to set True to use it"
             )
             raise ValueError
         else:
@@ -389,7 +389,7 @@ class LazyTransformationPipeline(BasicPipeline):
                         for col in train_continuous_columns
                     ]
                     + [
-                        pl.col(c).cast(pl.Float32)
+                        pl.col(c)
                         for c in lazy_df_train.columns
                         if c not in train_continuous_columns
                     ]
@@ -439,7 +439,7 @@ class LazyTransformationPipeline(BasicPipeline):
                     n_iter=self.valid_config.number_iterations,
                     cv=self.valid_config.cross_validation,
                 )
-            if self.valid_config.standardized_df:
+            if self.valid_config.standardize_df:
                 x = (
                     pl.scan_csv(
                         self.valid_config.transformed_standardized_df_path_train_x
@@ -509,7 +509,7 @@ class LazyTransformationPipeline(BasicPipeline):
                 / f"{self.valid_config.best_parameters_name}_{self.valid_config.feature_mode}_{self.valid_config.ML_type}.json",
                 "w",
             ) as f:
-                json.dump(best_params, f)
+                json.dump(best_params, f)  # type: ignore
             logging.info(
                 f"Best hyperparameters saved at {self.valid_config.tuned_parameters_path}/"
                 f"{self.valid_config.best_parameters_name}_{self.valid_config.feature_mode}_{self.valid_config.ML_type}.json."

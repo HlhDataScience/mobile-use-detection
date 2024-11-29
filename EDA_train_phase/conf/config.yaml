@@ -19,7 +19,7 @@ dynamic_settings:
     - "UserID"
   target_column: "UserBehaviorClass"
   normalize_df: true # To normalize the dataframe (TransformationPipeline Setting)
-  standardized_df: false # to standardize the dataframe (TransformationPipeline Setting)
+  standardize_df: false # to standardize the dataframe (TransformationPipeline Setting)
   apply_feature_selection: false
   feature_selection:
     - "AppUsageTime_min_day"
@@ -47,8 +47,5 @@ dynamic_settings:
       - rbf
   feature_mode: "GridSearch"
   model_path: "EDA_train_phase/src/models"
-
-# Bolean parameters for training
-
-normalized_df: true #to use the normalized dataframe for training and testing.
-standardized_df: false #to use the standardized dataframe for training and testing
+  normalized_df: true #to use the normalized dataframe for training and testing.
+  standardized_df: false #to use the standardized dataframe for training and testing
