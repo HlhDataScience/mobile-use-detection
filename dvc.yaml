@@ -1,0 +1,34 @@
+stages:
+  transformation_pipeline:
+    cmd: python3 main.py --pipeline transformation
+    deps:
+    - EDA_train_phase/data/rawdata/user_behavior_dataset.csv
+    - main.py
+    outs:
+    - EDA_train_phase/data/processed_data/intermediate_data/transformed_df.csv
+    - EDA_train_phase/data/processed_data/test_data/X_test.csv
+    - EDA_train_phase/data/processed_data/test_data/y_test.csv
+    - EDA_train_phase/data/processed_data/train_data/X_train.csv
+    - EDA_train_phase/data/processed_data/train_data/y_train.csv
+    metrics:
+    - EDA_train_phase/metrics/Best_parameters_model__GridSearch_Tree-Based.json:
+        cache: false
+    - EDA_train_phase/metrics/categorical_mapping.json:
+        cache: false
+  training_pipeline:
+    cmd: python3 main.py --pipeline training
+    deps:
+    - EDA_train_phase/data/processed_data/test_data/X_test.csv
+    - EDA_train_phase/data/processed_data/test_data/y_test.csv
+    - EDA_train_phase/data/processed_data/train_data/X_train.csv
+    - EDA_train_phase/data/processed_data/train_data/y_train.csv
+    - main.py
+    outs:
+    - EDA_train_phase/models/Tree_Classifier_GridSearchCV.joblib
+    metrics:
+    - EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_Test_metrics.json:
+        cache: false
+    - EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_Train_metrics.json:
+        cache: false
+    - EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_parameters.json:
+        cache: false

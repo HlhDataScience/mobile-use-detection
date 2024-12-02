@@ -19,6 +19,5 @@ EDA_train_phase/src/training/__pycache__/
 logs/
 EDA_testing.ipynb
 pipeline_testing.ipynb
-EDA_train_phase/src/models/
-EDA_train_phase/data/
+EDA_train_phase/models/
 trainer_testing.ipynb

@@ -17,7 +17,7 @@ best_parameters_name: "Best_parameters_model_"
 # Transformations
 categorical_columns_to_transform: ${dynamic_settings.categorical_columns_to_transform}
 columns_to_drop: ${dynamic_settings.columns_to_drop}
-mapping_file_path: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/intermediate_data"
+mapping_file_path: "EDA_train_phase/metrics"
 target_column: ${dynamic_settings.target_column}
 normalize_df: ${dynamic_settings.normalize_df}
 standardize_df: ${dynamic_settings.standardized_df}
@@ -30,7 +30,7 @@ ML_type: ${dynamic_settings.ML_type}
 number_iterations: ${dynamic_settings.number_iterations}
 cross_validation: ${dynamic_settings.cross_validation}
 feature_engineering_dict: ${dynamic_settings.feature_engineering_dict}
-tuned_parameters_path: "/home/tensorboard/PycharmProjects/mobile_usage_detection/EDA_train_phase/data/processed_data/train_data"
+tuned_parameters_path: "EDA_train_phase/metrics"
 feature_mode: ${dynamic_settings.feature_mode}
 
 # Saving Data File Paths

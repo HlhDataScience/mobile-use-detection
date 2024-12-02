@@ -277,7 +277,7 @@ class TrainerConfig(BaseModel):
 
     standardized_df: bool = Field(..., description="Whether to standardize the data")
 
-    tuned_parameters: FilePath = Field(
+    tuned_parameters: Optional[FilePath] = Field(
         ..., description="File path to the json file with the tuned parameters"
     )
 

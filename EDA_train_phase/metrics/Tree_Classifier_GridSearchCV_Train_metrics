@@ -1,0 +1,1 @@
+{"train__accuracy": 1.0, "train__precision": 1.0, "train__recall": 1.0, "train__f1": 1.0, "train__roc_auc": 1.0, "train__average_precision": 1.0}

@@ -1,0 +1,82 @@
+schema: '2.0'
+stages:
+  transformation_pipeline:
+    cmd: python3 main.py --pipeline transformation
+    deps:
+    - path: EDA_train_phase/data/rawdata/user_behavior_dataset.csv
+      hash: md5
+      md5: 6c4a34dc6d5dfa3846d7c19be4913fb0
+      size: 38856
+    - path: main.py
+      hash: md5
+      md5: 596644390e1457294e3054c80d42faff
+      size: 3884
+    outs:
+    - path: EDA_train_phase/data/processed_data/intermediate_data/transformed_df.csv
+      hash: md5
+      md5: 1372c7444290e23a4dd0dcfe6c6fae9e
+      size: 21848
+    - path: EDA_train_phase/data/processed_data/test_data/X_test.csv
+      hash: md5
+      md5: 22092e0a79f30e6ff1f52d620e5c0786
+      size: 3599
+    - path: EDA_train_phase/data/processed_data/test_data/y_test.csv
+      hash: md5
+      md5: 5dd734aba9d1294fe0f49d5e5b3debf5
+      size: 368
+    - path: EDA_train_phase/data/processed_data/train_data/X_train.csv
+      hash: md5
+      md5: ece8a0d944859859b960dd04822c7f0f
+      size: 10572
+    - path: EDA_train_phase/data/processed_data/train_data/y_train.csv
+      hash: md5
+      md5: 39c391b61b5323152bb1be0ea8c1b311
+      size: 1068
+    - path: EDA_train_phase/metrics/Best_parameters_model__GridSearch_Tree-Based.json
+      hash: md5
+      md5: 6ebf3bc8520bee0ede09d41721c342fd
+      size: 156
+    - path: EDA_train_phase/metrics/categorical_mapping.json
+      hash: md5
+      md5: 3d885fb8f36ea50ca4233906ae68ff06
+      size: 195
+  training_pipeline:
+    cmd: python3 main.py --pipeline training
+    deps:
+    - path: EDA_train_phase/data/processed_data/test_data/X_test.csv
+      hash: md5
+      md5: 22092e0a79f30e6ff1f52d620e5c0786
+      size: 3599
+    - path: EDA_train_phase/data/processed_data/test_data/y_test.csv
+      hash: md5
+      md5: 5dd734aba9d1294fe0f49d5e5b3debf5
+      size: 368
+    - path: EDA_train_phase/data/processed_data/train_data/X_train.csv
+      hash: md5
+      md5: ece8a0d944859859b960dd04822c7f0f
+      size: 10572
+    - path: EDA_train_phase/data/processed_data/train_data/y_train.csv
+      hash: md5
+      md5: 39c391b61b5323152bb1be0ea8c1b311
+      size: 1068
+    - path: main.py
+      hash: md5
+      md5: 596644390e1457294e3054c80d42faff
+      size: 3884
+    outs:
+    - path: EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_Test_metrics.json
+      hash: md5
+      md5: 9b27cf8ef05e7f1fdb55634327ab7f3a
+      size: 229
+    - path: EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_Train_metrics.json
+      hash: md5
+      md5: 45f4d18f5be6ab57586a81fca064c234
+      size: 145
+    - path: EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_parameters.json
+      hash: md5
+      md5: 66057ab3caf319d87d0b1a786692de61
+      size: 738
+    - path: EDA_train_phase/models/Tree_Classifier_GridSearchCV.joblib
+      hash: md5
+      md5: ba8625525a21d9794836708bbf974cfe
+      size: 2497

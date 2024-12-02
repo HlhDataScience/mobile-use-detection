@@ -11,9 +11,9 @@ y_test: "EDA_train_phase/data/processed_data/test_data/y_test.csv"
 
 #Standardized and Normalized Paths
 
-normalized_x_train: "EDA_train_phase/data/processed_data/train_data/X_train_normalize.csv"
+#normalized_x_train: "EDA_train_phase/data/processed_data/train_data/X_train_normalize.csv"
 #standardized_x_train: None
-normalized_x_test: "EDA_train_phase/data/processed_data/test_data/X_test_normalized.csv"
+#normalized_x_test: "EDA_train_phase/data/processed_data/test_data/X_test_normalized.csv"
 #standardized_x_test: None
 
 # Bolean parameters
@@ -23,13 +23,13 @@ standardized_df: ${dynamic_settings.standardized_df}
 
 # model path
 
-model_path: "EDA_train_phase/src/models"
+model_path: "EDA_train_phase/models"
 
 # tuned parameters and metrics
 using_custom_parameters: ${dynamic_settings.using_custom_parameters}
-custom_parameters: ${dynamic_setting.custom_parameters}
+custom_parameters: ${dynamic_settings.custom_parameters}
 tuned_parameters: ${dynamic_settings.tuned_parameters}
 average_mode: ${dynamic_settings.average_mode}
-metrics: "EDA_train_phase/src/metrics"
+metrics: "EDA_train_phase/metrics"
 
 

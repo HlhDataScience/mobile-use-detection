@@ -169,13 +169,14 @@ class TrainerPipeline(BasicTrainer):
             IOError: If the model file cannot be saved.
         """
         if self.valid_config.using_custom_parameters:
-            logging.info("Using custom paratemers to train the model.")
+            logging.info("Using custom parameters to train the model.")
             model_ = self.model.set_params(**self.valid_config.custom_parameters)
             model_.fit(x, y)
 
         else:
             logging.info("Using tuned parameters with CV")
             with open(self.valid_config.tuned_parameters) as f:
+                print(self.valid_config.tuned_parameters)
                 parameters = json.load(f)
                 f.close()
             model_ = self.model.set_params(**parameters)
@@ -265,7 +266,7 @@ class TrainerPipeline(BasicTrainer):
                 model_and_parameters = model_class | model_parameters
                 with open(
                     self.valid_config.metrics
-                    / f"{self.valid_config.experiment_name}_parameters",
+                    / f"{self.valid_config.experiment_name}_parameters.json",
                     "w",
                 ) as f:
                     json.dump(model_and_parameters, f)  # type: ignore
@@ -281,7 +282,7 @@ class TrainerPipeline(BasicTrainer):
                 }
                 with open(
                     self.valid_config.metrics
-                    / f"{self.valid_config.experiment_name}_Train_metrics",
+                    / f"{self.valid_config.experiment_name}_Train_metrics.json",
                     "w",
                 ) as f:
                     json.dump(train_metrics_to_save, f)  # type: ignore
@@ -294,7 +295,7 @@ class TrainerPipeline(BasicTrainer):
                 }
                 with open(
                     self.valid_config.metrics
-                    / f"{self.valid_config.experiment_name}_Test_metrics",
+                    / f"{self.valid_config.experiment_name}_Test_metrics.json",
                     "w",
                 ) as f:
                     json.dump(test_metrics_to_save, f)  # type: ignore

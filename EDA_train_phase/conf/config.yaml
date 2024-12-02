@@ -60,9 +60,9 @@ dynamic_settings:
   feature_mode: "GridSearch"
   #trainer settings
   model_path: "EDA_train_phase/src/models"
-  normalized_df: true #to use the normalized dataframe for training and testing.
+  normalized_df: false #to use the normalized dataframe for training and testing.
   standardized_df: false #to use the standardized dataframe for training and testing
-  tuned_parameters: "EDA_train_phase/data/processed_data/train_data/Best_parameters_model__GridSearch_Tree-Based.json"
+  tuned_parameters: "EDA_train_phase/metrics/Best_parameters_model__GridSearch_Tree-Based.json"
   using_custom_parameters: false
   custom_parameters:
     criterion: "gini"
