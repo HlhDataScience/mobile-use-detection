@@ -43,7 +43,6 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - ~~We need to create a deviating branch(or several) to test other classic machine learning models.~~
   - ~~We need to create a dvc pipeline managing system~~
   - We need to create test for every class and method with pytest
-  - We need to experiment with different parameters and save the different models.
 
 
 ## Done related to production_phase
