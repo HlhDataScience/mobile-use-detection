@@ -6,6 +6,7 @@ import mlflow
 import pandera.polars
 import pydantic
 from hydra import compose
+from mlflow import ActiveRun
 from omegaconf import OmegaConf
 
 from EDA_train_phase.src.abstractions.ABC_validations import (
@@ -63,3 +64,33 @@ class MLFlowTracker(IExperimentTracker):
             exp_id = mlflow.create_experiment(name)
             return exp_id
         return exp.experiment_id
+
+    def initialize_experiment(self, experiment_id: Any) -> ActiveRun:
+        return mlflow.start_run(experiment_id=experiment_id)
+
+    def log_param(self, key: str, value: Union[int | float | str | Any]) -> None:
+        """log the parameter into mlflow"""
+        mlflow.log_param(key=key, value=value)
+
+    def log_params(self, dictionary: Dict[str, Union[int | float | str | Any]]) -> None:
+        """Log a dict of parameters into mlflow"""
+        mlflow.log_params(params=dictionary)
+
+    def log_metrics(
+        self, dictionary: Dict[str, Union[int | float | str | Any]]
+    ) -> None:
+        """Log the metrics into mlflow"""
+        mlflow.log_metrics(metrics=dictionary)
+
+    def log_model(self, model: Any):
+        """signature function override by log_model_signature"""
+        pass
+
+    def log_model_signature(self, model: Any, signature: Any, registered_model_name: str) -> None:  # type: ignore
+        """logging the model into mlflow"""
+        mlflow.sklearn.log_model(
+            sk_model=model,
+            artifact_path="sklearn-model",
+            signature=signature,
+            registered_model_name=registered_model_name,
+        )

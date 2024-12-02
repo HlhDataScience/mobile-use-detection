@@ -5,7 +5,8 @@ defaults:
 
 dynamic_settings:
   ##GENERAL SETTINGS:
-  experiment_name: "Tree_Classifier_GridSearchCV"
+  experiment_name: "Tree_Classifier_New"
+  registered_model_name: "sk-learn-Decision-Tree-Classifier-custom-params_V2"
   ##SETTINGS FOR TRANSFORMATION AND TRAINING
   # load the original data
   original_datapath: "EDA_train_phase/data/rawdata/user_behavior_dataset.csv"

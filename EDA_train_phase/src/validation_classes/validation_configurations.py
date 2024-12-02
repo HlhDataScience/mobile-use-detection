@@ -248,6 +248,10 @@ class TrainerConfig(BaseModel):
 
     experiment_name: str = Field(..., description="The name of your current experiment")
 
+    registered_model_name: str = Field(
+        ..., description="The name to register the model into mlflow."
+    )
+
     x_train: FilePath = Field(
         ..., description="Path to the transformed train_data data X folder"
     )

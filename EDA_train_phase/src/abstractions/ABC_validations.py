@@ -1,7 +1,7 @@
 """module for ABC validation"""
 
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Dict, Union
 
 
 class IValidationModel(ABC):
@@ -37,4 +37,30 @@ class IExperimentTracker(ABC):
     @abstractmethod
     def get_or_create_experiment_id(self, name: str):
         """This function handle the creation of the experiment id tracking by the interface"""
+        pass
+
+    @abstractmethod
+    def initialize_experiment(self, experiment_id: Any):
+        """Wrapper around starting the experiment"""
+        pass
+
+    @abstractmethod
+    def log_param(self, key: str, value: Union[int | float | str | Any]) -> None:
+        """Handles the log parameter function"""
+        pass
+
+    @abstractmethod
+    def log_params(self, dictionary: Dict[str, Union[int | float | str | Any]]) -> None:
+        """Handles the log parameters function"""
+        pass
+
+    @abstractmethod
+    def log_metrics(
+        self, dictionary: Dict[str, Union[int | float | str | Any]]
+    ) -> None:
+        """Handles the metrics logging"""
+
+    @abstractmethod
+    def log_model(self, model: Any) -> None:
+        """Defines the log model function"""
         pass

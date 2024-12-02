@@ -1,7 +1,7 @@
 # VARIABLE NAMING
 
 experiment_name: ${dynamic_settings.experiment_name}
-
+registered_model_name: ${dynamic_settings.registered_model_name}
 # Train and test Paths
 
 x_train: "EDA_train_phase/data/processed_data/train_data/X_train.csv"

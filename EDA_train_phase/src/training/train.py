@@ -5,7 +5,6 @@ import logging
 from typing import Any, Dict, Tuple
 
 import joblib
-import mlflow
 import numpy as np
 import polars as pl
 from mlflow.models import infer_signature
@@ -257,7 +256,7 @@ class TrainerPipeline(BasicTrainer):
             )
             logging.info("Test and train sets loaded and experiment ID created")
             logging.info("Starting the tracking with MLFlow...")
-            with mlflow.start_run(experiment_id=exp_id):
+            with self.experiment_tracker.initialize_experiment(experiment_id=exp_id):
                 logging.info("Training model...")
                 ml_model = self.train(x_train, y_train)
                 model_class = {"model__class": type(ml_model).__name__}
@@ -272,8 +271,10 @@ class TrainerPipeline(BasicTrainer):
                     "w",
                 ) as f:
                     json.dump(model_and_parameters, f)  # type: ignore
-                mlflow.log_param(key="model__class", value=type(ml_model).__name__)
-                mlflow.log_params(model_parameters)
+                self.experiment_tracker.log_param(
+                    key="model__class", value=type(ml_model).__name__
+                )
+                self.experiment_tracker.log_params(model_parameters)
                 logging.info(f"The parameters saved are:\n{model_and_parameters}")
                 logging.info("Model trained and parameters saved.")
 
@@ -289,7 +290,7 @@ class TrainerPipeline(BasicTrainer):
                 ) as f:
                     json.dump(train_metrics_to_save, f)  # type: ignore
 
-                mlflow.log_metrics(train_metrics_to_save)
+                self.experiment_tracker.log_metrics(train_metrics_to_save)
 
                 test_metrics, mlflow_signature = self.eval(
                     model=ml_model, x=x_test, y=y_test
@@ -303,15 +304,14 @@ class TrainerPipeline(BasicTrainer):
                     "w",
                 ) as f:
                     json.dump(test_metrics_to_save, f)  # type: ignore
-                mlflow.log_metrics(test_metrics_to_save)
+                self.experiment_tracker.log_metrics(test_metrics_to_save)
                 logging.info(
                     "Model Evaluated and train and test metrics tracked and saved"
                 )
-                mlflow.sklearn.log_model(
-                    sk_model=ml_model,
-                    artifact_path="sklearn-model",
+                self.experiment_tracker.log_model_signature(
+                    model=ml_model,
                     signature=mlflow_signature,
-                    registered_model_name="sk-learn-Decission-Tree-Classifier-custom-params",
+                    registered_model_name=self.valid_config.registered_model_name,
                 )
                 logging.info("Train and test completed.")
         except Exception as e:
