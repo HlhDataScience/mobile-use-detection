@@ -6,9 +6,6 @@ EDA_train_phase/src/EDA/__pycache__/EDA_functions.cpython-311.pyc
 EDA_train_phase/.jupyter/
 EDA_train_phase/src/EDA/.ipynb_checkpoints/
 EDA_train_phase/src/.ipynb_checkpoints/
-/EDA_testing.ipynb
-/pipeline_testing.ipynb
-/testing.csv
 .ipynb_checkpoints/
 .jupyter/
 EDA_train_phase/.ipynb_checkpoints/
@@ -21,3 +18,7 @@ EDA_train_phase/src/abstractions/__pycache__/
 /trainer_testing.ipynb
 EDA_train_phase/src/training/__pycache__/
 logs/
+EDA_testing.ipynb
+pipeline_testing.ipynb
+EDA_train_phase/src/models/
+EDA_train_phase/data/
