@@ -1,1 +1,1 @@
-{"train__accuracy": 1.0, "train__precision": 1.0, "train__recall": 1.0, "train__f1": 1.0, "train__roc_auc": 1.0, "train__average_precision": 1.0}
+{"train__accuracy": 0.900952380952381, "train__precision": 0.900952380952381, "train__recall": 0.900952380952381, "train__f1": 0.900952380952381, "train__roc_auc": 0.9826910318153548, "train__average_precision": 0.9090545509515773}

@@ -63,12 +63,12 @@ dynamic_settings:
   normalized_df: false #to use the normalized dataframe for training and testing.
   standardized_df: false #to use the standardized dataframe for training and testing
   tuned_parameters: "EDA_train_phase/metrics/Best_parameters_model__GridSearch_Tree-Based.json"
-  using_custom_parameters: false
+  using_custom_parameters: true
   custom_parameters:
     criterion: "gini"
     splitter: "random"
-    max_depth: 5
-    min_samples_split: 2
+    max_depth: 4
+    min_samples_split: 5
     min_samples_leaf: 2
     max_features: "log2"
     class_weight: "balanced"
