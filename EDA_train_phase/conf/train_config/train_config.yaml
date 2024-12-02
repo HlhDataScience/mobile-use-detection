@@ -26,7 +26,8 @@ standardized_df: ${dynamic_settings.standardized_df}
 model_path: "EDA_train_phase/src/models"
 
 # tuned parameters and metrics
-
+using_custom_parameters: ${dynamic_settings.using_custom_parameters}
+custom_parameters: ${dynamic_setting.custom_parameters}
 tuned_parameters: ${dynamic_settings.tuned_parameters}
 average_mode: ${dynamic_settings.average_mode}
 metrics: "EDA_train_phase/src/metrics"

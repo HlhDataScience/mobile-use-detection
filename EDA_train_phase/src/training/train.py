@@ -168,11 +168,19 @@ class TrainerPipeline(BasicTrainer):
             json.JSONDecodeError: If the parameter configuration file cannot be loaded.
             IOError: If the model file cannot be saved.
         """
-        with open(self.valid_config.tuned_parameters) as f:
-            parameters = json.load(f)
-            f.close()
-        model_ = self.model.set_params(**parameters)
-        model_.fit(x, y)
+        if self.valid_config.using_custom_parameters:
+            logging.info("Using custom paratemers to train the model.")
+            model_ = self.model.set_params(**self.valid_config.custom_parameters)
+            model_.fit(x, y)
+
+        else:
+            logging.info("Using tuned parameters with CV")
+            with open(self.valid_config.tuned_parameters) as f:
+                parameters = json.load(f)
+                f.close()
+            model_ = self.model.set_params(**parameters)
+            model_.fit(x, y)
+
         joblib.dump(
             model_,
             f"{self.valid_config.model_path}/{self.valid_config.experiment_name}.joblib",

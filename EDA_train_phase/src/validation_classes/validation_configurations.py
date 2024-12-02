@@ -164,7 +164,7 @@ class DataTransformationConfig(BaseModel):
     feature_engineering_dict: Dict[str, List[float | int | str] | float | int | str] = (
         Field(
             ...,
-            description="Feature engineering dictionary specifying transformations for columns",
+            description="Feature engineering dictionary specifying the parameters to be tested by the CV search method",
         )
     )
 
@@ -279,6 +279,15 @@ class TrainerConfig(BaseModel):
 
     tuned_parameters: FilePath = Field(
         ..., description="File path to the json file with the tuned parameters"
+    )
+
+    using_custom_parameters: bool = Field(
+        ..., description="Either to use the CV parameters or the ones created by hand."
+    )
+
+    custom_parameters: Dict[str, List[float | int | str] | float | int | str] = Field(
+        ...,
+        description="Custom_parameters dictionary specifying ML parameters",
     )
 
     model_path: Path = Field(..., description="The path to save the ML model trained.")
