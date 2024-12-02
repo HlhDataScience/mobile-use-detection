@@ -2,12 +2,13 @@
 
 import json
 import logging
-from typing import Dict, Tuple
+from typing import Any, Dict, Tuple
 
 import joblib
 import mlflow
 import numpy as np
 import polars as pl
+from mlflow.models import infer_signature
 from sklearn.base import BaseEstimator
 from sklearn.metrics import (
     accuracy_score,
@@ -189,7 +190,7 @@ class TrainerPipeline(BasicTrainer):
         return model_
 
     @override
-    def eval(self, x, y, model: BaseEstimator = None) -> Dict[str, float]:
+    def eval(self, x, y, model: BaseEstimator = None) -> Tuple[Dict[str, float], Any]:
         """
         Evaluates the model's performance on the given dataset and computes evaluation metrics.
 
@@ -211,6 +212,7 @@ class TrainerPipeline(BasicTrainer):
             ValueError: If the model does not support `predict_proba` for probability prediction.
         """
         y_predicted = model.predict(x)  # type: ignore
+        mlflow_signature = infer_signature(x, y_predicted)
         params_dict = {
             "accuracy": accuracy_score(y, y_predicted),
             "precision": precision_score(
@@ -230,7 +232,7 @@ class TrainerPipeline(BasicTrainer):
             params_dict["roc_auc"] = roc_auc_score(y, y_proba, multi_class="ovr")
             params_dict["average_precision"] = average_precision_score(y, y_proba)
 
-        return params_dict
+        return params_dict, mlflow_signature
 
     def run(self):
         """ "
@@ -276,7 +278,7 @@ class TrainerPipeline(BasicTrainer):
                 logging.info("Model trained and parameters saved.")
 
                 logging.info("Evaluating model..")
-                train_metrics = self.eval(model=ml_model, x=x_train, y=y_train)
+                train_metrics, _ = self.eval(model=ml_model, x=x_train, y=y_train)
                 train_metrics_to_save = {
                     f"train__{k}": v for k, v in train_metrics.items()
                 }
@@ -289,7 +291,9 @@ class TrainerPipeline(BasicTrainer):
 
                 mlflow.log_metrics(train_metrics_to_save)
 
-                test_metrics = self.eval(model=ml_model, x=x_test, y=y_test)
+                test_metrics, mlflow_signature = self.eval(
+                    model=ml_model, x=x_test, y=y_test
+                )
                 test_metrics_to_save = {
                     f"test__{k}": v for k, v in test_metrics.items()
                 }
@@ -302,6 +306,12 @@ class TrainerPipeline(BasicTrainer):
                 mlflow.log_metrics(test_metrics_to_save)
                 logging.info(
                     "Model Evaluated and train and test metrics tracked and saved"
+                )
+                mlflow.sklearn.log_model(
+                    sk_model=ml_model,
+                    artifact_path="sklearn-model",
+                    signature=mlflow_signature,
+                    registered_model_name="sk-learn-Decission-Tree-Classifier-custom-params",
                 )
                 logging.info("Train and test completed.")
         except Exception as e:
