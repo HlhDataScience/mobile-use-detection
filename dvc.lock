@@ -14,7 +14,7 @@ stages:
     outs:
     - path: EDA_train_phase/data/processed_data/intermediate_data/transformed_df.csv
       hash: md5
-      md5: e702a6fcf3d0d218c0977b02f88447ee
+      md5: 1b730f00209a774debc2e3d4982a9f47
       size: 21848
     - path: EDA_train_phase/data/processed_data/test_data/X_test.csv
       hash: md5
@@ -34,11 +34,11 @@ stages:
       size: 1068
     - path: EDA_train_phase/metrics/Best_parameters_model__GridSearch_Tree-Based.json
       hash: md5
-      md5: 0a2ab561abb6db0cf6fff742b2eb862d
-      size: 159
+      md5: 6ebf3bc8520bee0ede09d41721c342fd
+      size: 156
     - path: EDA_train_phase/metrics/categorical_mapping.json
       hash: md5
-      md5: 92264542621a5f3cba9da712f910b4e0
+      md5: f6b4eba3cd1db1b9703137be49783786
       size: 195
   training_pipeline:
     cmd: python3 main.py --pipeline training
@@ -66,17 +66,17 @@ stages:
     outs:
     - path: EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_Test_metrics.json
       hash: md5
-      md5: d095176f6211925216d80c322fb54a1f
+      md5: 9ed7b5d21f3b17bd6a20d10cdc36ef7e
       size: 229
     - path: EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_Train_metrics.json
       hash: md5
-      md5: ead68a19e7074de54094bb9399770df5
-      size: 231
+      md5: 5e22b9a66b0be69fffbd2db515626065
+      size: 235
     - path: EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_parameters.json
       hash: md5
       md5: a6ae133a69ed8a3a02ff855650f1bd2a
       size: 740
-    - path: EDA_train_phase/models/Tree_Classifier_GridSearchCV.joblib
+    - path: EDA_train_phase/models/Tree_Classifier_GridSearchCV.pkl
       hash: md5
-      md5: f4e52634fa923544d843154433f351ea
-      size: 3345
+      md5: e4e3d87726f870454c08b016aa31d22e
+      size: 3553

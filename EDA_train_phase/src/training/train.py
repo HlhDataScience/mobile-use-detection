@@ -184,7 +184,7 @@ class TrainerPipeline(BasicTrainer):
 
         joblib.dump(
             model_,
-            f"{self.valid_config.model_path}/{self.valid_config.experiment_name}.joblib",
+            f"{self.valid_config.model_path}/{self.valid_config.experiment_name}.pkl",
         )
         return model_
 

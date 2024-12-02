@@ -24,7 +24,7 @@ stages:
     - EDA_train_phase/data/processed_data/train_data/y_train.csv
     - main.py
     outs:
-    - EDA_train_phase/models/Tree_Classifier_GridSearchCV.joblib
+    - EDA_train_phase/models/Tree_Classifier_GridSearchCV.pkl
     metrics:
     - EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_Test_metrics.json:
         cache: false
