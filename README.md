@@ -23,6 +23,7 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
 - Created Makefile for main.py
 - Tested main.py. It works without problem.
 - Created KNN deviating branch to test different experiments.
+- Created the dvc pipeline managing system
 
 
 ## TODOs related to EDA_train_phase
@@ -40,6 +41,7 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - ~~We need to create a makefile for the main.py~~
   - ~~We need to use the main.py to run the whole program~~
   - ~~We need to create a deviating branch(or several) to test other classic machine learning models.~~
+  - ~~We need to create a dvc pipeline managing system~~
   - We need to create test for every class and method with pytest
   - We need to experiment with different parameters and save the different models.
 
@@ -48,5 +50,5 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - Refactored structure of the project to work with the 2 development and production phases of MLOps
 
 ## toDOs related to production_phase
- - Create the FASTAPI app
  - ~~Completed refactor of the project's structure.~~
+ -  Create the FASTAPI app
