@@ -1,1 +1,1 @@
-{"test__accuracy": 0.9314285714285714, "test__precision": 0.9314285714285714, "test__recall": 0.9314285714285714, "test__f1": 0.9314285714285714, "test__roc_auc": 0.9842076485095255, "test__average_precision": 0.9165154412724945}
+{"test__accuracy": 0.9485714285714286, "test__precision": 0.9485714285714286, "test__recall": 0.9485714285714286, "test__f1": 0.9485714285714286, "test__roc_auc": 0.9893234584156243, "test__average_precision": 0.94193914908188}
