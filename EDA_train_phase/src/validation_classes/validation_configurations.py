@@ -11,7 +11,7 @@ Modules used:
 """
 
 from pathlib import Path
-from typing import Dict, List, Literal, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Union
 
 import pandera.polars as pa
 from pydantic import BaseModel, Field, FilePath
@@ -152,20 +152,18 @@ class DataTransformationConfig(BaseModel):
         ..., description="The columns selected by correlation to y"
     )
 
-    number_iterations: int = (
-        Field(
-            ...,
-            description="Number of iterations performed by the cross validation model.",
-        ),
+    number_iterations: int = Field(
+        ...,
+        description="Number of iterations performed by the cross validation model.",
     )
 
     cross_validation: int = Field(..., description="Number of cross validators")
 
-    feature_engineering_dict: Dict[str, List[float | int | str] | float | int | str] = (
-        Field(
-            ...,
-            description="Feature engineering dictionary specifying the parameters to be tested by the CV search method",
-        )
+    feature_engineering_dict: Dict[
+        str, List[float | int | str] | float | int | str | Any
+    ] = Field(
+        ...,
+        description="Feature engineering dictionary specifying the parameters to be tested by the CV search method",
     )
 
     tuned_parameters_path: Path = Field(

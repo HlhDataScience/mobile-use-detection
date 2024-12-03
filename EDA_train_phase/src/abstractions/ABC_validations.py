@@ -158,12 +158,12 @@ class IExperimentTracker(ABC):
         pass
 
     @abstractmethod
-    def log_metrics(self, dictionary: Dict[str, Union[int, float, str, Any]]) -> None:
+    def log_metrics(self, dictionary: Dict[str, float]) -> None:
         """
         Logs metrics for the experiment.
 
         Args:
-            dictionary (Dict[str, Union[int, float, str, Any]]): A dictionary of metrics to log.
+            dictionary (dictionary: Dict[str, float]): A dictionary of metrics to log.
         """
         pass
 

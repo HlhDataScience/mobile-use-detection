@@ -4,6 +4,7 @@ various libraries such as Pandera, Pydantic, Hydra, and MLFlow. It defines
 interfaces for validation models, configuration loaders, and experiment tracking.
 """
 
+from enum import Enum
 from typing import Any, Dict, Union
 
 import mlflow
@@ -82,7 +83,9 @@ class PydanticConfigModel(IConfigModel):
 class HydraConfLoader(IConfigurationLoader):
     """A wrapper for loading configuration files using Hydra and OmegaConf."""
 
-    def load(self, config_name: str) -> Dict:
+    def load(
+        self, config_name: str
+    ) -> Dict[str | bytes | int | Enum | float | bool, Any] | list | None | str:
         """
         Loads the configuration from a YAML file using Hydra.
 
@@ -147,14 +150,12 @@ class MLFlowTracker(IExperimentTracker):
         """
         mlflow.log_params(params=dictionary)
 
-    def log_metrics(
-        self, dictionary: Dict[str, Union[int | float | str | Any]]
-    ) -> None:
+    def log_metrics(self, dictionary: Dict[str, float]) -> None:
         """
                Logs metrics to MLFlow.
 
                Args:
-        dictionary (Dict[str, Union[int, float, str, Any]]): A dictionary of metrics to log.
+        dictionary (Dict[str,  float]): A dictionary of metrics to log.
         """
         mlflow.log_metrics(metrics=dictionary)
 

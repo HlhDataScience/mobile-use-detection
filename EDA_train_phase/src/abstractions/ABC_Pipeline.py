@@ -158,7 +158,7 @@ class BasicPipeline(ABC):
         config_loader: IConfigurationLoader,
         config_name: str,
         apply_custom_function: bool,
-        config_section: str = None,
+        config_section: str,
     ):
         self.validation_model = validation_model
         self.config_model = config_model

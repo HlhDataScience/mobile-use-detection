@@ -79,7 +79,7 @@ class BasicTrainer(ABC):
         config_loader: IConfigurationLoader,
         experiment_tracker: IExperimentTracker,
         config_name: str,
-        config_section: str = None,
+        config_section: str,
         model: Any = None,
     ):
         """
