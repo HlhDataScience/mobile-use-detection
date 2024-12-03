@@ -22,3 +22,13 @@ pipeline_testing.ipynb
 EDA_train_phase/models/
 trainer_testing.ipynb
 production_phase/model
+_.py
+__pycache__/
+production_phase/src/__pycache__/
+production_phase/src/api/__pycache__/
+production_phase/src/api/__pycache__/
+production_phase/src/api/__pycache__/
+production_phase/src/interfaces/__pycache__/
+production_phase/src/interfaces/__pycache__/
+production_phase/src/predictions/__pycache__/
+production_phase/src/predictions/__pycache__/

@@ -1,7 +1,6 @@
 """Provisional module"""
 
-import pickle
-
+import joblib
 from pydantic import BaseModel
 
 
@@ -37,4 +36,4 @@ def predict_endpoint(input_data: dict, classifier) -> dict:
 def load_classifier(model_path: str):
     """Loads the model for the predictions"""
     with open(model_path, "rb") as f:
-        return pickle.load(f)
+        return joblib.load(f)

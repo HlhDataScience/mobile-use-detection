@@ -1,5 +1,7 @@
 """Setup module that may be expanded with other frameworks."""
 
+from typing import Dict
+
 from fastapi import Request
 
 from production_phase.src.interfaces.WebFrameworksProtocols import (
@@ -9,6 +11,14 @@ from production_phase.src.predictions.predict import (
     PredictionInput,
     predict_endpoint,
 )
+
+
+async def root() -> Dict:
+    return {"message": "THis is a test of the interface"}
+
+
+async def read_item(item_id: int) -> Dict:
+    return {"item_id": item_id}
 
 
 def setup_app(

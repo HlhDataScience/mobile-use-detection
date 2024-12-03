@@ -1,1 +1,1 @@
-{"DeviceModel": {"Xiaomi Mi 11": 0, "iPhone 12": 1, "OnePlus 9": 2, "Google Pixel 5": 3, "Samsung Galaxy S21": 4}, "OperatingSystem": {"iOS": 0, "Android": 1}, "Gender": {"Female": 0, "Male": 1}}
+{"DeviceModel": {"Samsung Galaxy S21": 0, "iPhone 12": 1, "Google Pixel 5": 2, "Xiaomi Mi 11": 3, "OnePlus 9": 4}, "OperatingSystem": {"iOS": 0, "Android": 1}, "Gender": {"Male": 0, "Female": 1}}
