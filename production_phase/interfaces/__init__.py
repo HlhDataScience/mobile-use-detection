@@ -1,0 +1,1 @@
+"""Initializer of the module"""
