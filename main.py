@@ -9,17 +9,17 @@ from hydra import initialize
 from hydra.core.global_hydra import GlobalHydra
 from sklearn.tree import DecisionTreeClassifier
 
-from EDA_train_phase.src.logging_functions.logger import setup_logging
-from EDA_train_phase.src.pipeline.transformation_pipeline import (
+from Phases.EDA_train_phase import setup_logging
+from Phases.EDA_train_phase.src.pipeline.transformation_pipeline import (
     LazyTransformationPipeline,
 )
-from EDA_train_phase.src.training.train import TrainerPipeline
-from EDA_train_phase.src.validation_classes.validation_configurations import (
+from Phases.EDA_train_phase.src.training.train import TrainerPipeline
+from Phases.EDA_train_phase.src.validation_classes.validation_configurations import (
     DataTransformationConfig,
     DataValidationConfig,
     TrainerConfig,
 )
-from EDA_train_phase.src.validation_classes.validation_interfaces import (
+from Phases.EDA_train_phase.src.validation_classes.validation_interfaces import (
     HydraConfLoader,
     MLFlowTracker,
     PanderaValidationModel,
@@ -28,7 +28,7 @@ from EDA_train_phase.src.validation_classes.validation_interfaces import (
 
 # CONSTANTS
 LOG_FILE = Path("logs/main_program.log")
-CONFIG_PATH = "EDA_train_phase/conf/"
+CONFIG_PATH = "Phases/ConfTrain/"
 DAGSHUB_REPO_OWNER = "data_analitics_HLH"
 DAGSHUB_REPO = "mobile-use-detection"
 
@@ -97,7 +97,7 @@ def main(args) -> None:
 if __name__ == "__main__":
     # Argument parser setup
     parser = argparse.ArgumentParser(
-        description="Run data transformation and training pipelines."
+        description="Run DataTrain transformation and training pipelines."
     )
     parser.add_argument(
         "--pipeline",

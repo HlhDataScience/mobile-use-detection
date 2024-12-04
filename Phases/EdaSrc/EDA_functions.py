@@ -14,23 +14,23 @@ from hydra import compose, initialize
 from omegaconf import DictConfig, OmegaConf
 from pydantic import BaseModel, Field, FilePath
 
-from EDA_train_phase.src.logging_functions.logger import setup_logging
-from EDA_train_phase.src.validation_classes.validation_configurations import (
+from Phases.EDA_train_phase.src.logging_functions.logger import setup_logging
+from Phases.EDA_train_phase.src.validation_classes.validation_configurations import (
     DataValidationConfig,
 )
 
 # CONSTANTS
-LOG_FILE = Path("logs/EDA.log")
+LOG_FILE = Path("../../logs/EDA.log")
 setup_logging(LOG_FILE)
-initialize(config_path="../../conf/Eda_config/")
+initialize(config_path="../ConfTrain/Eda_config/")
 HYDRA_CONFIG = compose(config_name="Eda_config")
 CONFIG_DICT = OmegaConf.to_object(HYDRA_CONFIG)
 
 
 class EdaDataExplorationConfig(BaseModel):
     """
-    Pydantic model to define the configuration structure.
-    This model ensures the configuration is valid.
+    Pydantic ModelsProduction to define the configuration structure.
+    This ModelsProduction ensures the configuration is valid.
     """
 
     columns: List[str] = Field(
@@ -51,9 +51,9 @@ class EdaPipeline:
                 **self.hydra_config
             )
 
-            logging.info("Valid EDA configuration found.")
+            logging.info("Valid EdaSrc configuration found.")
         except ValueError as e:
-            logging.error(f"Failed EDA configuration yalm file with {e}")
+            logging.error(f"Failed EdaSrc configuration yalm file with {e}")
             raise e
         try:
             pl.scan_csv(self.config.original_datapath).pipe(self.df_validation.validate)
@@ -258,7 +258,7 @@ class EdaPipeline:
         plt.close()
 
     def run(self):
-        """Execute the EDA pipeline."""
+        """Execute the EdaSrc pipeline."""
         os.makedirs(self.config.output_folder, exist_ok=True)
         self.load_data()
         self.generate_basic_statistics()

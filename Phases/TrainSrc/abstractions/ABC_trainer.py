@@ -3,8 +3,8 @@ Trainer Module
 
 This module provides the abstract base class `BasicTrainer`, which serves as a foundation
 for implementing custom training classes in machine learning workflows. It integrates
-with configuration management, experiment tracking, and model evaluation components,
-ensuring a consistent interface for training and evaluating machine learning models.
+with configuration management, experiment tracking, and ModelsProduction evaluation components,
+ensuring a consistent interface for training and evaluating machine learning ModelsTrain.
 
 Classes:
 - BasicTrainer: An abstract base class for creating custom trainer classes.
@@ -16,7 +16,7 @@ from typing import Any
 
 import pydantic
 
-from EDA_train_phase.src.abstractions.ABC_validations import (
+from Phases.EDA_train_phase.src.abstractions.ABC_validations import (
     IConfigModel,
     IConfigurationLoader,
     IExperimentTracker,
@@ -28,7 +28,7 @@ class BasicTrainer(ABC):
     BasicTrainer Abstract Base Class
 
     The `BasicTrainer` class is an abstract base class designed to provide a
-    structured approach for training and evaluating machine learning models.
+    structured approach for training and evaluating machine learning ModelsTrain.
     It requires subclasses to implement the core methods for training, evaluation,
     and running the training process. This class integrates with configuration
     management and experiment tracking systems to facilitate a streamlined
@@ -36,36 +36,36 @@ class BasicTrainer(ABC):
 
     Attributes:
         experiment_tracker (IExperimentTracker): An instance responsible for tracking
-            experiment details, metrics, and logging during the training and evaluation phases.
+            experiment details, MetricsTrain, and logging during the training and evaluation phases.
         config_model (IConfigModel): An instance that validates and parses configuration
-            data for the training pipeline.
-        config_data (dict): A dictionary containing configuration data loaded from a
+            DataTrain for the training pipeline.
+        config_data (dict): A dictionary containing configuration DataTrain loaded from a
             specified configuration file.
-        model (Any): The machine learning model that will be trained and evaluated.
+        model (Any): The machine learning ModelsProduction that will be trained and evaluated.
 
     Constructor Parameters:
-        config_model (IConfigModel): The configuration model used for validation and parsing.
-        config_loader (IConfigurationLoader): The configuration loader for fetching data
+        config_model (IConfigModel): The configuration ModelsProduction used for validation and parsing.
+        config_loader (IConfigurationLoader): The configuration loader for fetching DataTrain
             from a configuration file.
         experiment_tracker (IExperimentTracker): The experiment tracker instance for monitoring
             the experiment.
         config_name (str): The name of the configuration file or section to be loaded.
         config_section (str, optional): A specific section in the configuration file to load.
             Defaults to `None`.
-        model (Any, optional): The machine learning model. Defaults to `None`.
+        ModelsProduction (Any, optional): The machine learning ModelsProduction. Defaults to `None`.
 
     Methods:
         train(self, x, y):
-            Abstract method that must be implemented by subclasses to handle the training of the model.
+            Abstract method that must be implemented by subclasses to handle the training of the ModelsProduction.
 
         eval(self, x, y):
-            Abstract method that must be implemented by subclasses to handle model evaluation.
+            Abstract method that must be implemented by subclasses to handle ModelsProduction evaluation.
 
         run(self):
             Abstract method that must be implemented by subclasses to execute the full training process.
 
     Raises:
-        KeyError: If the specified configuration section is not found in the configuration data.
+        KeyError: If the specified configuration section is not found in the configuration DataTrain.
         pydantic.ValidationError: If the configuration validation fails.
 
     Usage:
@@ -86,18 +86,18 @@ class BasicTrainer(ABC):
         Initializes the BasicTrainer instance.
 
         Args:
-            config_model (IConfigModel): The configuration model used for validation and parsing.
-            config_loader (IConfigurationLoader): The configuration loader for fetching data
+            config_model (IConfigModel): The configuration ModelsProduction used for validation and parsing.
+            config_loader (IConfigurationLoader): The configuration loader for fetching DataTrain
                 from a configuration file.
             experiment_tracker (IExperimentTracker): The experiment tracker instance for monitoring
                 the experiment.
             config_name (str): The name of the configuration file or section to be loaded.
             config_section (str, optional): A specific section in the configuration file to load.
                 Defaults to `None`.
-            model (Any, optional): The machine learning model. Defaults to `None`.
+            model (Any, optional): The machine learning ModelsProduction. Defaults to `None`.
 
         Raises:
-            KeyError: If the specified configuration section is not found in the configuration data.
+            KeyError: If the specified configuration section is not found in the configuration DataTrain.
             pydantic.ValidationError: If the configuration validation fails.
         """
         self.experiment_tracker = experiment_tracker
@@ -118,33 +118,33 @@ class BasicTrainer(ABC):
                 "Data Pipeline configuration was successfully loaded and validated"
             )
         except pydantic.ValidationError as e:
-            logging.error(f"Validation of the data configuration failed at:\n{e}")
+            logging.error(f"Validation of the DataTrain configuration failed at:\n{e}")
 
     @abstractmethod
     def train(self, x, y):
         """
-        Trains the machine learning model using the provided input data.
+        Trains the machine learning ModelsProduction using the provided input DataTrain.
 
         Args:
-            x (Any): The input features for training the model.
+            x (Any): The input features for training the ModelsProduction.
             y (Any): The target labels corresponding to the input features.
 
         This method must be implemented by subclasses to define the specific training logic
-        for the model.
+        for the ModelsProduction.
         """
         pass
 
     @abstractmethod
     def eval(self, x, y):
         """
-        Evaluates the performance of the machine learning model on the provided dataset.
+        Evaluates the performance of the machine learning ModelsProduction on the provided dataset.
 
         Args:
             x (Any): The input features for evaluation.
             y (Any): The target labels corresponding to the input features.
 
         This method must be implemented by subclasses to define the specific evaluation logic
-        for the model.
+        for the ModelsProduction.
         """
         pass
 
@@ -154,6 +154,6 @@ class BasicTrainer(ABC):
         Executes the complete training process, including training and evaluation.
 
         This method must be implemented by subclasses to orchestrate the entire training
-        workflow, ensuring that the model is trained and evaluated appropriately.
+        workflow, ensuring that the ModelsProduction is trained and evaluated appropriately.
         """
         pass

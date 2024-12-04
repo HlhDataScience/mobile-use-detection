@@ -1,6 +1,6 @@
 """
 This module defines the `BasicPipeline` abstract class, adhering to the SOLID principles
-to provide a structured and extensible pipeline framework for data transformation and validation.
+to provide a structured and extensible pipeline framework for DataTrain transformation and validation.
 
 The pipeline integrates several key libraries:
 - **Pandera**: For validating dataframes.
@@ -9,7 +9,7 @@ The pipeline integrates several key libraries:
 
 Key Features:
 -------------
-- **Validation and Configuration Parsing**: Built-in mechanisms to ensure the integrity of input data and configurations using Pandera and Pydantic.
+- **Validation and Configuration Parsing**: Built-in mechanisms to ensure the integrity of input DataTrain and configurations using Pandera and Pydantic.
 - **YAML Integration**: Designed to work with Hydra for configuration management, requiring a properly defined YAML file to streamline pipeline setup.
 - **Selective Sub-Configuration Parsing**: Supports loading and validating specific sections of the YAML configuration file using the `config_section` parameter.
 - **Reproducibility and Scalability**: Leverages configuration-driven design for reproducible and scalable workflows.
@@ -23,7 +23,7 @@ Mandatory Requirement:
 Usage:
 ------
 Subclasses should implement the abstract methods to define specific pipeline behaviors,
-such as data transformations, scaling, and feature engineering.
+such as DataTrain transformations, scaling, and feature engineering.
 
 Example Subclass:
 
@@ -49,7 +49,7 @@ from abc import ABC, abstractmethod
 import polars as pl
 import pydantic
 
-from EDA_train_phase.src.abstractions.ABC_validations import (
+from Phases.EDA_train_phase.src.abstractions.ABC_validations import (
     IConfigModel,
     IConfigurationLoader,
     IValidationModel,
@@ -58,12 +58,12 @@ from EDA_train_phase.src.abstractions.ABC_validations import (
 
 class BasicPipeline(ABC):
     """
-    Abstract base class for defining data pipelines with built-in support for validation
+    Abstract base class for defining DataTrain pipelines with built-in support for validation
     and configuration management using abstraction layers for various libraries.
 
     This class is designed to:
-    - Validate input dataframes using an abstraction of validation models.
-    - Parse and validate pipeline configurations using an abstraction of configuration models.
+    - Validate input dataframes using an abstraction of validation ModelsTrain.
+    - Parse and validate pipeline configurations using an abstraction of configuration ModelsTrain.
     - Automate the management of configurations through an abstraction of configuration loaders.
     - Enforce a structured and extensible workflow through abstract methods.
 
@@ -86,7 +86,7 @@ class BasicPipeline(ABC):
     - config_model (IConfigModel):
         An abstraction for parsing and validating pipeline configuration.
     - config_loader (IConfigurationLoader):
-        An abstraction for loading configuration data from specified paths.
+        An abstraction for loading configuration DataTrain from specified paths.
     - config_path (str):
         The path to the configuration file to be loaded.
     - config_name (str):
@@ -99,7 +99,7 @@ class BasicPipeline(ABC):
 
     Key Features:
     -------------
-    - **Built-in Validation**: Ensures configuration validity and data integrity
+    - **Built-in Validation**: Ensures configuration validity and DataTrain integrity
       through the use of validation abstractions, reducing manual errors.
     - **Flexible Configuration Handling**: Allows for dynamic selection of specific sub-configurations
       within a larger configuration file using the `config_section` parameter.
@@ -118,8 +118,8 @@ class BasicPipeline(ABC):
     - **Reproducibility and Scalability**: Using configuration-driven design allows the pipeline
       to adapt to new workflows with minimal code changes.
     - **Integration Points**: The class is compatible with libraries through abstractions,
-      making it easy to integrate with existing data processing tools.
-    - **Target Audience**: Designed for data scientists and ML engineers seeking
+      making it easy to integrate with existing DataTrain processing tools.
+    - **Target Audience**: Designed for DataTrain scientists and ML engineers seeking
       validation, configuration management, and scalable workflows.
 
     Default Methods:
@@ -127,10 +127,10 @@ class BasicPipeline(ABC):
     Subclasses may implement, depending on the needs, the following methods:
 
     - `categorical_encoding`: Conversion of categorical features to numerical.
-    - `split_train_test`: Splitting data into training and test sets.
-    - `scaling`: Scaling data features.
-    - `normalize`: Normalizing data features.
-    - `standardize`: Standardizing data features.
+    - `split_train_test`: Splitting DataTrain into training and test sets.
+    - `scaling`: Scaling DataTrain features.
+    - `normalize`: Normalizing DataTrain features.
+    - `standardize`: Standardizing DataTrain features.
     - `_apply_feature_search`: Applying feature search techniques.
     - `apply_feature_engineering`: Implementing feature engineering.
 
@@ -139,14 +139,14 @@ class BasicPipeline(ABC):
     Abstract Methods:
     -----------------
     Subclasses must implement the following:
-    - `custom_validate`: Custom logic for data validation.
+    - `custom_validate`: Custom logic for DataTrain validation.
     - `run`: Executing the pipeline end-to-end.
 
     Updates:
     --------
     - **`config_section` Argument**: Enables loading and validating a specific section
       of the configuration file. This is useful for modular pipelines where each phase
-      (e.g., EDA, transformation, training) has its own configuration.
+      (e.g., EdaSrc, transformation, training) has its own configuration.
     - **Error Handling for Missing Sections**: Raises a `KeyError` if the specified
       `config_section` does not exist in the configuration file.
     """
@@ -180,7 +180,7 @@ class BasicPipeline(ABC):
                 "Data Pipeline configuration was successfully loaded and validated"
             )
         except pydantic.ValidationError as e:
-            logging.error(f"Validation of the data configuration failed at:\n{e}")
+            logging.error(f"Validation of the DataTrain configuration failed at:\n{e}")
 
         if self.apply_custom_function:
             try:

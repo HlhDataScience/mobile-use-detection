@@ -2,15 +2,15 @@
 ABC Validations Module
 
 This module provides abstract base classes (ABCs) for various components related to
-data validation, configuration management, and experiment tracking. The use of ABCs
+DataTrain validation, configuration management, and experiment tracking. The use of ABCs
 ensures that any concrete implementation of these components adheres to a defined
 interface, promoting consistency and reliability across different implementations.
 
 Classes:
 - IValidationModel: Defines the interface for validating dataframes.
-- IConfigModel: Defines the interface for parsing configuration data.
+- IConfigModel: Defines the interface for parsing configuration DataTrain.
 - IConfigurationLoader: Defines the interface for loading configurations from a specified path.
-- IExperimentTracker: Defines the interface for tracking experiments, including logging parameters, metrics, and models.
+- IExperimentTracker: Defines the interface for tracking experiments, including logging parameters, MetricsTrain, and ModelsTrain.
 """
 
 from abc import ABC, abstractmethod
@@ -21,7 +21,7 @@ class IValidationModel(ABC):
     """
     Interface for Validation Models
 
-    This abstract base class defines the contract for validation models that
+    This abstract base class defines the contract for validation ModelsTrain that
     validate dataframes. Implementations must provide the logic for validating
     the structure and contents of a dataframe.
 
@@ -39,7 +39,7 @@ class IValidationModel(ABC):
 
         Returns:
             Any: The result of the validation process, which may include
-            validation status, errors, or transformed data.
+            validation status, errors, or transformed DataTrain.
         """
         pass
 
@@ -48,21 +48,21 @@ class IConfigModel(ABC):
     """
     Interface for Configuration Models
 
-    This abstract base class defines the contract for configuration models
-    that parse configuration data. Implementations must provide the logic
+    This abstract base class defines the contract for configuration ModelsTrain
+    that parse configuration DataTrain. Implementations must provide the logic
     for interpreting and validating configuration inputs.
 
     Methods:
-    - parse: Parses the configuration data and returns the structured output.
+    - parse: Parses the configuration DataTrain and returns the structured output.
     """
 
     @abstractmethod
     def parse(self, config_data: Any) -> Any:
         """
-        Parses the configuration data.
+        Parses the configuration DataTrain.
 
         Args:
-            config_data (Any): The configuration data to be parsed.
+            config_data (Any): The configuration DataTrain to be parsed.
 
         Returns:
             Any: The structured output of the parsed configuration.
@@ -75,8 +75,8 @@ class IConfigurationLoader(ABC):
     Interface for Configuration Loaders
 
     This abstract base class defines the contract for loaders that retrieve
-    configuration data from a specified path. Implementations must provide
-    the logic for loading configuration files or data sources.
+    configuration DataTrain from a specified path. Implementations must provide
+    the logic for loading configuration files or DataTrain sources.
 
     Methods:
     - load: Loads the configuration from the specified path.
@@ -91,7 +91,7 @@ class IConfigurationLoader(ABC):
             config_name (str): The name or path of the configuration to load.
 
         Returns:
-            Any: The loaded configuration data.
+            Any: The loaded configuration DataTrain.
         """
         pass
 
@@ -102,15 +102,15 @@ class IExperimentTracker(ABC):
 
     This abstract base class defines the contract for tracking experiments.
     Implementations must provide methods for initializing experiments and
-    logging parameters, metrics, and models.
+    logging parameters, MetricsTrain, and ModelsTrain.
 
     Methods:
     - get_or_create_experiment_id: Retrieves or creates an experiment ID.
     - initialize_experiment: Initializes the tracking for a given experiment.
     - log_param: Logs a single parameter for the experiment.
     - log_params: Logs multiple parameters for the experiment.
-    - log_metrics: Logs metrics for the experiment.
-    - log_model: Logs the model used in the experiment.
+    - log_metrics: Logs MetricsTrain for the experiment.
+    - log_model: Logs the ModelsProduction used in the experiment.
     """
 
     @abstractmethod
@@ -160,19 +160,19 @@ class IExperimentTracker(ABC):
     @abstractmethod
     def log_metrics(self, dictionary: Dict[str, float]) -> None:
         """
-        Logs metrics for the experiment.
+        Logs MetricsTrain for the experiment.
 
         Args:
-            dictionary (dictionary: Dict[str, float]): A dictionary of metrics to log.
+            dictionary (dictionary: Dict[str, float]): A dictionary of MetricsTrain to log.
         """
         pass
 
     @abstractmethod
     def log_model(self, model: Any) -> None:
         """
-        Logs the model used in the experiment.
+        Logs the ModelsProduction used in the experiment.
 
         Args:
-            model (Any): The model instance to log.
+            model (Any): The ModelsProduction instance to log.
         """
         pass

@@ -1,0 +1,35 @@
+# VARIABLE NAMING
+
+experiment_name: ${dynamic_settings.experiment_name}
+registered_model_name: ${dynamic_settings.registered_model_name}
+# TrainSrc and test Paths
+
+x_train: "TrainSrc/DataTrain/processed_data/train_data/X_train.csv"
+x_test: "TrainSrc/DataTrain/processed_data/test_data/X_test.csv"
+y_train: "TrainSrc/DataTrain/processed_data/train_data/y_train.csv"
+y_test: "TrainSrc/DataTrain/processed_data/test_data/y_test.csv"
+
+#Standardized and Normalized Paths
+
+#normalized_x_train: "TrainSrc/DataTrain/processed_data/train_data/X_train_normalize.csv"
+#standardized_x_train: None
+#normalized_x_test: "TrainSrc/DataTrain/processed_data/test_data/X_test_normalized.csv"
+#standardized_x_test: None
+
+# Bolean parameters
+
+normalized_df: ${dynamic_settings.normalized_df}
+standardized_df: ${dynamic_settings.standardized_df}
+
+# ModelsProduction path
+
+model_path: "TrainSrc/ModelsTrain"
+
+# tuned parameters and MetricsTrain
+using_custom_parameters: ${dynamic_settings.using_custom_parameters}
+custom_parameters: ${dynamic_settings.custom_parameters}
+tuned_parameters: ${dynamic_settings.tuned_parameters}
+average_mode: ${dynamic_settings.average_mode}
+metrics: "TrainSrc/MetricsTrain"
+
+

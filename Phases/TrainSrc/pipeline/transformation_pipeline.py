@@ -1,12 +1,12 @@
 """
-This module contains a class for data  transformation, and feature engineering pipelines. It is designed to handle the preprocessing of data for machine learning tasks, focusing on categorical transformation, normalization, standardization, and feature engineering. The module includes the following key components:
+This module contains a class for DataTrain  transformation, and feature engineering pipelines. It is designed to handle the preprocessing of DataTrain for machine learning tasks, focusing on categorical transformation, normalization, standardization, and feature engineering. The module includes the following key components:
 
-- LazyTransformationPipeline: A class that orchestrates the data transformation pipeline using Polars' lazy API. This class handles tasks such as categorical encoding, splitting data into train_data/test_data sets, applying normalization or standardization, and performing feature engineering.
+- LazyTransformationPipeline: A class that orchestrates the DataTrain transformation pipeline using Polars' lazy API. This class handles tasks such as categorical encoding, splitting DataTrain into train_data/test_data sets, applying normalization or standardization, and performing feature engineering.
 
-The pipeline supports various machine learning models, including SVM, KNN, PCA, and tree-based models, and provides mechanisms for hyperparameter tuning using RandomSearch, GridSearch, or Bayesian Optimization.
+The pipeline supports various machine learning ModelsTrain, including SVM, KNN, PCA, and tree-based ModelsTrain, and provides mechanisms for hyperparameter tuning using RandomSearch, GridSearch, or Bayesian Optimization.
 
 Modules used:
-- Polars for efficient data manipulation and transformation
+- Polars for efficient DataTrain manipulation and transformation
 - Scikit-learn for hyperparameter tuning
 - Skopt for Bayesian optimization
 """
@@ -22,8 +22,8 @@ from sklearn.base import BaseEstimator
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from skopt import BayesSearchCV
 
-from EDA_train_phase.src.abstractions.ABC_Pipeline import BasicPipeline
-from EDA_train_phase.src.validation_classes.validation_interfaces import (
+from Phases.EDA_train_phase.src.abstractions.ABC_Pipeline import BasicPipeline
+from Phases.EDA_train_phase.src.validation_classes.validation_interfaces import (
     HydraConfLoader,
     PanderaValidationModel,
     PydanticConfigModel,
@@ -32,13 +32,13 @@ from EDA_train_phase.src.validation_classes.validation_interfaces import (
 
 class LazyTransformationPipeline(BasicPipeline):
     """
-    A pipeline class to perform efficient data transformations on dataframes using Polars' lazy API.
-    The class reads raw data, validates it, applies categorical to numerical encoding, splits into
-    training and testing datasets, and optionally normalizes or standardizes the data. It also
+    A pipeline class to perform efficient DataTrain transformations on dataframes using Polars' lazy API.
+    The class reads raw DataTrain, validates it, applies categorical to numerical encoding, splits into
+    training and testing datasets, and optionally normalizes or standardizes the DataTrain. It also
     supports feature engineering using Random Search, Grid Search, and Bayesian Optimization.
 
     Attributes:
-        validation_model (DataValidationConfig): An instance of the DataValidationConfig class, used to validate the data.
+        validation_model (DataValidationConfig): An instance of the DataValidationConfig class, used to validate the DataTrain.
         config_model (DataTransformationConfig): An instance of the DataTransformationConfig class, holding configuration settings.
         config_data (DictConfig): The omegaconf DictObject that holds the parameters of the yalm configuration.
         apply_custom_function (bool): a flag to use a custom function to validate the dataframe. Default = False
@@ -56,7 +56,7 @@ class LazyTransformationPipeline(BasicPipeline):
         model: BaseEstimator,
     ):
         """
-        Initializes the LazyTransformationPipeline subclass with default super configurations for data transformation,
+        Initializes the LazyTransformationPipeline subclass with default super configurations for DataTrain transformation,
         validation, and feature engineering. It attempts to validate the dataframe schema based on the
         provided configuration. If validation fails, an error message is printed.
 
@@ -80,7 +80,7 @@ class LazyTransformationPipeline(BasicPipeline):
         dataframe is saved to the specified path in the configuration.
 
         The method:
-            - Loads the data lazily using Polars
+            - Loads the DataTrain lazily using Polars
             - Creates mappings for categorical columns to numerical values
             - Drops original categorical columns and any columns specified in `columns_to_drop`
             - Saves the transformed dataframe and the mappings to specified paths
@@ -146,12 +146,12 @@ class LazyTransformationPipeline(BasicPipeline):
         The method:
             - Loads the transformed dataframe lazily
             - Adds a row number for shuffling and splitting
-            - Splits the data based on the row number into training and testing sets
+            - Splits the DataTrain based on the row number into training and testing sets
             - Saves the resulting datasets (X_train, X_test, y_train, y_test) to the specified paths
 
         Args:
             random_state (int, optional): The seed for random operations. Defaults to 42.
-            train_fraction (float, optional): The fraction of data to use for training. Defaults to 0.75.
+            train_fraction (float, optional): The fraction of DataTrain to use for training. Defaults to 0.75.
 
         Returns:
             None
@@ -201,8 +201,8 @@ class LazyTransformationPipeline(BasicPipeline):
         pass
 
     def scaling(self) -> Tuple[List[str], List[str], List[str], List[str]]:
-        """Prepares the data to be used in normalization or standardization."""
-        # Read data lazily
+        """Prepares the DataTrain to be used in normalization or standardization."""
+        # Read DataTrain lazily
         lazy_df_train = pl.scan_csv(
             self.valid_config.transformed_train_df_path_x
             / self.valid_config.x_train_name
@@ -239,13 +239,13 @@ class LazyTransformationPipeline(BasicPipeline):
     def normalize(self) -> None:
         """
         Performs column-wise normalization [0, 1] for continuous columns only.
-        If the model is SVM, KNN, or PCA, normalizes categorical encoded columns as well.
+        If the ModelsProduction is SVM, KNN, or PCA, normalizes categorical encoded columns as well.
         Otherwise, skips normalization for categorical columns.
 
         Args:
-        model_type (str): The model type used for prediction (e.g., "SVM", "KNN", "PCA").
+        model_type (str): The ModelsProduction type used for prediction (e.g., "SVM", "KNN", "PCA").
         """
-        # Specify models that will normalize the categorical columns already converted
+        # Specify ModelsTrain that will normalize the categorical columns already converted
         normalize_categorical = ["SVM", "KNN", "PCA"]
         # Raise error if the method is not specified in the transformation config.
         if not self.valid_config.normalize_df:
@@ -254,7 +254,7 @@ class LazyTransformationPipeline(BasicPipeline):
             )
             raise ValueError
         else:
-            # Read data lazily
+            # Read DataTrain lazily
             lazy_df_train = pl.scan_csv(
                 self.valid_config.transformed_train_df_path_x
                 / self.valid_config.x_train_name
@@ -269,7 +269,7 @@ class LazyTransformationPipeline(BasicPipeline):
                 train_all_columns,
                 test_all_columns,
             ) = self.scaling()
-            # Check if the model is distance, gradient, or scale-sensitive
+            # Check if the ModelsProduction is distance, gradient, or scale-sensitive
             if self.valid_config.ML_type in normalize_categorical:
                 logging.info(
                     f"Model type '{self.valid_config.ML_type}' detected. Normalizing categorical columns as well."
@@ -330,13 +330,13 @@ class LazyTransformationPipeline(BasicPipeline):
     def standardize(self) -> None:
         """
         Performs column-wise standardization [0, 1] for continuous columns only.
-        If the model is SVM, KNN, or PCA, normalizes categorical encoded columns as well.
+        If the ModelsProduction is SVM, KNN, or PCA, normalizes categorical encoded columns as well.
         Otherwise, skips normalization for categorical columns.
 
         Args:
-        model_type (str): The model type used for prediction (e.g., "SVM", "KNN", "PCA").
+        model_type (str): The ModelsProduction type used for prediction (e.g., "SVM", "KNN", "PCA").
         """
-        # Specify models that will standardize the categorical columns already converted
+        # Specify ModelsTrain that will standardize the categorical columns already converted
         standardize_categorical: list[str] = ["SVM", "KNN", "PCA"]
 
         # Raise error if the method is not specified in the transformation config.
@@ -346,7 +346,7 @@ class LazyTransformationPipeline(BasicPipeline):
             )
             raise ValueError
         else:
-            # Read data lazily
+            # Read DataTrain lazily
             lazy_df_train = pl.scan_csv(
                 self.valid_config.transformed_train_df_path_x
                 / self.valid_config.x_train_name
@@ -361,7 +361,7 @@ class LazyTransformationPipeline(BasicPipeline):
                 train_all_columns,
                 test_all_columns,
             ) = self.scaling()
-            # Check if the model is distance, gradient, or scale-sensitive
+            # Check if the ModelsProduction is distance, gradient, or scale-sensitive
             if self.valid_config.ML_type in standardize_categorical:
                 logging.info(
                     f"Model type '{self.valid_config.ML_type}' detected. Normalizing categorical columns as well."
@@ -423,7 +423,7 @@ class LazyTransformationPipeline(BasicPipeline):
             search_class (class): The search class to use (RandomizedSearchCV, GridSearchCV, or BayesSearchCV).
 
         Raises:
-            ValueError: If no model is provided.
+            ValueError: If no ModelsProduction is provided.
         """
         if self.model is not None and self.search_class is not None:
             if self.search_class == "GridSearch":
@@ -518,7 +518,7 @@ class LazyTransformationPipeline(BasicPipeline):
         else:
             with ValueError as e:
                 logging.error(
-                    f"You need to specify a model of classification. You can find the the accepted types in "
+                    f"You need to specify a ModelsProduction of classification. You can find the the accepted types in "
                     f"the DataTransformationConfig class"
                     f", in the attribute {self.valid_config.ML_type} The error:\n{e}."
                 )

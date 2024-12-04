@@ -1,12 +1,10 @@
 """The main API _app program entry point"""
 
 from contextlib import asynccontextmanager
-from pathlib import Path
 
 from fastapi import FastAPI
 
-from EDA_train_phase.src.logging_functions.logger import setup_logging
-from production_phase.src.api.apifuncs import (
+from Phases.ProductionSrc.api.apifuncs import (
     classify,
     get_results,
     load_classifier,
@@ -14,10 +12,10 @@ from production_phase.src.api.apifuncs import (
     root,
     setup_app,
 )
-from production_phase.src.api.Frameworks import FastAPIFramework
+from Phases.ProductionSrc.api.Frameworks import FastAPIFramework
 
 # CONSTANTS:
-MODEL_PATH = "EDA_train_phase/models/Tree_Classifier_New_v4.joblib"
+MODEL_PATH = "Phases/ModelsTrain/Tree_Classifier_New_v4.joblib"
 API_CONSTRUCTOR = {
     "/": (root, ["GET"]),
     "/predict/": (classify, ["POST"]),

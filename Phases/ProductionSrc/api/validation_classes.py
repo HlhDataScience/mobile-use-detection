@@ -15,5 +15,6 @@ class ClassifierInputFeature(BaseModel):
         description="THe number of apps you have currently install in your phone.",
     )
     DataUsage_MB_day: int = Field(
-        default=0, description="The usage of data you have currently with your phone"
+        default=0,
+        description="The usage of DataTrain you have currently with your phone",
     )

@@ -1,8 +1,8 @@
 """
-This module contains classes and functions for data validation. The module includes the following key components:
+This module contains classes and functions for DataTrain validation. The module includes the following key components:
 
-- DataValidationConfig: A Pandera-based configuration class for validating incoming data and ensuring it adheres to an expected schema.
-- DataTransformationConfig: A Pydantic-based configuration class for managing transformation settings, including data file paths, model configurations, and feature engineering modes.
+- DataValidationConfig: A Pandera-based configuration class for validating incoming DataTrain and ensuring it adheres to an expected schema.
+- DataTransformationConfig: A Pydantic-based configuration class for managing transformation settings, including DataTrain file paths, ModelsProduction configurations, and feature engineering modes.
 
 Modules used:
 - Pandera for schema validation
@@ -20,17 +20,17 @@ from pydantic.class_validators import root_validator
 
 class DataValidationConfig(pa.DataFrameModel):
     """
-    Validates the format of incoming data to ensure it conforms to the expected schema using pandera.
+    Validates the format of incoming DataTrain to ensure it conforms to the expected schema using pandera.
 
     Attributes:
         UserID (int): User ID.
-        DeviceModel (str): Device model.
+        DeviceModel (str): Device ModelsProduction.
         OperatingSystem (str): Operating system used.
         AppUsageTime_min_day (int): Daily _app usage time in minutes.
         ScreenOnTime_hours_day (float): Daily screen on time in hours.
         BatteryDrain_mAh_day (int): Daily battery drain in mAh.
         NumberOfAppsInstalled (int): Number of apps installed.
-        DataUsage_MB_day (int): Daily data usage in MB.
+        DataUsage_MB_day (int): Daily DataTrain usage in MB.
         Age (int): Age in days.
         Gender (str): User's gender.
         UserBehaviorClass (int): Class label for user behavior.
@@ -54,28 +54,28 @@ class DataTransformationConfig(BaseModel):
     Configuration for LazyTransformationPipeline class.
 
     Attributes:
-        original_datapath (FilePath): Path to the original data file.
+        original_datapath (FilePath): Path to the original DataTrain file.
         mapping_name (str): Name of transformation mapping.
-        intermediate_df_name (str): Name of intermediate data file.
-        x_train_name (str): Name of training data file.
-        y_train_name (str): Name of training data file.
-        x_test_name (str): Name of testing data file.
-        y_test_name (str): Name of testing data file.
-        x_train_normalized_name (str): Name of training data file.
-        x_test_normalized_name (str): Name of testing data file.
-        x_train_standardized_name (str): Name of training data file.
-        x_test_standardized_name (str): Name of testing data file.
+        intermediate_df_name (str): Name of intermediate DataTrain file.
+        x_train_name (str): Name of training DataTrain file.
+        y_train_name (str): Name of training DataTrain file.
+        x_test_name (str): Name of testing DataTrain file.
+        y_test_name (str): Name of testing DataTrain file.
+        x_train_normalized_name (str): Name of training DataTrain file.
+        x_test_normalized_name (str): Name of testing DataTrain file.
+        x_train_standardized_name (str): Name of training DataTrain file.
+        x_test_standardized_name (str): Name of testing DataTrain file.
         categorical_columns_to_transform (List[str]): Columns to transform from categorical to numeric.
         columns_to_drop (List[str]): Columns to drop from the DataFrame.
         mapping_file_path (Path): Path to the mapping file.
         ML_type (Literal[ "SVM","KNN","PCA","Gradient","Tree-Based","Naive"]): Model type to perform normalization just into numerical values or into categorical as well,
         normalize_df (bool): Whether to normalize the DataFrame.
         standardize_df (bool): Whether to standardize the DataFrame.
-        number_iterations (int): Number of iterations performed by the cross validation model.
+        number_iterations (int): Number of iterations performed by the cross validation ModelsProduction.
         cross_validation: (int): Number of cross validators.
         feature_engineering_dict (Dict[str, Union[float, int, str]]): Dictionary for feature engineering.
         tuned_parameters_path (Path): Path to the tuned parameters json file created after feature engineering is performed.
-        transformed_intermediate_df_path (Path): Path to the transformed intermediate data file.
+        transformed_intermediate_df_path (Path): Path to the transformed intermediate DataTrain file.
         transformed_train_df_path_x (Path): Path to save the transformed train_data X DataFrame.
         transformed_train_df_path_y (Path): Path to save the transformed train_data y DataFrame.
         transformed_test_df_path_x(Path): Path to save the transformed test_data X DataFrame.
@@ -90,39 +90,39 @@ class DataTransformationConfig(BaseModel):
     """
 
     original_datapath: FilePath = Field(
-        ..., description="Path to the original data folder"
+        ..., description="Path to the original DataTrain folder"
     )
 
     mapping_name: str = Field(
         ..., description="Name of the mapping file categorical transformation."
     )
     intermediate_df_name: str = Field(
-        ..., description="Name of transformed intermediate data file."
+        ..., description="Name of transformed intermediate DataTrain file."
     )
     x_train_name: str = Field(
-        ..., description="Name of the train_data data file after splitting."
+        ..., description="Name of the train_data DataTrain file after splitting."
     )
     y_train_name: str = Field(
-        ..., description="Name of the train_data data file after splitting."
+        ..., description="Name of the train_data DataTrain file after splitting."
     )
     x_test_name: str = Field(
-        ..., description="Name of the test_data data file after splitting."
+        ..., description="Name of the test_data DataTrain file after splitting."
     )
     y_test_name: str = Field(
-        ..., description="Name of the test_data data file after splitting."
+        ..., description="Name of the test_data DataTrain file after splitting."
     )
 
     x_train_normalized_name: str = Field(
-        ..., description="Name of the train_data data file after normalization."
+        ..., description="Name of the train_data DataTrain file after normalization."
     )
     x_test_normalized_name: str = Field(
-        ..., description="Name of the test_data data file after normalization."
+        ..., description="Name of the test_data DataTrain file after normalization."
     )
     x_train_standardized_name: str = Field(
-        ..., description="Name of the train_data data file after standardization."
+        ..., description="Name of the train_data DataTrain file after standardization."
     )
     x_test_standardized_name: str = Field(
-        ..., description="Name of the test_data data file after standardization."
+        ..., description="Name of the test_data DataTrain file after standardization."
     )
     best_parameters_name: str = Field(
         ..., description="Name of tuned parameters json file created."
@@ -140,9 +140,11 @@ class DataTransformationConfig(BaseModel):
         ...,
         description="Model type to perform normalization just into numerical values or into categorical as well",
     )
-    normalize_df: bool = Field(..., description="Whether to normalize the data")
+    normalize_df: bool = Field(..., description="Whether to normalize the DataTrain")
 
-    standardize_df: bool = Field(..., description="Whether to standardize the data")
+    standardize_df: bool = Field(
+        ..., description="Whether to standardize the DataTrain"
+    )
 
     apply_feature_selection: bool = Field(
         ..., description="If to apply or not the feature selection"
@@ -154,7 +156,7 @@ class DataTransformationConfig(BaseModel):
 
     number_iterations: int = Field(
         ...,
-        description="Number of iterations performed by the cross validation model.",
+        description="Number of iterations performed by the cross validation ModelsProduction.",
     )
 
     cross_validation: int = Field(..., description="Number of cross validators")
@@ -175,16 +177,16 @@ class DataTransformationConfig(BaseModel):
         ..., description="Path to save the transformed intermediate DataFrame"
     )
     transformed_test_df_path_y: Path = Field(
-        ..., description="Path to the transformed test_data data Y folder"
+        ..., description="Path to the transformed test_data DataTrain Y folder"
     )
     transformed_train_df_path_x: Path = Field(
-        ..., description="Path to the transformed train_data data X folder"
+        ..., description="Path to the transformed train_data DataTrain X folder"
     )
     transformed_train_df_path_y: Path = Field(
-        ..., description="Path to the transformed train_data data y folder"
+        ..., description="Path to the transformed train_data DataTrain y folder"
     )
     transformed_test_df_path_x: Path = Field(
-        ..., description="Path to the transformed test_data data X folder"
+        ..., description="Path to the transformed test_data DataTrain X folder"
     )
     transformed_normalized_df_path_train_x: Path = Field(
         ..., description="Path to save the transformed normalized train_data DataFrame"
@@ -218,23 +220,23 @@ class DataTransformationConfig(BaseModel):
 
 class TrainerConfig(BaseModel):
     """
-    TrainerConfig is a Pydantic model that validates and manages the configuration for the training pipeline.
+    TrainerConfig is a Pydantic ModelsProduction that validates and manages the configuration for the training pipeline.
 
     Attributes:
         experiment_name (str): The name of the current experiment.
-        x_train (FilePath): Path to the transformed training data (X) folder.
-        x_test (FilePath): Path to the transformed testing data (X) folder.
-        y_train (FilePath): Path to the training data (Y) folder.
-        y_test (FilePath): Path to the transformed testing data (Y) folder.
-        normalized_x_train (FilePath): Path to save the normalized training data DataFrame.
-        standardized_x_train (FilePath): Path to save the standardized training data DataFrame.
-        normalized_x_test (FilePath): Path to save the normalized testing data DataFrame.
-        standardized_x_test (FilePath): Path to save the standardized testing data DataFrame.
-        normalized_df (bool): Indicates whether to normalize the data.
-        standardized_df (bool): Indicates whether to standardize the data.
+        x_train (FilePath): Path to the transformed training DataTrain (X) folder.
+        x_test (FilePath): Path to the transformed testing DataTrain (X) folder.
+        y_train (FilePath): Path to the training DataTrain (Y) folder.
+        y_test (FilePath): Path to the transformed testing DataTrain (Y) folder.
+        normalized_x_train (FilePath): Path to save the normalized training DataTrain DataFrame.
+        standardized_x_train (FilePath): Path to save the standardized training DataTrain DataFrame.
+        normalized_x_test (FilePath): Path to save the normalized testing DataTrain DataFrame.
+        standardized_x_test (FilePath): Path to save the standardized testing DataTrain DataFrame.
+        normalized_df (bool): Indicates whether to normalize the DataTrain.
+        standardized_df (bool): Indicates whether to standardize the DataTrain.
         tuned_parameters (FilePath): File path to the JSON file containing the tuned parameters.
-        model_path (Path): Path to save the trained machine learning model.
-        metrics (Path): Path to the directory holding metrics for training and testing.
+        model_path (Path): Path to save the trained machine learning ModelsProduction.
+        metrics (Path): Path to the directory holding MetricsTrain for training and testing.
 
     Methods:
         check_normalization_and_standardization(cls, values):
@@ -247,18 +249,20 @@ class TrainerConfig(BaseModel):
     experiment_name: str = Field(..., description="The name of your current experiment")
 
     registered_model_name: str = Field(
-        ..., description="The name to register the model into mlflow."
+        ..., description="The name to register the ModelsProduction into mlflow."
     )
 
     x_train: FilePath = Field(
-        ..., description="Path to the transformed train_data data X folder"
+        ..., description="Path to the transformed train_data DataTrain X folder"
     )
     x_test: FilePath = Field(
-        ..., description="Path to the transformed test_data data X folder"
+        ..., description="Path to the transformed test_data DataTrain X folder"
     )
-    y_train: FilePath = Field(..., description="Path to the  train_data data Y folder")
+    y_train: FilePath = Field(
+        ..., description="Path to the  train_data DataTrain Y folder"
+    )
     y_test: FilePath = Field(
-        ..., description="Path to the transformed test_data data Y folder"
+        ..., description="Path to the transformed test_data DataTrain Y folder"
     )
 
     normalized_x_train: Optional[FilePath] = Field(
@@ -275,9 +279,11 @@ class TrainerConfig(BaseModel):
         None,
         description="Path to save the transformed standardized test_data DataFrame",
     )
-    normalized_df: bool = Field(..., description="Whether to normalize the data")
+    normalized_df: bool = Field(..., description="Whether to normalize the DataTrain")
 
-    standardized_df: bool = Field(..., description="Whether to standardize the data")
+    standardized_df: bool = Field(
+        ..., description="Whether to standardize the DataTrain"
+    )
 
     tuned_parameters: Optional[FilePath] = Field(
         ..., description="File path to the json file with the tuned parameters"
@@ -292,7 +298,9 @@ class TrainerConfig(BaseModel):
         description="Custom_parameters dictionary specifying ML parameters",
     )
 
-    model_path: Path = Field(..., description="The path to save the ML model trained.")
+    model_path: Path = Field(
+        ..., description="The path to save the ML ModelsProduction trained."
+    )
 
     average_mode: Literal["micro", "macro", "samples", "weighted", "binary"] = Field(
         ..., description="The average for classes in precision and recall"
@@ -300,7 +308,7 @@ class TrainerConfig(BaseModel):
 
     metrics: Path = Field(
         ...,
-        description="The path to the directory that holds the metrics for train and test.",
+        description="The path to the directory that holds the MetricsTrain for train and test.",
     )
 
     @root_validator(pre=True)

@@ -1,7 +1,7 @@
 """
 This module provides wrappers for validation and configuration management using
 various libraries such as Pandera, Pydantic, Hydra, and MLFlow. It defines
-interfaces for validation models, configuration loaders, and experiment tracking.
+interfaces for validation ModelsTrain, configuration loaders, and experiment tracking.
 """
 
 from enum import Enum
@@ -14,7 +14,7 @@ from hydra import compose
 from mlflow import ActiveRun
 from omegaconf import OmegaConf
 
-from EDA_train_phase.src.abstractions.ABC_validations import (
+from Phases.EDA_train_phase.src.abstractions.ABC_validations import (
     IConfigModel,
     IConfigurationLoader,
     IExperimentTracker,
@@ -32,7 +32,7 @@ class PanderaValidationModel(IValidationModel):
         ],
     ):
         """
-        Initializes the PanderaValidationModel with a specified validation model.
+        Initializes the PanderaValidationModel with a specified validation ModelsProduction.
 
         Args:
             validation_model (type): A Pandera DataFrameModel or Polars DataFrameModel type used for validation.
@@ -41,7 +41,7 @@ class PanderaValidationModel(IValidationModel):
 
     def validate(self, dataframe: Any) -> Any:
         """
-        Validates the schema of the provided dataframe using the Pandera validation model.
+        Validates the schema of the provided dataframe using the Pandera validation ModelsProduction.
 
         Args:
             dataframe (Any): The dataframe to be validated.
@@ -53,11 +53,11 @@ class PanderaValidationModel(IValidationModel):
 
 
 class PydanticConfigModel(IConfigModel):
-    """A wrapper for validating configuration data using Pydantic."""
+    """A wrapper for validating configuration DataTrain using Pydantic."""
 
     def __init__(self, config_model: type[pydantic.BaseModel]):
         """
-        Initializes the PydanticConfigModel with a specified Pydantic model.
+        Initializes the PydanticConfigModel with a specified Pydantic ModelsProduction.
 
         Args:
             config_model (type): A Pydantic BaseModel type used for configuration validation.
@@ -66,16 +66,16 @@ class PydanticConfigModel(IConfigModel):
 
     def parse(self, config_data: Any) -> Any:
         """
-        Validates and parses the given configuration data using the Pydantic model.
+        Validates and parses the given configuration DataTrain using the Pydantic ModelsProduction.
 
         Args:
-            config_data (Any): The configuration data to be validated and parsed.
+            config_data (Any): The configuration DataTrain to be validated and parsed.
 
         Returns:
-            Any: An instance of the Pydantic model populated with the validated configuration data.
+            Any: An instance of the Pydantic ModelsProduction populated with the validated configuration DataTrain.
 
         Raises:
-            ValidationError: If the provided configuration data does not conform to the model.
+            ValidationError: If the provided configuration DataTrain does not conform to the ModelsProduction.
         """
         return self.config_model(**config_data)
 
@@ -152,36 +152,36 @@ class MLFlowTracker(IExperimentTracker):
 
     def log_metrics(self, dictionary: Dict[str, float]) -> None:
         """
-               Logs metrics to MLFlow.
+               Logs MetricsTrain to MLFlow.
 
                Args:
-        dictionary (Dict[str,  float]): A dictionary of metrics to log.
+        dictionary (Dict[str,  float]): A dictionary of MetricsTrain to log.
         """
         mlflow.log_metrics(metrics=dictionary)
 
     def log_model(self, model: Any):
         """
-        Logs a model to MLFlow. This method is intended to be overridden by
-        log_model_signature for specific model logging implementations.
+        Logs a ModelsProduction to MLFlow. This method is intended to be overridden by
+        log_model_signature for specific ModelsProduction logging implementations.
 
         Args:
-            model (Any): The model to log.
+            model (Any): The ModelsProduction to log.
         """
         pass
 
     @staticmethod
     def log_model_signature(model: Any, signature: Any, registered_model_name: str) -> None:  # type: ignore
         """
-        Logs a model along with its signature to MLFlow.
+        Logs a ModelsProduction along with its signature to MLFlow.
 
         Args:
-            model (Any): The model to log.
-            signature (Any): The signature of the model.
-            registered_model_name (str): The name under which the model is registered in MLFlow.
+            model (Any): The ModelsProduction to log.
+            signature (Any): The signature of the ModelsProduction.
+            registered_model_name (str): The name under which the ModelsProduction is registered in MLFlow.
         """
         mlflow.sklearn.log_model(
             sk_model=model,
-            artifact_path="sklearn-model",
+            artifact_path="sklearn-ModelsProduction",
             signature=signature,
             registered_model_name=registered_model_name,
         )

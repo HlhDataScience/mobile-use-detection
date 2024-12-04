@@ -1,16 +1,15 @@
 """Setup module that may be expanded with other frameworks."""
 
 import json
-import logging
 from datetime import datetime, timezone
-from typing import Dict, List, Tuple
+from typing import Dict
 
 import joblib  # type: ignore
 import numpy as np
 from fastapi import HTTPException, Request
 
-from production_phase.src.api.validation_classes import ClassifierInputFeature
-from production_phase.src.interfaces.WebFrameworksProtocols import (
+from Phases.ProductionSrc.api.validation_classes import ClassifierInputFeature
+from Phases.ProductionSrc.interfaces.WebFrameworksProtocols import (
     WebFrameworkProtocol,
 )
 
@@ -33,7 +32,7 @@ def save_results(prediction_entry) -> None:
         if "index_id" not in dicti.keys():
             dicti["index_id"] = index
 
-    # Write the updated data back to the JSON file
+    # Write the updated DataTrain back to the JSON file
     with open(f"production_phase/data/{PREDICTION_FILE}", "w") as f:
         json.dump(predictions, f, indent=4)
 
@@ -96,7 +95,7 @@ async def results() -> Dict:
 
 
 def load_classifier(model_path: str):
-    """Loads the model for the predictions"""
+    """Loads the ModelsProduction for the predictions"""
     with open(model_path, "rb") as f:
         return joblib.load(f)
 
@@ -110,7 +109,7 @@ async def classify(input_data: ClassifierInputFeature, request: Request):
     """Classifies the results sent by users into classes of mobile usage."""
     try:
         classifier = request.app.state.classifier
-        # Extract and reshape the input data
+        # Extract and reshape the input DataTrain
         input_data_list = [i for i in input_data.model_dump().values()]
         numbers = np.array(input_data_list).reshape(1, -1)
         # Make prediction using the tree classifier
