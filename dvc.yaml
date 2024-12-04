@@ -2,33 +2,31 @@ stages:
   transformation_pipeline:
     cmd: python3 main.py --pipeline transformation
     deps:
-    - SrcTrain/DataTrain/rawdata/user_behavior_dataset.csv
+    - Phases/DataTrain/rawdata/user_behavior_dataset.csv
     - main.py
     outs:
-    - SrcTrain/DataTrain/processed_data/intermediate_data/transformed_df.csv
-    - SrcTrain/DataTrain/processed_data/test_data/X_test.csv
-    - SrcTrain/DataTrain/processed_data/test_data/y_test.csv
-    - SrcTrain/DataTrain/processed_data/train_data/X_train.csv
-    - SrcTrain/DataTrain/processed_data/train_data/y_train.csv
+    - Phases/DataTrain/processed_data/intermediate_data/transformed_df.csv
+    - Phases/DataTrain/processed_data/test_data/X_test.csv
+    - Phases/DataTrain/processed_data/test_data/y_test.csv
+    - Phases/DataTrain/processed_data/train_data/X_train.csv
+    - Phases/DataTrain/processed_data/train_data/y_train.csv
     metrics:
-    - EDA_train_phase/metrics/Best_parameters_model__GridSearch_Tree-Based.json:
-        cache: false
-    - EDA_train_phase/metrics/categorical_mapping.json:
+    - Phases/MetricsTrain/categorical_mapping.json:
         cache: false
   training_pipeline:
     cmd: python3 main.py --pipeline training
     deps:
-    - SrcTrain/DataTrain/processed_data/test_data/X_test.csv
-    - SrcTrain/DataTrain/processed_data/test_data/y_test.csv
-    - SrcTrain/DataTrain/processed_data/train_data/X_train.csv
-    - SrcTrain/DataTrain/processed_data/train_data/y_train.csv
+    - Phases/DataTrain/processed_data/test_data/X_test.csv
+    - Phases/DataTrain/processed_data/test_data/y_test.csv
+    - Phases/DataTrain/processed_data/train_data/X_train.csv
+    - Phases/DataTrain/processed_data/train_data/y_train.csv
     - main.py
     outs:
-    - SrcTrain/ModelsTrain/Tree_Classifier_GridSearchCV.pkl
+    - Phases/ModelsTrain/Tree_Classifier_New_v4.joblib
     metrics:
-    - EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_Test_metrics.json:
+    - Phases/MetricsTrain/Tree_Classifier_New_v4_Test_metrics.json:
         cache: false
-    - EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_Train_metrics.json:
+    - Phases/MetricsTrain/Tree_Classifier_New_v4_Train_metrics.json:
         cache: false
-    - EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_parameters.json:
+    - Phases/MetricsTrain/Tree_Classifier_New_v4_parameters.json:
         cache: false
