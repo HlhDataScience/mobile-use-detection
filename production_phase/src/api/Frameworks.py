@@ -10,7 +10,7 @@ from production_phase.src.interfaces.WebFrameworksProtocols import (
 )
 
 
-class FastAPIFramework(WebFrameworkProtocol):  # Inherit from the protocol
+class FastAPIFramework:  # Inherit from the protocol
     """Interface class that implements the protocols"""
 
     def __init__(self, app: FastAPI):
@@ -22,9 +22,9 @@ class FastAPIFramework(WebFrameworkProtocol):  # Inherit from the protocol
         """agnostic get and post methods for routing"""
         for method in methods:
             if method.lower() == "get":
-                self.app.get(path)(endpoint)
+                self.app.get(path)(endpoint)  # type: ignore
             elif method.lower() == "post":
-                self.app.post(path)(endpoint)
+                self.app.post(path)(endpoint)  # type: ignore
 
     def run(self, host: str = "127.0.0.1", port: int = 8000) -> None:
         """specific server running"""
