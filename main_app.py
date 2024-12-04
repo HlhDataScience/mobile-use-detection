@@ -15,7 +15,7 @@ from Phases.SrcProduction.api.apifuncs import (
 from Phases.SrcProduction.api.Frameworks import FastAPIFramework
 
 # CONSTANTS:
-MODEL_PATH = "Phases/ModelsTrain/Tree_Classifier_New_v4.joblib"
+MODEL_PATH = "Phases/ModelsProduction/Tree_Classifier_New_v4.joblib"
 API_CONSTRUCTOR = {
     "/": (root, ["GET"]),
     "/predict/": (classify, ["POST"]),
