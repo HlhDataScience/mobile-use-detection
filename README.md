@@ -50,10 +50,12 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - Created the FastAPI app
   - Created the agnostic processor of the API framework
   - System of dev fastapi works with agnostic implementation
+  - Infrastructure for the web app created.
 
-## toDOs related to production_phase
+## TODOs related to production_phase
  - ~~Completed refactor of the project's structure.~~
  -  ~~Create the FASTAPI app~~
  - ~~Create an agnostic processor of webapp and webframeworks using protocols.~~
  - ~~make the system of fastapi dev works with agnostic interface.~~
- - create the infrastructure of the API with for the web app
+ - ~~create the infrastructure of the API for the web app~~
+ - create the interface system for the webapp and test it with jupỳter notebook.
