@@ -9,7 +9,7 @@ dynamic_settings:
   registered_model_name: "sk-learn-Decision-Tree-Classifier-custom-params_V4"
   ##SETTINGS FOR TRANSFORMATION AND TRAINING
   # load the original DataTrain
-  original_datapath: "TrainSrc/DataTrain/rawdata/user_behavior_dataset.csv"
+  original_datapath: "SrcTrain/DataTrain/rawdata/user_behavior_dataset.csv"
 
   # Transformations
   categorical_columns_to_transform:
@@ -60,10 +60,10 @@ dynamic_settings:
 
   feature_mode: "GridSearch"
   #trainer settings
-  model_path: "TrainSrc/Phases/ModelsTrain"
+  model_path: "SrcTrain/Phases/ModelsTrain"
   normalized_df: false #to use the normalized dataframe for training and testing.
   standardized_df: false #to use the standardized dataframe for training and testing
-  tuned_parameters: "TrainSrc/MetricsTrain/Best_parameters_model__GridSearch_Tree-Based.json"
+  tuned_parameters: "SrcTrain/MetricsTrain/Best_parameters_model__GridSearch_Tree-Based.json"
   using_custom_parameters: true
   custom_parameters:
     criterion: "gini"

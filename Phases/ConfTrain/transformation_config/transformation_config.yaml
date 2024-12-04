@@ -17,7 +17,7 @@ best_parameters_name: "Best_parameters_model_"
 # Transformations
 categorical_columns_to_transform: ${dynamic_settings.categorical_columns_to_transform}
 columns_to_drop: ${dynamic_settings.columns_to_drop}
-mapping_file_path: "TrainSrc/MetricsTrain"
+mapping_file_path: "SrcTrain/MetricsTrain"
 target_column: ${dynamic_settings.target_column}
 normalize_df: ${dynamic_settings.normalize_df}
 standardize_df: ${dynamic_settings.standardized_df}
@@ -30,18 +30,18 @@ ML_type: ${dynamic_settings.ML_type}
 number_iterations: ${dynamic_settings.number_iterations}
 cross_validation: ${dynamic_settings.cross_validation}
 feature_engineering_dict: ${dynamic_settings.feature_engineering_dict}
-tuned_parameters_path: "TrainSrc/MetricsTrain"
+tuned_parameters_path: "SrcTrain/MetricsTrain"
 feature_mode: ${dynamic_settings.feature_mode}
 
 # Saving Data File Paths
-transformed_intermediate_df_path: "TrainSrc/DataTrain/processed_data/intermediate_data"
-transformed_train_df_path_x: "TrainSrc/DataTrain/processed_data/train_data"
-transformed_test_df_path_x: "TrainSrc/DataTrain/processed_data/test_data"
-transformed_train_df_path_y: "TrainSrc/DataTrain/processed_data/train_data"
-transformed_test_df_path_y: "TrainSrc/DataTrain/processed_data/test_data"
-transformed_normalized_df_path_train_x: "TrainSrc/DataTrain/processed_data/train_data"
-transformed_normalized_df_path_test_x: "TrainSrc/DataTrain/processed_data/test_data"
-transformed_standardized_df_path_train_x: "TrainSrc/DataTrain/processed_data/train_data"
-transformed_standardized_df_path_test_x: "TrainSrc/DataTrain/processed_data/test_data"
+transformed_intermediate_df_path: "SrcTrain/DataTrain/processed_data/intermediate_data"
+transformed_train_df_path_x: "SrcTrain/DataTrain/processed_data/train_data"
+transformed_test_df_path_x: "SrcTrain/DataTrain/processed_data/test_data"
+transformed_train_df_path_y: "SrcTrain/DataTrain/processed_data/train_data"
+transformed_test_df_path_y: "SrcTrain/DataTrain/processed_data/test_data"
+transformed_normalized_df_path_train_x: "SrcTrain/DataTrain/processed_data/train_data"
+transformed_normalized_df_path_test_x: "SrcTrain/DataTrain/processed_data/test_data"
+transformed_standardized_df_path_train_x: "SrcTrain/DataTrain/processed_data/train_data"
+transformed_standardized_df_path_test_x: "SrcTrain/DataTrain/processed_data/test_data"
 
 

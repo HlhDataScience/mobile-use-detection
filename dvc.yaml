@@ -2,14 +2,14 @@ stages:
   transformation_pipeline:
     cmd: python3 main.py --pipeline transformation
     deps:
-    - TrainSrc/DataTrain/rawdata/user_behavior_dataset.csv
+    - SrcTrain/DataTrain/rawdata/user_behavior_dataset.csv
     - main.py
     outs:
-    - TrainSrc/DataTrain/processed_data/intermediate_data/transformed_df.csv
-    - TrainSrc/DataTrain/processed_data/test_data/X_test.csv
-    - TrainSrc/DataTrain/processed_data/test_data/y_test.csv
-    - TrainSrc/DataTrain/processed_data/train_data/X_train.csv
-    - TrainSrc/DataTrain/processed_data/train_data/y_train.csv
+    - SrcTrain/DataTrain/processed_data/intermediate_data/transformed_df.csv
+    - SrcTrain/DataTrain/processed_data/test_data/X_test.csv
+    - SrcTrain/DataTrain/processed_data/test_data/y_test.csv
+    - SrcTrain/DataTrain/processed_data/train_data/X_train.csv
+    - SrcTrain/DataTrain/processed_data/train_data/y_train.csv
     metrics:
     - EDA_train_phase/metrics/Best_parameters_model__GridSearch_Tree-Based.json:
         cache: false
@@ -18,13 +18,13 @@ stages:
   training_pipeline:
     cmd: python3 main.py --pipeline training
     deps:
-    - TrainSrc/DataTrain/processed_data/test_data/X_test.csv
-    - TrainSrc/DataTrain/processed_data/test_data/y_test.csv
-    - TrainSrc/DataTrain/processed_data/train_data/X_train.csv
-    - TrainSrc/DataTrain/processed_data/train_data/y_train.csv
+    - SrcTrain/DataTrain/processed_data/test_data/X_test.csv
+    - SrcTrain/DataTrain/processed_data/test_data/y_test.csv
+    - SrcTrain/DataTrain/processed_data/train_data/X_train.csv
+    - SrcTrain/DataTrain/processed_data/train_data/y_train.csv
     - main.py
     outs:
-    - TrainSrc/ModelsTrain/Tree_Classifier_GridSearchCV.pkl
+    - SrcTrain/ModelsTrain/Tree_Classifier_GridSearchCV.pkl
     metrics:
     - EDA_train_phase/metrics/Tree_Classifier_GridSearchCV_Test_metrics.json:
         cache: false

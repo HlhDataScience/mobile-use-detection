@@ -146,7 +146,7 @@ class BasicPipeline(ABC):
     --------
     - **`config_section` Argument**: Enables loading and validating a specific section
       of the configuration file. This is useful for modular pipelines where each phase
-      (e.g., EdaSrc, transformation, training) has its own configuration.
+      (e.g., SrcEda, transformation, training) has its own configuration.
     - **Error Handling for Missing Sections**: Raises a `KeyError` if the specified
       `config_section` does not exist in the configuration file.
     """

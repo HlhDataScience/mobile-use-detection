@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from Phases.ProductionSrc.api.apifuncs import (
+from Phases.SrcProduction.api.apifuncs import (
     classify,
     get_results,
     load_classifier,
@@ -12,7 +12,7 @@ from Phases.ProductionSrc.api.apifuncs import (
     root,
     setup_app,
 )
-from Phases.ProductionSrc.api.Frameworks import FastAPIFramework
+from Phases.SrcProduction.api.Frameworks import FastAPIFramework
 
 # CONSTANTS:
 MODEL_PATH = "Phases/ModelsTrain/Tree_Classifier_New_v4.joblib"

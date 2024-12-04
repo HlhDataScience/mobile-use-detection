@@ -313,7 +313,7 @@ class TrainerPipeline(BasicTrainer):
                     signature=mlflow_signature,
                     registered_model_name=self.valid_config.registered_model_name,
                 )
-                logging.info("TrainSrc and test completed.")
+                logging.info("SrcTrain and test completed.")
         except Exception as e:
             logging.error(f"Trainer failure at {e}")
             raise e

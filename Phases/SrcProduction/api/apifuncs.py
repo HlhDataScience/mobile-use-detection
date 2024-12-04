@@ -8,8 +8,8 @@ import joblib  # type: ignore
 import numpy as np
 from fastapi import HTTPException, Request
 
-from Phases.ProductionSrc.api.validation_classes import ClassifierInputFeature
-from Phases.ProductionSrc.interfaces.WebFrameworksProtocols import (
+from Phases.SrcProduction.api.validation_classes import ClassifierInputFeature
+from Phases.SrcProduction.interfaces.WebFrameworksProtocols import (
     WebFrameworkProtocol,
 )
 

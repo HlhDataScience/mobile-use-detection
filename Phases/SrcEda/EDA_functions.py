@@ -51,9 +51,9 @@ class EdaPipeline:
                 **self.hydra_config
             )
 
-            logging.info("Valid EdaSrc configuration found.")
+            logging.info("Valid SrcEda configuration found.")
         except ValueError as e:
-            logging.error(f"Failed EdaSrc configuration yalm file with {e}")
+            logging.error(f"Failed SrcEda configuration yalm file with {e}")
             raise e
         try:
             pl.scan_csv(self.config.original_datapath).pipe(self.df_validation.validate)
@@ -258,7 +258,7 @@ class EdaPipeline:
         plt.close()
 
     def run(self):
-        """Execute the EdaSrc pipeline."""
+        """Execute the SrcEda pipeline."""
         os.makedirs(self.config.output_folder, exist_ok=True)
         self.load_data()
         self.generate_basic_statistics()
