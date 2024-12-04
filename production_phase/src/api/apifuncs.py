@@ -35,7 +35,7 @@ def save_results(prediction_entry) -> None:
 
 
 async def get_results(result_id: int) -> Dict:
-    """optains the storaged results of previous predictions."""
+    """obtains the storage results of previous predictions."""
     with open(f"production_phase/data/{PREDICTION_FILE}", "r") as f:
         results = json.load(f)
     try:
