@@ -1,13 +1,9 @@
 """Module for the Validation Protocols interfaces"""
 
 from collections.abc import Coroutine
-from typing import Any, Dict, List, Sequence
+from typing import Any, Dict, Sequence
 
 from fastapi import FastAPI
-
-from production_phase.src.interfaces.WebFrameworksProtocols import (
-    WebFrameworkProtocol,
-)
 
 
 class FastAPIFramework:  # Inherit from the protocol
