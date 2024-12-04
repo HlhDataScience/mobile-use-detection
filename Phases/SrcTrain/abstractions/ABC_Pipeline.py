@@ -200,48 +200,13 @@ class BasicPipeline(ABC):
         pl.scan_csv(self.valid_config.original_datapath).pipe(
             self.validation_model.validate
         )
-
+    
     @abstractmethod
     def custom_validate(self):
         """Custom mandatory validation method."""
         pass
 
-    def categorical_encoding(self):
-        """Default implementation for categorical to numerical transformation."""
-        logging.warning("categorical_to_numerical method is not implemented")
-        raise NotImplementedError()
-
-    def split_train_test(self):
-        """Default implementation for train-test split."""
-        logging.warning("split_train_test method is not implemented")
-        raise NotImplementedError()
-
-    def scaling(self):
-        """Default implementation for scaling."""
-        logging.warning("scaling method is not implemented")
-        raise NotImplementedError()
-
-    def normalize(self):
-        """Default implementation for normalize"""
-        logging.warning("normalize method is not implemented")
-        raise NotImplementedError()
-
-    def standardize(self):
-        """Default implementation for standardize."""
-        logging.warning("standardize method is not implemented")
-        raise NotImplementedError()
-
-    def _apply_feature_search(self):
-        """Default implementation for _apply_feature_search."""
-        logging.warning("_apply_feature_search method is not implemented")
-        raise NotImplementedError()
-
-    def apply_feature_engineering(self):
-        """Default implementation for apply_feature_engineering."""
-        logging.warning("apply_feature_engineering method is not implemented")
-        raise NotImplementedError()
-
     @abstractmethod
     def run(self):
-        """Mandatory implementation for the run method that orchestrates the whole pipeline class"""
+        """Mandatory implementation for the run method that orchestrates the whole pipeline class. All the functions must be run throuh this method."""
         pass
