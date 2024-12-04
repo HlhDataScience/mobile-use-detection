@@ -31,8 +31,8 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - ~~We need to create a logging function to handle the whole program~~
   - ~~We need to create the data and config validation classes~~
   - ~~We need to perform EDA analysis~~
-  - ~~We need to create a ABC Pipeline class to adhere to SOLID principles~~
-  - ~~We need to create a ABC validation classes and its interfaces~~
+  - ~~We need to create an ABC Pipeline class to adhere to SOLID principles~~
+  - ~~We need to create an ABC validation classes and its interfaces~~
   - ~~We need to refactor the TransformationPipeline to MAke it inherit from ABC_Pipeline.py~~
   - ~~We need to test the TransformationPipeline and its different methods~~
   - ~~We need to test the other CV methods in the TransformationPipeline~~

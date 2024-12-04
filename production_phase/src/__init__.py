@@ -1,1 +1,1 @@
-"""module to initialize the API and the app"""
+"""module to initialize the API and the _app"""

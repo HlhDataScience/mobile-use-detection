@@ -26,7 +26,7 @@ class DataValidationConfig(pa.DataFrameModel):
         UserID (int): User ID.
         DeviceModel (str): Device model.
         OperatingSystem (str): Operating system used.
-        AppUsageTime_min_day (int): Daily app usage time in minutes.
+        AppUsageTime_min_day (int): Daily _app usage time in minutes.
         ScreenOnTime_hours_day (float): Daily screen on time in hours.
         BatteryDrain_mAh_day (int): Daily battery drain in mAh.
         NumberOfAppsInstalled (int): Number of apps installed.

@@ -1,27 +1,27 @@
-"""The main API app program entry point"""
+"""The main API _app program entry point"""
 
-from crypt import methods
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
 
 # Load the classifier
 from production_phase.src.api.apifuncs import (
-    predict_endpoint,
+    classify,
     read_item,
     root,
     setup_app,
 )
 from production_phase.src.api.Frameworks import FastAPIFramework
-from production_phase.src.predictions.predict import load_classifier
 
-# CONSTANT:
-MODEL_PATH = "EDA_train_phase/models/Tree_Classifier_New_v4.joblib"
-api_dict = {
+# CONSTANTS:
+API_CONSTRUCTOR = {
     "/": (root, ["GET"]),
-    "/predict/": (predict_endpoint, ["GET"]),
+    "/predict/": (classify, ["POST"]),
     "/items/{item_id}": (read_item, ["GET"]),
 }
-classifier = load_classifier(model_path=MODEL_PATH)
 
-framework = setup_app(FastAPIFramework(), api_functions=api_dict)
-app = framework.app
+
+framework = setup_app(FastAPIFramework(app=FastAPI()), api_functions=API_CONSTRUCTOR)
+app = framework.app  # expose the _app to make function the fastapi CLI
 if __name__ == "__main__":
     framework.run(port=8001)

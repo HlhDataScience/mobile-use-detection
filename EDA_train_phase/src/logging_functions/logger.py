@@ -10,7 +10,7 @@ def setup_logging(log_file_path: Path, log_level: int = logging.DEBUG):
 
     Args:
         log_file_path (Path): Path to the log file.
-        log_level (int): Logging level (e.g., logging.INFO, logging.DEBUG).
+        log_level (int): Logging level (e.g., logging.INFO, logging. DEBUG).
     """
     # Create the log file directory if it doesn't exist
     log_file_path.parent.mkdir(parents=True, exist_ok=True)

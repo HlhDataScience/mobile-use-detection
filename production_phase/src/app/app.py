@@ -1,1 +1,1 @@
-"""Module to construct the app with streamlite or gradio"""
+"""Module to construct the _app with streamlite or gradio"""
