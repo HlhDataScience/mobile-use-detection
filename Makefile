@@ -29,10 +29,10 @@ clean:
 	@echo "Logs cleaned."
 
 api_dev:
-	$(API) dev $(APP_SCRIPT) --port 8001
+	$(API) dev $(APP_SCRIPT) --port 8001 2>&1 | tee -a logs/api_dev.log
 
 api_run:
-	$(API) run $(APP_SCRIPT) --port 8001
+	$(API) run $(APP_SCRIPT) --port 8001 2>&1 | tee -a logs/api_run.log
 # Display help
 help:
 	@echo "Makefile for managing the program"

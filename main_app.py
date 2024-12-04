@@ -1,14 +1,16 @@
 """The main API _app program entry point"""
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 
-# Load the classifier
+from EDA_train_phase.src.logging_functions.logger import setup_logging
 from production_phase.src.api.apifuncs import (
     classify,
     get_results,
     load_classifier,
+    results,
     root,
     setup_app,
 )
@@ -19,7 +21,8 @@ MODEL_PATH = "EDA_train_phase/models/Tree_Classifier_New_v4.joblib"
 API_CONSTRUCTOR = {
     "/": (root, ["GET"]),
     "/predict/": (classify, ["POST"]),
-    "/results/{result_id}": (get_results, ["GET"]),
+    "/results/": (results, ["GET"]),
+    "/results/{index_id}": (get_results, ["GET"]),
 }
 
 

@@ -1,8 +1,9 @@
 """Setup module that may be expanded with other frameworks."""
 
 import json
+import logging
 from datetime import datetime, timezone
-from typing import Dict
+from typing import Dict, List, Tuple
 
 import joblib  # type: ignore
 import numpy as np
@@ -28,22 +29,70 @@ def save_results(prediction_entry) -> None:
         predictions = []  # If file doesn't exist, start with an empty list
 
     predictions.append(prediction_entry)
+    for index, dicti in enumerate(predictions):
+        if "index_id" not in dicti.keys():
+            dicti["index_id"] = index
 
     # Write the updated data back to the JSON file
     with open(f"production_phase/data/{PREDICTION_FILE}", "w") as f:
         json.dump(predictions, f, indent=4)
 
 
-async def get_results(result_id: int) -> Dict:
+async def get_results(
+    index_id: int, query: str | None = None, parameters: str | None = None
+) -> Dict | str | int | float:
     """obtains the storage results of previous predictions."""
-    with open(f"production_phase/data/{PREDICTION_FILE}", "r") as f:
-        results = json.load(f)
+    json_file = await results()
     try:
-        return results[result_id]
+        if not query:
+            result = dict(
+                next(
+                    filter(
+                        lambda dicti: dicti["index_id"] == index_id,
+                        json_file["results"],
+                    ),
+                    "Index not present",
+                )
+            )  # type: ignore
+        else:
+            if not parameters:
+                result = dict(
+                    next(
+                        filter(
+                            lambda dicti: dicti["index_id"] == index_id,
+                            json_file["results"],
+                        ),
+                        "Index not present",
+                    )
+                )  # type: ignore
+                if isinstance(result, dict):
+                    result = result[query]
+                else:
+                    result = result.items()
+            else:
+                result = dict(
+                    next(
+                        filter(
+                            lambda dicti: dicti["index_id"] == index_id,
+                            json_file["results"],
+                        ),
+                        "Index not present",
+                    )
+                )  # type: ignore
+
+                result = result[query]
+                if isinstance(result, dict):
+                    result = result[parameters]
+        return result
+
     except Exception as e:
-        raise HTTPException(
-            status_code=400, detail=f"{str(e)}: The index is not present in the list."
-        )
+        raise HTTPException(status_code=400, detail=f"{str(e)}")
+
+
+async def results() -> Dict:
+    with open(f"production_phase/data/{PREDICTION_FILE}", "r") as f:
+        json_file = json.load(f)
+    return {"results": json_file}
 
 
 def load_classifier(model_path: str):
