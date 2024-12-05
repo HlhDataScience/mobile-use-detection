@@ -1,8 +1,9 @@
 """Module for the Validation Protocols interfaces"""
 
-from typing import Dict, List, Sequence, Tuple
+from typing import Dict, List, Sequence, Tuple, Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from fastapi.responses import JSONResponse
 
 from Phases.SrcProduction.interfaces.WebFrameworksProtocols import (
     EndPointProtocolFunction,
@@ -28,7 +29,14 @@ class FastAPIFramework:
         self.app = app
 
     def add_route(
-        self, path: str, endpoint: EndPointProtocolFunction, methods: Sequence[str]
+        self,
+        path: str,
+        endpoint: EndPointProtocolFunction,
+        methods: Sequence[str],
+        response_model: Optional[type] = None,
+        status_code: Optional[int] = None,
+        tags: Optional[List[str]] = None,
+        dependencies: Optional[List[Depends]] = None,
     ) -> None:
         """
         Adds routes to the FastAPI app for the specified HTTP methods.
@@ -37,15 +45,31 @@ class FastAPIFramework:
             path (str): The route path.
             endpoint (EndPointProtocolFunction): The endpoint function to handle requests.
             methods (Sequence[str]): A sequence of HTTP methods (e.g., ['GET', 'POST']).
+            response_model (Optional[type]): The response model for the route.
+            status_code (Optional[int]): The HTTP status code for the response.
+            tags (Optional[List[str]]): Tags for API documentation grouping.
+            dependencies (Optional[List[Depends]]): Dependencies to inject for the endpoint.
 
         Raises:
             ValueError: If an unsupported HTTP method is provided.
         """
         for method in methods:
             if method.lower() == "get":
-                self.app.get(path)(endpoint)  # type: ignore
+                self.app.get(
+                    path,
+                    response_model=response_model,
+                    status_code=status_code,
+                    tags=tags,
+                    dependencies=dependencies,
+                )(endpoint)  # type: ignore
             elif method.lower() == "post":
-                self.app.post(path)(endpoint)  # type: ignore
+                self.app.post(
+                    path,
+                    response_model=response_model,
+                    status_code=status_code,
+                    tags=tags,
+                    dependencies=dependencies,
+                )(endpoint)  # type: ignore
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 
