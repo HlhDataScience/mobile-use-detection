@@ -9,7 +9,7 @@ class EndPointProtocolFunction(Protocol):
 
     async def __call__(
         self, *args: Any, **kwargs: Any
-    ) -> Coroutine[Any, Any, Dict]: ...
+    ) -> Coroutine[Any, Any, Dict[str, Any] | Any]: ...
 
 
 class WebFrameworkProtocol(Protocol):

@@ -2,28 +2,52 @@
 
 import json
 from datetime import datetime, timezone
-from typing import Dict, List, Tuple
+from typing import Annotated, Any, Dict
 
 import joblib  # type: ignore
 import numpy as np
-from fastapi import HTTPException, Request
+from fastapi import Header, HTTPException, Query, Request
 
-from Phases.SrcProduction.api.validation_classes import ClassifierInputFeature
-from Phases.SrcProduction.interfaces.WebFrameworksProtocols import (
-    EndPointProtocolFunction,
-    WebFrameworkProtocol,
+from Phases.SrcProduction.api.validation_classes import (
+    APIInfo,
+    ClassifierInputFeature,
+    ClassifierOutput,
+    PredictionHeathers,
+    QueryParameters,
+    ResultsDisplay,
 )
 
 PREDICTION_FILE = "predictions.json"
 
 
-def save_results(prediction_entry) -> None:
-    """Save the predictions and results into a JSON file"""
+async def read_root() -> APIInfo:
+    """presentation of the api"""
+    return APIInfo(
+        **{
+            "message": "Welcome to the mobile-use-detection API!",
+            "description": "This API allows you to make predictions and consult results related to the use of mobile app you do in your daily life.",
+            "version": 1.0,
+            "endpoints": {
+                "/predict": "Make a prediction.",
+                "/results": "Consult all results.",
+                "/results/get_results": "Filter the results",
+                "/docs": "API documentation (Swagger UI).",
+                "/openapi.json": "OpenAPI schema.",
+            },
+        }
+    )
 
+
+def load_classifier(model_path: str):
+    """Loads the ModelsProduction for the predictions."""
+    with open(model_path, "rb") as f:
+        return joblib.load(f)
+
+
+def save_results(prediction_entry: Dict) -> None:
+    """Save the predictions and results into a JSON file."""
     try:
-        with open(
-            f"production_phase/data/{PREDICTION_FILE}", "r"
-        ) as f:  # Added comma here
+        with open(f"Phases/DataProduction/{PREDICTION_FILE}", "r") as f:
             predictions = json.load(f)
     except FileNotFoundError:
         predictions = []  # If file doesn't exist, start with an empty list
@@ -33,107 +57,92 @@ def save_results(prediction_entry) -> None:
         if "index_id" not in dicti.keys():
             dicti["index_id"] = index
 
-    # Write the updated DataTrain back to the JSON file
-    with open(f"production_phase/data/{PREDICTION_FILE}", "w") as f:
+    with open(f"Phases/DataProduction/{PREDICTION_FILE}", "w") as f:
         json.dump(predictions, f, indent=4)  # type: ignore
 
 
-async def get_results(
-    index_id: int, query: str | None = None, parameters: str | None = None
-) -> Dict | str | int | float:
-    """obtains the storage results of previous predictions."""
-    json_file = await results()
-    try:
-        if not query:
-            result = dict(
-                next(
-                    filter(
-                        lambda dicti: dicti["index_id"] == index_id,
-                        json_file["results"],
-                    ),
-                    "Index not present",
-                )
-            )  # type: ignore
-        else:
-            if not parameters:
-                result = dict(
-                    next(
-                        filter(
-                            lambda dicti: dicti["index_id"] == index_id,
-                            json_file["results"],
-                        ),
-                        "Index not present",
-                    )
-                )  # type: ignore
-                if isinstance(result, dict):
-                    result = result[query]
-                else:
-                    result = result.items()
-            else:
-                result = dict(
-                    next(
-                        filter(
-                            lambda dicti: dicti["index_id"] == index_id,
-                            json_file["results"],
-                        ),
-                        "Index not present",
-                    )
-                )  # type: ignore
-
-                result = result[query]
-                if isinstance(result, dict):
-                    result = result[parameters]
-        return result
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"{str(e)}")
-
-
-async def results() -> Dict:
-    with open(f"production_phase/data/{PREDICTION_FILE}", "r") as f:
-        json_file = json.load(f)
-    return {"results": json_file}
-
-
-def load_classifier(model_path: str):
-    """Loads the ModelsProduction for the predictions"""
-    with open(model_path, "rb") as f:
-        return joblib.load(f)
-
-
-async def root() -> Dict:
-    """small testing root function"""
-    return {"message": "This is a test of the interface"}
-
-
-async def classify(input_data: ClassifierInputFeature, request: Request):
+async def classify(
+    input_data: ClassifierInputFeature, request: Request
+) -> ClassifierOutput:
     """Classifies the results sent by users into classes of mobile usage."""
     try:
         classifier = request.app.state.classifier
-        # Extract and reshape the input DataTrain
+
         input_data_list = [i for i in input_data.model_dump().values()]
         numbers = np.array(input_data_list).reshape(1, -1)
-        # Make prediction using the tree classifier
+
         predicted_class = classifier.predict(numbers)[0]  # Get the predicted class
-        prediction = {"class": int(predicted_class)}
-        predicted_entry = {
-            "features": input_data.model_dump(),
-            "prediction": prediction,
-            "time_stamp": datetime.now(timezone.utc).isoformat(),
-        }
-        save_results(prediction_entry=predicted_entry)
+        prediction = int(predicted_class)
+        validated_entry = ClassifierOutput(
+            features={k: v for k, v in input_data.model_dump().items()},
+            prediction=prediction,
+            time_stamp=datetime.now(timezone.utc).isoformat(),
+        )
+
+        save_results(prediction_entry=validated_entry.model_dump())
         # Return the result
-        return prediction
+        return ClassifierOutput(
+            features={k: v for k, v in input_data.model_dump().items()},
+            prediction=prediction,
+            time_stamp=datetime.now(timezone.utc).isoformat(),
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
 
 
-def setup_app(
-    framework: WebFrameworkProtocol,
-    api_functions: Dict[str, Tuple[EndPointProtocolFunction, List[str]]],
-) -> WebFrameworkProtocol:
-    """Creates the API setup from a dictionary"""
-    for path, parameters in api_functions.items():
-        framework.add_route(path=path, endpoint=parameters[0], methods=parameters[1])
+async def results(headers: Annotated[PredictionHeathers, Header()]) -> ResultsDisplay:
+    with open(f"Phases/DataProduction/{PREDICTION_FILE}", "r") as f:
+        json_file = json.load(f)
+        headers_var = {k: v for k, v in headers.model_dump().items()}
 
-    return framework
+    return ResultsDisplay(
+        headers={k: v for k, v in headers_var["headers"].items()}, results=json_file
+    )
+
+
+async def get_results(
+    headers: Annotated[PredictionHeathers, Header()],
+    filter_query: Annotated[QueryParameters, Query()],
+) -> ResultsDisplay:
+    """Obtains the storage results of previous predictions."""
+
+    with open(f"Phases/DataProduction/{PREDICTION_FILE}", "r") as f:
+        json_file = json.load(f)
+    try:
+        headers_var = {k: v for k, v in headers.model_dump().items()}
+        filtered_results = iter(json_file)
+        if filter_query.class_ is None and filter_query.index is None:
+            return ResultsDisplay(
+                headers={k: v for k, v in headers_var["headers"].items()},
+                results=json_file,
+            )
+        # Apply filtering
+        filtered_results = (
+            entry
+            for entry in filtered_results
+            if (
+                filter_query.class_ is None
+                or entry.get("prediction") == filter_query.class_
+            )
+            and (
+                filter_query.index is None
+                or entry.get("index_id") == filter_query.index
+            )
+        )
+
+        # Sort the results
+        filtered_results = sorted(
+            filtered_results, key=lambda x: x.get(filter_query.order_by, 0)
+        )
+
+        # Check if there are any results
+        if not filtered_results:
+            return "No matching results found."
+
+        return ResultsDisplay(
+            headers={k: v for k, v in headers_var["headers"].items()},
+            results=filtered_results,
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"{str(e)}")

@@ -14,7 +14,7 @@ from hydra import compose
 from mlflow import ActiveRun
 from omegaconf import OmegaConf
 
-from Phases.EDA_train_phase.src.abstractions.ABC_validations import (
+from Phases.SrcTrain.abstractions.ABC_validations import (
     IConfigModel,
     IConfigurationLoader,
     IExperimentTracker,

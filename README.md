@@ -24,6 +24,7 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
 - Tested main.py. It works without problem.
 - Created KNN deviating branch to test different experiments.
 - Created the dvc pipeline managing system
+- Created class methods for ABC_Pipeline. ABC_Pipeline now is more flexible.
 
 
 ## TODOs related to EDA_train_phase
@@ -42,6 +43,7 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - ~~We need to use the main.py to run the whole program~~
   - ~~We need to create a deviating branch(or several) to test other classic machine learning models.~~
   - ~~We need to create a dvc pipeline managing system~~
+  - ~~We need to create class methods and typing adherence for the functions~~
   - We need to create test for every class and method with pytest
 
 
@@ -51,6 +53,10 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - Created the agnostic processor of the API framework
   - System of dev fastapi works with agnostic implementation
   - Infrastructure for the web app created.
+  - Created class methods and protocols for the api functions
+  - Included headers and root information
+  - Included pydantic validation through the predict, results and get_results methods
+  - Included query functionality for the small json file used as database.
 
 ## TODOs related to production_phase
  - ~~Completed refactor of the project's structure.~~
@@ -58,4 +64,8 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
  - ~~Create an agnostic processor of webapp and webframeworks using protocols.~~
  - ~~make the system of fastapi dev works with agnostic interface.~~
  - ~~create the infrastructure of the API for the web app~~
+ - ~~Create class methods and protocols for the api functions.~~
+ - ~~Include Headers and root information~~
+ - ~~Improve FastApi functions with pydantic models~~
+ - ~~Include query functionality for the small json file.~~
  - create the interface system for the webapp and test it with jupỳter notebook.
