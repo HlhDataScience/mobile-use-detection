@@ -16,7 +16,7 @@ from typing import Any
 
 import pydantic
 
-from Phases.EDA_train_phase.src.abstractions.ABC_validations import (
+from Phases.SrcTrain.abstractions.ABC_validations import (
     IConfigModel,
     IConfigurationLoader,
     IExperimentTracker,

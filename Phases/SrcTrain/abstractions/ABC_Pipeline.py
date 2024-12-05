@@ -45,11 +45,14 @@ class MyPipeline(BasicPipeline):
 
 import logging
 from abc import ABC, abstractmethod
+from collections.abc import Callable
+from types import MethodType
+from typing import List
 
 import polars as pl
 import pydantic
 
-from Phases.EDA_train_phase.src.abstractions.ABC_validations import (
+from Phases.SrcTrain.abstractions.ABC_validations import (
     IConfigModel,
     IConfigurationLoader,
     IValidationModel,
@@ -164,7 +167,7 @@ class BasicPipeline(ABC):
         self.config_model = config_model
         self.config_data = config_loader.load(config_name)
         self.apply_custom_function = apply_custom_function
-
+        self.functions: List[Callable] = []
         if config_section:
             if config_section in self.config_data:
                 self.config_data = self.config_data[config_section]
@@ -200,13 +203,70 @@ class BasicPipeline(ABC):
         pl.scan_csv(self.valid_config.original_datapath).pipe(
             self.validation_model.validate
         )
-    
-    @abstractmethod
+
     def custom_validate(self):
-        """Custom mandatory validation method."""
-        pass
+        """Custom  validation method."""
+        raise NotImplementedError
+
+    @classmethod
+    def from_functions(
+        cls,
+        validation_model: IValidationModel,
+        config_model: IConfigModel,
+        config_loader: IConfigurationLoader,
+        config_name: str,
+        apply_custom_function: bool,
+        config_section: str,
+        functions_constructor: List[Callable],
+    ) -> "BasicPipeline":
+        """
+        Creates a BasicPipeline instance and allows customization through provided functions.
+
+        Args:
+            validation_model (IValidationModel): Validation model for the pipeline.
+            config_model (IConfigModel): Configuration model for parsing and validation.
+            config_loader (IConfigurationLoader): Loader for configuration data.
+            config_name (str): Name of the configuration file.
+            apply_custom_function (bool): Whether to apply custom validation logic.
+            config_section (str): Section of the configuration to load.
+            functions_constructor (Tuple[Callable, ...]): Additional functions to customize behavior.
+
+        Returns:
+            BasicPipeline: An initialized instance of the BasicPipeline.
+        """
+        # Create the pipeline instance
+        instance = cls(
+            validation_model=validation_model,
+            config_model=config_model,
+            config_loader=config_loader,
+            config_name=config_name,
+            apply_custom_function=apply_custom_function,
+            config_section=config_section,
+        )
+
+        # Store the functions to be executed later
+        instance.functions = functions_constructor
+
+        # Dynamically assign the run method to execute the functions in sequence
+        def run(self):
+            """
+            Executes the pipeline by running the functions in sequence.
+            """
+            logging.info("Pipeline is starting.")
+            for function in self.functions:
+                logging.info(f"Running function: {function.__name__}")
+                function(self)
+            logging.info("Pipeline execution finished.")
+
+        # Override the run method for this instance
+        instance.run = MethodType(run, instance)
+
+        return instance
 
     @abstractmethod
     def run(self):
-        """Mandatory implementation for the run method that orchestrates the whole pipeline class. All the functions must be run throuh this method."""
+        """
+        Mandatory implementation for the run method that orchestrates the whole pipeline class.
+        All the functions must be run through this method.
+        """
         pass

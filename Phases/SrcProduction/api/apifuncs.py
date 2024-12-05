@@ -2,7 +2,7 @@
 
 import json
 from datetime import datetime, timezone
-from typing import Dict
+from typing import Dict, List, Tuple
 
 import joblib  # type: ignore
 import numpy as np
@@ -10,6 +10,7 @@ from fastapi import HTTPException, Request
 
 from Phases.SrcProduction.api.validation_classes import ClassifierInputFeature
 from Phases.SrcProduction.interfaces.WebFrameworksProtocols import (
+    EndPointProtocolFunction,
     WebFrameworkProtocol,
 )
 
@@ -34,7 +35,7 @@ def save_results(prediction_entry) -> None:
 
     # Write the updated DataTrain back to the JSON file
     with open(f"production_phase/data/{PREDICTION_FILE}", "w") as f:
-        json.dump(predictions, f, indent=4)
+        json.dump(predictions, f, indent=4)  # type: ignore
 
 
 async def get_results(
@@ -129,7 +130,7 @@ async def classify(input_data: ClassifierInputFeature, request: Request):
 
 def setup_app(
     framework: WebFrameworkProtocol,
-    api_functions: Dict,
+    api_functions: Dict[str, Tuple[EndPointProtocolFunction, List[str]]],
 ) -> WebFrameworkProtocol:
     """Creates the API setup from a dictionary"""
     for path, parameters in api_functions.items():
