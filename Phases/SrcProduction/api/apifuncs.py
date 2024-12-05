@@ -54,9 +54,7 @@ def save_results(prediction_entry: Dict) -> None:
 
     predictions.append(prediction_entry)
     for index, dicti in enumerate(predictions):
-        if "index_id" not in dicti.keys():
-            dicti["index_id"] = index
-
+        dicti["index_id"] = index
     with open(f"Phases/DataProduction/{PREDICTION_FILE}", "w") as f:
         json.dump(predictions, f, indent=4)  # type: ignore
 
@@ -77,6 +75,7 @@ async def classify(
             features={k: v for k, v in input_data.model_dump().items()},
             prediction=prediction,
             time_stamp=datetime.now(timezone.utc).isoformat(),
+            index_id=0,
         )
 
         save_results(prediction_entry=validated_entry.model_dump())
@@ -137,7 +136,7 @@ async def get_results(
 
         # Check if there are any results
         if not filtered_results:
-            return "No matching results found."
+            raise HTTPException(status_code=404, detail="No match found")
 
         return ResultsDisplay(
             headers={k: v for k, v in headers_var["headers"].items()},

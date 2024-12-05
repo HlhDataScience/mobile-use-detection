@@ -81,6 +81,7 @@ class ClassifierOutput(BaseModel):
         1, ge=1, le=5, description="The class predicted by the model."
     )
     time_stamp: str = Field("The time you performed the inference.")
+    index_id: int = Field(None, description="The actual index in  the Database")
 
 
 class QueryParameters(BaseModel):
