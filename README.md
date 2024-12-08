@@ -26,7 +26,17 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
 - Created the dvc pipeline managing system
 - Created class methods for ABC_Pipeline. ABC_Pipeline now is more flexible.
 
-
+## Done related to production_phase
+  - Refactored structure of the project to work with the 2 development and production phases of MLOps
+  - Created the FastAPI app
+  - Created the agnostic processor of the API framework
+  - System of dev fastapi works with agnostic implementation
+  - Infrastructure for the web app created.
+  - Created class methods and protocols for the api functions
+  - Included headers and root information
+  - Included pydantic validation through the predict, results and get_results methods
+  - Included query functionality for the small json file used as database.
+    
 ## TODOs related to EDA_train_phase
   - ~~We need to create Hydra Config to handle yalm automatization~~ 
   - ~~We need to create a logging function to handle the whole program~~
@@ -46,18 +56,6 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - ~~We need to create class methods and typing adherence for the functions~~
   - We need to create test for every class and method with pytest
 
-
-## Done related to production_phase
-  - Refactored structure of the project to work with the 2 development and production phases of MLOps
-  - Created the FastAPI app
-  - Created the agnostic processor of the API framework
-  - System of dev fastapi works with agnostic implementation
-  - Infrastructure for the web app created.
-  - Created class methods and protocols for the api functions
-  - Included headers and root information
-  - Included pydantic validation through the predict, results and get_results methods
-  - Included query functionality for the small json file used as database.
-
 ## TODOs related to production_phase
  - ~~Completed refactor of the project's structure.~~
  -  ~~Create the FASTAPI app~~
@@ -68,4 +66,5 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
  - ~~Include Headers and root information~~
  - ~~Improve FastApi functions with pydantic models~~
  - ~~Include query functionality for the small json file.~~
+ - Check with dir() all the functions that need to adhere to EndPointProtocolFunction
  - create the interface system for the webapp and test it with jupỳter notebook.
