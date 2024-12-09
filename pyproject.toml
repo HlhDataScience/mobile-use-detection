@@ -19,6 +19,7 @@ scikit-optimize = "^0.10.2"
 fastapi = {extras = ["standard"], version = "^0.115.5"}
 gradio = "^5.7.1"
 streamlit = "^1.40.2"
+jupyterlab = "^4.3.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"

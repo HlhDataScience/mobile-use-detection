@@ -3,7 +3,7 @@ This module defines data validation classes using Pydantic for a machine learnin
 output predictions, query parameters, and API information.
 """
 
-from typing import Annotated, Dict, List, Literal
+from typing import Annotated, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -115,9 +115,9 @@ class PredictionHeathers(BaseModel):
                                    related to the model metrics.
     """
 
-    headers: Dict[str, str] = {
-        "ML_model_metrics": "https://dagshub.com/data_analitics_HLH/mobile-use-detection/models/sk-learn-Decision-Tree-Classifier-custom-params_V4"
-    }
+    ML_model_metrics: str = (
+        "https://dagshub.com/data_analitics_HLH/mobile-use-detection/models/sk-learn-Decision-Tree-Classifier-custom-params_V4"
+    )
 
 
 class ResultsDisplay(BaseModel):
@@ -132,5 +132,5 @@ class ResultsDisplay(BaseModel):
         results (List[ClassifierOutput]): A list of classifier output results.
     """
 
-    headers: PredictionHeathers
+    headers: Optional[PredictionHeathers] = None
     results: List[ClassifierOutput]

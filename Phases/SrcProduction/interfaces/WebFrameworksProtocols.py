@@ -1,15 +1,34 @@
 """Protocol class to ensure compatibility with different web frameworks."""
 
 from collections.abc import Coroutine
-from typing import Any, Dict, List, Protocol, Sequence, Tuple
+from inspect import iscoroutinefunction
+from typing import (
+    Any,
+    Dict,
+    List,
+    Protocol,
+    Sequence,
+    Tuple,
+    runtime_checkable,
+)
 
 
+@runtime_checkable
 class EndPointProtocolFunction(Protocol):
     """Protocol for API endpoint functions."""
 
     async def __call__(
         self, *args: Any, **kwargs: Any
     ) -> Coroutine[Any, Any, Dict[str, Any] | Any]: ...
+
+
+# Function to check adherence
+def check_endpoint_protocol(func: Any, protocol: type) -> bool:
+    """Check if the given function adheres to the EndPointProtocolFunction."""
+    # Ensure the function is a coroutine and matches the protocol
+    if not iscoroutinefunction(func):
+        return False
+    return isinstance(func, protocol)
 
 
 class WebFrameworkProtocol(Protocol):

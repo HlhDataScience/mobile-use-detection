@@ -2,7 +2,7 @@
 
 import json
 from datetime import datetime, timezone
-from typing import Annotated, Any, Dict
+from typing import Annotated, Dict
 
 import joblib  # type: ignore
 import numpy as np
@@ -33,6 +33,10 @@ async def read_root() -> APIInfo:
                 "/results/get_results": "Filter the results",
                 "/docs": "API documentation (Swagger UI).",
                 "/openapi.json": "OpenAPI schema.",
+            },
+            "metadata": {
+                "Github repository": "https://github.com/HlhDataScience/mobile-use-detection",
+                "Dagshug repository": "https://dagshub.com/data_analitics_HLH/mobile-use-detection",
             },
         }
     )
@@ -92,10 +96,9 @@ async def classify(
 async def results(headers: Annotated[PredictionHeathers, Header()]) -> ResultsDisplay:
     with open(f"Phases/DataProduction/{PREDICTION_FILE}", "r") as f:
         json_file = json.load(f)
-        headers_var = {k: v for k, v in headers.model_dump().items()}
 
     return ResultsDisplay(
-        headers={k: v for k, v in headers_var["headers"].items()}, results=json_file
+        results=json_file, headers={k: v for k, v in headers.model_dump().items()}
     )
 
 
@@ -112,8 +115,8 @@ async def get_results(
         filtered_results = iter(json_file)
         if filter_query.class_ is None and filter_query.index is None:
             return ResultsDisplay(
-                headers={k: v for k, v in headers_var["headers"].items()},
                 results=json_file,
+                headers=headers_var,
             )
         # Apply filtering
         filtered_results = (
@@ -139,9 +142,8 @@ async def get_results(
             raise HTTPException(status_code=404, detail="No match found")
 
         return ResultsDisplay(
-            headers={k: v for k, v in headers_var["headers"].items()},
             results=filtered_results,
+            headers={k: v for k, v in headers.model_dump().items()},
         )
-
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"{str(e)}")

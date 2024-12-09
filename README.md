@@ -36,6 +36,7 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - Included headers and root information
   - Included pydantic validation through the predict, results and get_results methods
   - Included query functionality for the small json file used as database.
+  - All the functions of the API adhere to EndPointProtocol class.
     
 ## TODOs related to EDA_train_phase
   - ~~We need to create Hydra Config to handle yalm automatization~~ 
@@ -66,5 +67,5 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
  - ~~Include Headers and root information~~
  - ~~Improve FastApi functions with pydantic models~~
  - ~~Include query functionality for the small json file.~~
- - Check with dir() all the functions that need to adhere to EndPointProtocolFunction
+ - ~~Check with dir() all the functions that need to adhere to EndPointProtocolFunction~~
  - create the interface system for the webapp and test it with jupỳter notebook.

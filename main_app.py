@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from typing import Dict, List, Tuple
 
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 from Phases.SrcProduction.api.apifuncs import (
     classify,
@@ -13,6 +14,11 @@ from Phases.SrcProduction.api.apifuncs import (
     results,
 )
 from Phases.SrcProduction.api.Frameworks import FastAPIFramework
+from Phases.SrcProduction.api.validation_classes import (
+    APIInfo,
+    ClassifierOutput,
+    ResultsDisplay,
+)
 from Phases.SrcProduction.interfaces.WebFrameworksProtocols import (
     EndPointProtocolFunction,
 )
@@ -20,11 +26,11 @@ from Phases.SrcProduction.interfaces.WebFrameworksProtocols import (
 # CONSTANTS:
 MODEL_PATH = "Phases/ModelsProduction/Tree_Classifier_New_v4.joblib"
 # noinspection PyTypeChecker
-API_CONSTRUCTOR: Dict[str, Tuple[EndPointProtocolFunction, List[str]]] = {
-    "/": (read_root, ["GET"]),
-    "/predict/": (classify, ["POST"]),
-    "/results/": (results, ["GET"]),
-    "/results/get_results/": (get_results, ["GET"]),
+API_CONSTRUCTOR: Dict[str, Tuple[EndPointProtocolFunction, List[str], BaseModel]] = {
+    "/": (read_root, ["GET"], APIInfo),
+    "/predict/": (classify, ["POST"], ClassifierOutput),
+    "/results/": (results, ["GET"], ResultsDisplay),
+    "/results/get_results/": (get_results, ["GET"], ResultsDisplay),
 }
 
 

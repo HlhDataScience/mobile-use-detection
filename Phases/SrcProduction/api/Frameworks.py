@@ -1,9 +1,10 @@
 """Module for the Validation Protocols interfaces"""
 
-from typing import Dict, List, Sequence, Tuple, Optional
+from typing import Dict, List, Optional, Sequence, Tuple
 
-from fastapi import FastAPI, Depends
+from fastapi import Depends, FastAPI
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 from Phases.SrcProduction.interfaces.WebFrameworksProtocols import (
     EndPointProtocolFunction,
@@ -33,7 +34,7 @@ class FastAPIFramework:
         path: str,
         endpoint: EndPointProtocolFunction,
         methods: Sequence[str],
-        response_model: Optional[type] = None,
+        response_model: Optional[BaseModel] = None,
         status_code: Optional[int] = None,
         tags: Optional[List[str]] = None,
         dependencies: Optional[List[Depends]] = None,
@@ -61,7 +62,9 @@ class FastAPIFramework:
                     status_code=status_code,
                     tags=tags,
                     dependencies=dependencies,
-                )(endpoint)  # type: ignore
+                )(
+                    endpoint
+                )  # type: ignore
             elif method.lower() == "post":
                 self.app.post(
                     path,
@@ -69,7 +72,9 @@ class FastAPIFramework:
                     status_code=status_code,
                     tags=tags,
                     dependencies=dependencies,
-                )(endpoint)  # type: ignore
+                )(
+                    endpoint
+                )  # type: ignore
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -89,7 +94,7 @@ class FastAPIFramework:
     def from_constructor(
         cls,
         app_instance: FastAPI,
-        api_functions: Dict[str, Tuple[EndPointProtocolFunction, List[str]]],
+        api_functions: Dict[str, Tuple[EndPointProtocolFunction, List[str], BaseModel]],
     ) -> "WebFrameworkProtocol":
         """
         Constructs a FastAPIFramework instance and sets it up by adding routes.
@@ -113,7 +118,12 @@ class FastAPIFramework:
         framework = cls(app_instance)
 
         # Add routes to the framework
-        for path, (endpoint, methods) in api_functions.items():
-            framework.add_route(path=path, endpoint=endpoint, methods=methods)
+        for path, (endpoint, methods, response_model) in api_functions.items():
+            framework.add_route(
+                path=path,
+                endpoint=endpoint,
+                methods=methods,
+                response_model=response_model,
+            )
 
         return framework
