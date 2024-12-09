@@ -17,6 +17,7 @@ Usage:
 from typing import Any, Callable
 
 import gradio as gr
+import streamlit as st
 
 
 class GradioApp:
@@ -87,7 +88,6 @@ class StreamlitApp:
 
         Imports the Streamlit module for internal use.
         """
-        import streamlit as st
 
         self.st = st
 
@@ -141,8 +141,6 @@ class BlockGradioApp:
 
         Sets up a Gradio Blocks object for managing block-based components.
         """
-        import gradio as gr
-
         self.block = gr.Blocks()
 
     def create_ui(self, *args: Any, **kwargs: Any) -> None:
@@ -153,20 +151,22 @@ class BlockGradioApp:
             *args: Positional arguments for UI configuration.
             **kwargs: Keyword arguments for component customization.
 
-        Example:
-            Add a text input and button to the block:
-                app.create_ui(
-                    components=[
-                        {"type": "textbox", "label": "Your Name"},
-                        {"type": "button", "label": "Submit"},
-                    ]
-                )
+        Keyword Arguments:
+            - components (list[dict]): A list of dictionaries defining UI components.
+              Example:
+                [{"type": "textbox", "label": "Enter your name"},
+                 {"type": "button", "label": "Submit"}]
 
         Returns:
             None
         """
-
-    ...
+        components = kwargs.get("components", [])
+        with self.block:
+            for component in components:
+                if component["type"] == "textbox":
+                    gr.Textbox(label=component["label"])
+                elif component["type"] == "button":
+                    gr.Button(label=component["label"])
 
     def run(self) -> None:
         """
