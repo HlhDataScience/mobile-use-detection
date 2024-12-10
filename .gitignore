@@ -22,7 +22,7 @@ pipeline_testing.ipynb
 Phases/ModelsTrain/
 trainer_testing.ipynb
 Phases/ModelsProduction
-_.py
+streamlit_interface_testing.py
 __pycache__/
 Phases/SrcProduction/src/__pycache__/
 Phases/SrcProduction/api/__pycache__/
@@ -30,3 +30,4 @@ Phases/SrcProduction/interfaces/__pycache__/
 Phases/SrcProduction/src/predictions/__pycache__/
 webapp_testing.ipynb
 webprotocols testing.ipynb
+.gradio/flagged/

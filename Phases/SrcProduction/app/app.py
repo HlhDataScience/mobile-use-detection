@@ -19,6 +19,11 @@ from typing import Any, Callable
 import gradio as gr
 import streamlit as st
 
+from Phases.SrcProduction.app.appfuncs import (
+    gradio_inference,
+    provide_class_info,
+)
+
 
 class GradioApp:
     """
@@ -160,13 +165,32 @@ class BlockGradioApp:
         Returns:
             None
         """
-        components = kwargs.get("components", [])
         with self.block:
-            for component in components:
-                if component["type"] == "textbox":
-                    gr.Textbox(label=component["label"])
-                elif component["type"] == "button":
-                    gr.Button(label=component["label"])
+            gr.Markdown("## Smartphone Usage Inference")
+            AppUsageTime = gr.Number(label="App Usage Time (min/day)", value=0)
+            ScreenOnTime = gr.Number(label="Screen On Time (hours/day)", value=0.0)
+            BatteryDrain = gr.Number(label="Battery Drain (mAh/day)", value=0)
+            NumApps = gr.Number(label="Number of Apps Installed", value=0)
+            DataUsage = gr.Number(label="Data Usage (MB/day)", value=0.0)
+            class_output = gr.Textbox(label="Inference Result", interactive=False)
+            additional_info_output = gr.Textbox(
+                label="Additional info to interpreted the result."
+            )
+
+            def infer_and_provide_info(
+                AppUsageTime, ScreenOnTime, BatteryDrain, NumApps, DataUsage
+            ):
+                inference_result = gradio_inference(
+                    AppUsageTime, ScreenOnTime, BatteryDrain, NumApps, DataUsage
+                )
+                additional_info = provide_class_info(inference_result)
+                return inference_result, additional_info
+
+            gr.Button("Submit").click(
+                infer_and_provide_info,
+                inputs=[AppUsageTime, ScreenOnTime, BatteryDrain, NumApps, DataUsage],
+                outputs=[class_output, additional_info_output],
+            )
 
     def run(self) -> None:
         """
