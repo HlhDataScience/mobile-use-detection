@@ -77,6 +77,7 @@ async def lifespan(app: FastAPI):
 framework = FastAPIFramework.from_constructor(
     app_instance=FastAPI(lifespan=lifespan), api_functions=API_CONSTRUCTOR
 )
+app = framework.app
 
 
 def main():
