@@ -78,7 +78,7 @@ class FastAPIFramework:
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 
-    def run(self, host: str = "127.0.0.1", port: int = 8000) -> None:
+    def run(self, host: str = "0.0.0.0", port: int = 8000) -> None:
         """
         Starts the FastAPI app using Uvicorn.
 

@@ -388,5 +388,135 @@
         "prediction": 1,
         "time_stamp": "2024-12-10T13:54:06.657965+00:00",
         "index_id": 29
+    },
+    {
+        "ML_model": "Tree_Classifier_New_v4",
+        "features": {
+            "AppUsageTime_min_day": 0,
+            "ScreenOnTime_hours_day": 0.0,
+            "BatteryDrain_mAh_day": 0,
+            "NumberOfAppsInstalled": 0,
+            "DataUsage_MB_day": 0
+        },
+        "prediction": 1,
+        "time_stamp": "2024-12-10T15:22:02.198179+00:00",
+        "index_id": 30
+    },
+    {
+        "ML_model": "Tree_Classifier_New_v4",
+        "features": {
+            "AppUsageTime_min_day": 0,
+            "ScreenOnTime_hours_day": 0.0,
+            "BatteryDrain_mAh_day": 0,
+            "NumberOfAppsInstalled": 0,
+            "DataUsage_MB_day": 0
+        },
+        "prediction": 1,
+        "time_stamp": "2024-12-10T15:34:07.159238+00:00",
+        "index_id": 31
+    },
+    {
+        "ML_model": "Tree_Classifier_New_v4",
+        "features": {
+            "AppUsageTime_min_day": 0,
+            "ScreenOnTime_hours_day": 0.0,
+            "BatteryDrain_mAh_day": 0,
+            "NumberOfAppsInstalled": 0,
+            "DataUsage_MB_day": 0
+        },
+        "prediction": 1,
+        "time_stamp": "2024-12-10T15:34:39.826544+00:00",
+        "index_id": 32
+    },
+    {
+        "ML_model": "Tree_Classifier_New_v4",
+        "features": {
+            "AppUsageTime_min_day": 0,
+            "ScreenOnTime_hours_day": 0.0,
+            "BatteryDrain_mAh_day": 0,
+            "NumberOfAppsInstalled": 0,
+            "DataUsage_MB_day": 0
+        },
+        "prediction": 1,
+        "time_stamp": "2024-12-10T15:35:27.863012+00:00",
+        "index_id": 33
+    },
+    {
+        "ML_model": "Tree_Classifier_New_v4",
+        "features": {
+            "AppUsageTime_min_day": 0,
+            "ScreenOnTime_hours_day": 0.0,
+            "BatteryDrain_mAh_day": 0,
+            "NumberOfAppsInstalled": 0,
+            "DataUsage_MB_day": 0
+        },
+        "prediction": 1,
+        "time_stamp": "2024-12-10T15:36:33.412308+00:00",
+        "index_id": 34
+    },
+    {
+        "ML_model": "Tree_Classifier_New_v4",
+        "features": {
+            "AppUsageTime_min_day": 0,
+            "ScreenOnTime_hours_day": 0.0,
+            "BatteryDrain_mAh_day": 0,
+            "NumberOfAppsInstalled": 0,
+            "DataUsage_MB_day": 0
+        },
+        "prediction": 1,
+        "time_stamp": "2024-12-10T16:48:51.831032+00:00",
+        "index_id": 35
+    },
+    {
+        "ML_model": "Tree_Classifier_New_v4",
+        "features": {
+            "AppUsageTime_min_day": 0,
+            "ScreenOnTime_hours_day": 0.0,
+            "BatteryDrain_mAh_day": 0,
+            "NumberOfAppsInstalled": 0,
+            "DataUsage_MB_day": 0
+        },
+        "prediction": 1,
+        "time_stamp": "2024-12-10T16:57:01.334414+00:00",
+        "index_id": 36
+    },
+    {
+        "ML_model": "Tree_Classifier_New_v4",
+        "features": {
+            "AppUsageTime_min_day": 0,
+            "ScreenOnTime_hours_day": 0.0,
+            "BatteryDrain_mAh_day": 0,
+            "NumberOfAppsInstalled": 0,
+            "DataUsage_MB_day": 0
+        },
+        "prediction": 1,
+        "time_stamp": "2024-12-10T16:57:08.707456+00:00",
+        "index_id": 37
+    },
+    {
+        "ML_model": "Tree_Classifier_New_v4",
+        "features": {
+            "AppUsageTime_min_day": 6,
+            "ScreenOnTime_hours_day": 1.2,
+            "BatteryDrain_mAh_day": 5,
+            "NumberOfAppsInstalled": 5,
+            "DataUsage_MB_day": 5
+        },
+        "prediction": 1,
+        "time_stamp": "2024-12-10T16:58:38.741658+00:00",
+        "index_id": 38
+    },
+    {
+        "ML_model": "Tree_Classifier_New_v4",
+        "features": {
+            "AppUsageTime_min_day": 0,
+            "ScreenOnTime_hours_day": 0.0,
+            "BatteryDrain_mAh_day": 0,
+            "NumberOfAppsInstalled": 0,
+            "DataUsage_MB_day": 0
+        },
+        "prediction": 1,
+        "time_stamp": "2024-12-10T17:08:07.243369+00:00",
+        "index_id": 39
     }
 ]

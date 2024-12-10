@@ -128,73 +128,93 @@ class StreamlitApp:
 
 class BlockGradioApp:
     """
-    Implementation of `AppInterfaceProtocol` for Gradio-style blocks.
+    Implementation of `AppInterfaceProtocol` for Gradio blocks.
 
-    This class provides methods for creating and rendering a block-based UI.
+    This class provides methods for creating and running a Block-based Gradio app.
 
     Attributes:
-        block (gr.Blocks): The Gradio Blocks object for managing the UI.
+        block (gr.Blocks): The Gradio Blocks object.
 
     Methods:
-        - create_ui(*args, **kwargs): Configures the block-based user interface.
-        - run(): Renders the block and launches the application.
+        - create_ui(*args, **kwargs): Configures the Gradio blocks user interface.
+        - run(): Launches the Gradio blocks application.
     """
 
     def __init__(self):
         """
         Initializes the BlockGradioApp.
 
-        Sets up a Gradio Blocks object for managing block-based components.
+        Creates an instance of `gr.Blocks` for building the UI using Gradio blocks.
         """
         self.block = gr.Blocks()
 
     def create_ui(self, *args: Any, **kwargs: Any) -> None:
         """
-        Configures the block-based user interface.
+        Configures the Gradio blocks user interface.
 
         Args:
-            *args: Positional arguments for UI configuration.
-            **kwargs: Keyword arguments for component customization.
+            *args: Positional arguments (unused for BlockGradio).
+            **kwargs: Keyword arguments for UI customization.
 
         Keyword Arguments:
-            - components (list[dict]): A list of dictionaries defining UI components.
-              Example:
-                [{"type": "textbox", "label": "Enter your name"},
-                 {"type": "button", "label": "Submit"}]
+            - components (list): List of components to include in the UI.
+                Each component should be a dictionary with the type and necessary values.
 
         Returns:
             None
         """
+        components = kwargs.get("components", [])
+
         with self.block:
-            gr.Markdown("## Smartphone Usage Inference")
-            AppUsageTime = gr.Number(label="App Usage Time (min/day)", value=0)
-            ScreenOnTime = gr.Number(label="Screen On Time (hours/day)", value=0.0)
-            BatteryDrain = gr.Number(label="Battery Drain (mAh/day)", value=0)
-            NumApps = gr.Number(label="Number of Apps Installed", value=0)
-            DataUsage = gr.Number(label="Data Usage (MB/day)", value=0.0)
-            class_output = gr.Textbox(label="Inference Result", interactive=False)
+            inputs = {}
+            for component in components:
+                if component["type"] == "number":
+                    inputs[component["name"]] = gr.Number(
+                        label=component["label"], value=component.get("value", 0)
+                    )
+                elif component["type"] == "markdown":
+                    inputs[component["content"]] = gr.Markdown(
+                        value=component["content"]
+                    )
+                # You can add more component types here if needed
+
+            class_output = gr.Textbox(label="Class Prediction", interactive=False)
             additional_info_output = gr.Textbox(
-                label="Additional info to interpreted the result."
+                label="Additional Information", interactive=False
             )
 
-            def infer_and_provide_info(
-                AppUsageTime, ScreenOnTime, BatteryDrain, NumApps, DataUsage
-            ):
-                inference_result = gradio_inference(
-                    AppUsageTime, ScreenOnTime, BatteryDrain, NumApps, DataUsage
+            def infer_and_provide_info(*input_data):
+                """
+                Runs inference and provides additional information for the prediction.
+
+                Args:
+                    *input_data: Input values to be processed for the prediction.
+
+                Returns:
+                    tuple: The class prediction and additional information.
+                """
+                input_data = [i for i in input_data if isinstance(i, (int, float))]
+                class_prediction = gradio_inference(
+                    input_data[0],
+                    input_data[1],
+                    input_data[2],
+                    input_data[3],
+                    input_data[4],
                 )
-                additional_info = provide_class_info(inference_result)
-                return inference_result, additional_info
+                additional_info = provide_class_info(class_prediction)
+                return class_prediction, additional_info
 
             gr.Button("Submit").click(
                 infer_and_provide_info,
-                inputs=[AppUsageTime, ScreenOnTime, BatteryDrain, NumApps, DataUsage],
+                inputs=list(inputs.values()),
                 outputs=[class_output, additional_info_output],
             )
 
     def run(self) -> None:
         """
-        Renders the block and launches the application.
+        Launches the Gradio blocks application.
+
+        Starts the Gradio Blocks interface in the current environment.
 
         Returns:
             None
