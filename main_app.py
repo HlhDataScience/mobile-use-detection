@@ -184,6 +184,7 @@ def main():
             st.subheader("Additional Information")
             st.write(additional_info)
         print("Streamlit initialized successfully.")
+
     elif args.ui_type == "blocks":
         print("Initializing Blocks UI...")
         user_interface = BlockGradioApp()
@@ -228,18 +229,6 @@ def main():
 
 
 if __name__ == "__main__":
-    """
-    Entry point for running the FastAPI server and the selected user interface.
-
-    This function starts the FastAPI server in a separate thread and
-    runs the main application logic, including selecting and launching the UI.
-
-    Args:
-        None
-
-    Returns:
-        None
-    """
     print("Starting FastAPI server...")
     threading.Thread(target=lambda: framework.run(port=8001), daemon=True).start()
     main()
