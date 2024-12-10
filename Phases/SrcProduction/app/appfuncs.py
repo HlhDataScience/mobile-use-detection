@@ -1,6 +1,6 @@
 """THis module houses the functions for inference of the fastapi and wrappers for gradio and gradio blocks."""
 
-from typing import Dict
+from typing import Dict, Tuple
 
 import requests
 
@@ -81,3 +81,30 @@ def provide_class_info(class_prediction: str) -> str:
             return value
 
     return "No additional information available for the predicted class."
+
+
+def gradio_inference_wrapper(
+    AppUsageTime: int,
+    ScreenOnTime: float,
+    BatteryDrain: int,
+    NumApps: int,
+    DataUsage: int,
+) -> Tuple[str | dict[str, str], str]:
+    """
+    Wrapper function to handle Gradio inference and provide additional information.
+
+    Args:
+        AppUsageTime (float): App usage time per day in minutes.
+        ScreenOnTime (float): Screen on time per day in hours.
+        BatteryDrain (float): Battery drain per day in mAh.
+        NumApps (int): Number of apps installed.
+        DataUsage (float): Data usage per day in MB.
+
+    Returns:
+        tuple: A tuple containing class prediction and additional information.
+    """
+    class_prediction = gradio_inference(
+        AppUsageTime, ScreenOnTime, BatteryDrain, NumApps, DataUsage
+    )
+    additional_info = provide_class_info(class_prediction)
+    return class_prediction, additional_info

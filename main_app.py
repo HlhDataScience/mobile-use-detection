@@ -3,7 +3,7 @@
 import argparse
 import threading
 from contextlib import asynccontextmanager
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 import gradio as gr
 import streamlit as st
@@ -29,7 +29,7 @@ from Phases.SrcProduction.app.app import (
     StreamlitApp,
 )
 from Phases.SrcProduction.app.appfuncs import (
-    gradio_inference,
+    gradio_inference_wrapper,
     inference_point,
     provide_class_info,
 )
@@ -39,6 +39,7 @@ from Phases.SrcProduction.interfaces.WebFrameworksProtocols import (
 
 # CONSTANTS
 MODEL_PATH = "Phases/ModelsProduction/Tree_Classifier_New_v4.joblib"
+# noinspection PyTypeChecker
 API_CONSTRUCTOR: Dict[str, Tuple[EndPointProtocolFunction, List[str], BaseModel]] = {
     "/": (read_root, ["GET"], APIInfo),
     "/predict/": (classify, ["POST"], ClassifierOutput),
@@ -48,6 +49,7 @@ API_CONSTRUCTOR: Dict[str, Tuple[EndPointProtocolFunction, List[str], BaseModel]
 
 
 # Launch API
+# noinspection PyShadowingNames
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
@@ -88,9 +90,6 @@ def main():
     user interface (Gradio, Streamlit, or BlockGradio), and runs the
     selected UI along with the API server.
 
-    Arguments:
-        None
-
     Returns:
         None
     """
@@ -120,44 +119,22 @@ def main():
     # UI Selection
     if args.ui_type == "gradio":
         print("Initializing Gradio...")
-        AppUsageTime_input = gr.Number(label="App Usage Time (min/day)")
-        ScreenOnTime_input = gr.Number(label="Screen On Time (hours/day)")
-        BatteryDrain_input = gr.Number(label="Battery Drain (mAh/day)")
-        NumApps_input = gr.Number(label="Number of Apps Installed")
-        DataUsage_input = gr.Number(label="Data Usage (MB/day)")
+        app_usage_time_input = gr.Number(label="App Usage Time (min/day)")
+        screen_on_time_input = gr.Number(label="Screen On Time (hours/day)")
+        battery_drain_input = gr.Number(label="Battery Drain (mAh/day)")
+        num_apps_input = gr.Number(label="Number of Apps Installed")
+        data_usage_input = gr.Number(label="Data Usage (MB/day)")
         class_output = gr.Textbox(label="*Class of usage of mobile*")
         info_output = gr.Textbox(label="Additional Information")
-
-        def gradio_inference_wrapper(
-            AppUsageTime, ScreenOnTime, BatteryDrain, NumApps, DataUsage
-        ):
-            """
-            Wrapper function to handle Gradio inference and provide additional information.
-
-            Args:
-                AppUsageTime (float): App usage time per day in minutes.
-                ScreenOnTime (float): Screen on time per day in hours.
-                BatteryDrain (float): Battery drain per day in mAh.
-                NumApps (int): Number of apps installed.
-                DataUsage (float): Data usage per day in MB.
-
-            Returns:
-                tuple: A tuple containing class prediction and additional information.
-            """
-            class_prediction = gradio_inference(
-                AppUsageTime, ScreenOnTime, BatteryDrain, NumApps, DataUsage
-            )
-            additional_info = provide_class_info(class_prediction)
-            return class_prediction, additional_info
 
         user_interface = GradioApp(
             interface=gradio_inference_wrapper,
             inputs=[
-                AppUsageTime_input,
-                ScreenOnTime_input,
-                BatteryDrain_input,
-                NumApps_input,
-                DataUsage_input,
+                app_usage_time_input,
+                screen_on_time_input,
+                battery_drain_input,
+                num_apps_input,
+                data_usage_input,
             ],
             outputs=[class_output, info_output],
         )
@@ -169,13 +146,15 @@ def main():
         user_interface = StreamlitApp()
         user_interface.create_ui(title=args.title, message=args.message)
         # Inputs
-        AppUsageTime = st.number_input("App Usage Time (min/day)", min_value=0, step=1)
-        ScreenOnTime = st.number_input(
+        app_usage_time = st.number_input(
+            "App Usage Time (min/day)", min_value=0, step=1
+        )
+        screen_on_time = st.number_input(
             "Screen On Time (hours/day)", min_value=0.0, step=0.1
         )
-        BatteryDrain = st.number_input("Battery Drain (mAh/day)", min_value=0, step=1)
-        NumApps = st.number_input("Number of Apps Installed", min_value=0, step=1)
-        DataUsage = st.number_input("Data Usage (MB/day)", min_value=0, step=1)
+        battery_drain = st.number_input("Battery Drain (mAh/day)", min_value=0, step=1)
+        num_apps = st.number_input("Number of Apps Installed", min_value=0, step=1)
+        data_usage = st.number_input("Data Usage (MB/day)", min_value=0, step=1)
         # Prediction
         if st.button("Classify"):
             """
@@ -192,11 +171,11 @@ def main():
                 None
             """
             input_features = {
-                "AppUsageTime_min_day": AppUsageTime,
-                "ScreenOnTime_hours_day": ScreenOnTime,
-                "BatteryDrain_mAh_day": BatteryDrain,
-                "NumberOfAppsInstalled": NumApps,
-                "DataUsage_MB_day": DataUsage,
+                "AppUsageTime_min_day": app_usage_time,
+                "ScreenOnTime_hours_day": screen_on_time,
+                "BatteryDrain_mAh_day": battery_drain,
+                "NumberOfAppsInstalled": num_apps,
+                "DataUsage_MB_day": data_usage,
             }
             class_prediction = inference_point(input_features)
             additional_info = provide_class_info(class_prediction)
@@ -213,31 +192,31 @@ def main():
                 {"type": "markdown", "content": "## Smartphone Usage Inference"},
                 {
                     "type": "number",
-                    "name": "AppUsageTime",
+                    "name": "app_usage_time",
                     "label": "App Usage Time (min/day)",
                     "value": 0,
                 },
                 {
                     "type": "number",
-                    "name": "ScreenOnTime",
+                    "name": "screen_on_time",
                     "label": "Screen On Time (hours/day)",
                     "value": 0.0,
                 },
                 {
                     "type": "number",
-                    "name": "BatteryDrain",
+                    "name": "battery_drain",
                     "label": "Battery Drain (mAh/day)",
                     "value": 0,
                 },
                 {
                     "type": "number",
-                    "name": "NumApps",
+                    "name": "num_apps",
                     "label": "Number of Apps Installed",
                     "value": 0,
                 },
                 {
                     "type": "number",
-                    "name": "DataUsage",
+                    "name": "data_usage",
                     "label": "Data Usage (MB/day)",
                     "value": 0.0,
                 },
