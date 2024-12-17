@@ -11,7 +11,7 @@ stages:
     - src/train/DataTrain/processed_data/train_data/X_train.csv
     - src/train/DataTrain/processed_data/train_data/y_train.csv
     metrics:
-    - Phases/MetricsTrain/categorical_mapping.json:
+    - src/train/MetricsTrain/categorical_mapping.json:
         cache: false
   training_pipeline:
     cmd: python3 main.py --pipeline training
@@ -22,7 +22,7 @@ stages:
     - src/train/DataTrain/processed_data/train_data/y_train.csv
     - main.py
     outs:
-    - Phases/ModelsTrain/Tree_Classifier_New_v4.joblib
+    - src/train/ModelsTrain/Tree_Classifier_New_v4.joblib
     metrics:
     - src/train/MetricsTrain/Tree_Classifier_New_v4_Test_metrics.json:
         cache: false

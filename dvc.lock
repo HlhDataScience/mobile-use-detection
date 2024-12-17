@@ -3,76 +3,76 @@ stages:
   transformation_pipeline:
     cmd: python3 main.py --pipeline transformation
     deps:
-    - path: Phases/DataTrain/rawdata/user_behavior_dataset.csv
+    - path: main.py
+      hash: md5
+      md5: 137405b5312cb4c8c2d17c423438539d
+      size: 3838
+    - path: src/train/DataTrain/rawdata/user_behavior_dataset.csv
       hash: md5
       md5: 6c4a34dc6d5dfa3846d7c19be4913fb0
       size: 38856
-    - path: main.py
-      hash: md5
-      md5: 4add747b6d1b3506b362a6d722bf8581
-      size: 3891
     outs:
-    - path: Phases/DataTrain/processed_data/intermediate_data/transformed_df.csv
+    - path: src/train/DataTrain/processed_data/intermediate_data/transformed_df.csv
       hash: md5
       md5: 8226100ca63689cd9a12432f0a314403
       size: 21848
-    - path: Phases/DataTrain/processed_data/test_data/X_test.csv
+    - path: src/train/DataTrain/processed_data/test_data/X_test.csv
       hash: md5
       md5: 22092e0a79f30e6ff1f52d620e5c0786
       size: 3599
-    - path: Phases/DataTrain/processed_data/test_data/y_test.csv
+    - path: src/train/DataTrain/processed_data/test_data/y_test.csv
       hash: md5
       md5: 5dd734aba9d1294fe0f49d5e5b3debf5
       size: 368
-    - path: Phases/DataTrain/processed_data/train_data/X_train.csv
+    - path: src/train/DataTrain/processed_data/train_data/X_train.csv
       hash: md5
       md5: ece8a0d944859859b960dd04822c7f0f
       size: 10572
-    - path: Phases/DataTrain/processed_data/train_data/y_train.csv
+    - path: src/train/DataTrain/processed_data/train_data/y_train.csv
       hash: md5
       md5: 39c391b61b5323152bb1be0ea8c1b311
       size: 1068
-    - path: Phases/MetricsTrain/categorical_mapping.json
+    - path: src/train/MetricsTrain/categorical_mapping.json
       hash: md5
       md5: 6b9b52893c091285d3a18b50572c3bcd
       size: 195
   training_pipeline:
     cmd: python3 main.py --pipeline training
     deps:
-    - path: Phases/DataTrain/processed_data/test_data/X_test.csv
+    - path: main.py
+      hash: md5
+      md5: 137405b5312cb4c8c2d17c423438539d
+      size: 3838
+    - path: src/train/DataTrain/processed_data/test_data/X_test.csv
       hash: md5
       md5: 22092e0a79f30e6ff1f52d620e5c0786
       size: 3599
-    - path: Phases/DataTrain/processed_data/test_data/y_test.csv
+    - path: src/train/DataTrain/processed_data/test_data/y_test.csv
       hash: md5
       md5: 5dd734aba9d1294fe0f49d5e5b3debf5
       size: 368
-    - path: Phases/DataTrain/processed_data/train_data/X_train.csv
+    - path: src/train/DataTrain/processed_data/train_data/X_train.csv
       hash: md5
       md5: ece8a0d944859859b960dd04822c7f0f
       size: 10572
-    - path: Phases/DataTrain/processed_data/train_data/y_train.csv
+    - path: src/train/DataTrain/processed_data/train_data/y_train.csv
       hash: md5
       md5: 39c391b61b5323152bb1be0ea8c1b311
       size: 1068
-    - path: main.py
-      hash: md5
-      md5: 4add747b6d1b3506b362a6d722bf8581
-      size: 3891
     outs:
-    - path: Phases/MetricsTrain/Tree_Classifier_New_v4_Test_metrics.json
+    - path: src/train/MetricsTrain/Tree_Classifier_New_v4_Test_metrics.json
       hash: md5
       md5: ace8abae8447ef1c7e42d07761e7cf82
       size: 229
-    - path: Phases/MetricsTrain/Tree_Classifier_New_v4_Train_metrics.json
+    - path: src/train/MetricsTrain/Tree_Classifier_New_v4_Train_metrics.json
       hash: md5
       md5: 03fa3f8356915e8764be19db71d45397
       size: 233
-    - path: Phases/MetricsTrain/Tree_Classifier_New_v4_parameters.json
+    - path: src/train/MetricsTrain/Tree_Classifier_New_v4_parameters.json
       hash: md5
       md5: b8c44e510ba89f737ee9ffb245422451
       size: 662
-    - path: Phases/ModelsTrain/Tree_Classifier_New_v4.joblib
+    - path: src/train/ModelsTrain/Tree_Classifier_New_v4.joblib
       hash: md5
       md5: 50567dcb5246f4bfeb39dc4fd6931616
       size: 2929
