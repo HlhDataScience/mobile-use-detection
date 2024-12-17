@@ -46,7 +46,7 @@ docker-compose up --build
 
 ## Done related to production_phase
   - Refactored structure of the project to work with the 2 development and production phases of MLOps
-  - Created the FastAPI app
+    - Created the FastAPI app
   - Created the agnostic processor of the API framework
   - System of dev fastapi works with agnostic implementation
   - Infrastructure for the web app created.
