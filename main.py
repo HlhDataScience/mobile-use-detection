@@ -7,8 +7,6 @@ from pathlib import Path
 import dagshub
 from hydra import initialize
 from hydra.core.global_hydra import GlobalHydra
-from sklearn.tree import DecisionTreeClassifier
-
 from Phases.EDA_train_phase import setup_logging
 from Phases.EDA_train_phase.src.pipeline.transformation_pipeline import (
     LazyTransformationPipeline,
@@ -25,10 +23,11 @@ from Phases.EDA_train_phase.src.validation_classes.validation_interfaces import 
     PanderaValidationModel,
     PydanticConfigModel,
 )
+from sklearn.tree import DecisionTreeClassifier
 
 # CONSTANTS
 LOG_FILE = Path("logs/main_program.log")
-CONFIG_PATH = "Phases/ConfTrain/"
+CONFIG_PATH = "src/train/ConfTrain/"
 DAGSHUB_REPO_OWNER = "data_analitics_HLH"
 DAGSHUB_REPO = "mobile-use-detection"
 

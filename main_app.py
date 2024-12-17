@@ -8,8 +8,6 @@ from typing import Dict, List, Tuple
 import gradio as gr
 import streamlit as st
 from fastapi import FastAPI
-from pydantic import BaseModel
-
 from Phases.SrcProduction.api.apifuncs import (
     classify,
     get_results,
@@ -23,6 +21,9 @@ from Phases.SrcProduction.api.validation_classes import (
     ClassifierOutput,
     ResultsDisplay,
 )
+from Phases.SrcProduction.api.WebFrameworksProtocols import (
+    EndPointProtocolFunction,
+)
 from Phases.SrcProduction.app.app import (
     BlockGradioApp,
     GradioApp,
@@ -33,12 +34,10 @@ from Phases.SrcProduction.app.appfuncs import (
     inference_point,
     provide_class_info,
 )
-from Phases.SrcProduction.interfaces.WebFrameworksProtocols import (
-    EndPointProtocolFunction,
-)
+from pydantic import BaseModel
 
 # CONSTANTS
-MODEL_PATH = "Phases/ModelsProduction/Tree_Classifier_New_v4.joblib"
+MODEL_PATH = "src/production/backend/Tree_Classifier_New_v4.joblib"
 # noinspection PyTypeChecker
 API_CONSTRUCTOR: Dict[str, Tuple[EndPointProtocolFunction, List[str], BaseModel]] = {
     "/": (read_root, ["GET"], APIInfo),
@@ -157,19 +156,6 @@ def main():
         data_usage = st.number_input("Data Usage (MB/day)", min_value=0, step=1)
         # Prediction
         if st.button("Classify"):
-            """
-            Classifies the input data when the 'Classify' button is pressed.
-
-            This function uses the user inputs from Streamlit, makes a prediction
-            using the classifier, and displays the prediction along with additional
-            information.
-
-            Args:
-                None
-
-            Returns:
-                None
-            """
             input_features = {
                 "AppUsageTime_min_day": app_usage_time,
                 "ScreenOnTime_hours_day": screen_on_time,
@@ -230,5 +216,5 @@ def main():
 
 if __name__ == "__main__":
     print("Starting FastAPI server...")
-    threading.Thread(target=lambda: framework.run(port=8001), daemon=True).start()
+    threading.Thread(target=lambda: framework.run(port=8002), daemon=True).start()
     main()

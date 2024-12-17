@@ -1,9 +1,9 @@
 stages:
   transformation_pipeline:
-    cmd: python3 main.py --pipeline transformation
+    cmd: python3 main_app.py --pipeline transformation
     deps:
     - Phases/DataTrain/rawdata/user_behavior_dataset.csv
-    - main.py
+    - main_app.py
     outs:
     - Phases/DataTrain/processed_data/intermediate_data/transformed_df.csv
     - Phases/DataTrain/processed_data/test_data/X_test.csv
@@ -14,13 +14,13 @@ stages:
     - Phases/MetricsTrain/categorical_mapping.json:
         cache: false
   training_pipeline:
-    cmd: python3 main.py --pipeline training
+    cmd: python3 main_app.py --pipeline training
     deps:
     - Phases/DataTrain/processed_data/test_data/X_test.csv
     - Phases/DataTrain/processed_data/test_data/y_test.csv
     - Phases/DataTrain/processed_data/train_data/X_train.csv
     - Phases/DataTrain/processed_data/train_data/y_train.csv
-    - main.py
+    - main_app.py
     outs:
     - Phases/ModelsTrain/Tree_Classifier_New_v4.joblib
     metrics:
