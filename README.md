@@ -1,26 +1,29 @@
 # Mobile Usage Detection
 
-## About
+## Overview
 
-This repository is a small sample of how we can leverage competent MLOps workflows with simple tools and good results. We use GitHub and dvc to version control both our code and our data. We also use pydantic to ensure good data input serialization (for EDA and training steps) as well as backend with FastAPI. Finally, we have a gradio powered app and a Docker image to use it in cloud computing. To make the code more reusable, we decided to implement interfaces and abstract classes bvy using prtocol and abc from python standar library, making the code more portable and usable.
+This repository demonstrates the implementation of efficient MLOps workflows using accessible tools to achieve effective results. We utilize GitHub and DVC for version control of both code and data, ensuring consistency and traceability. Pydantic is employed to enforce data input serialization during Exploratory Data Analysis (EDA) and training phases, while FastAPI serves as the backend framework. The project features a Gradio-powered application and a Docker image for seamless deployment in cloud environments. To enhance code reusability, we implement interfaces and abstract classes using Python's `protocol` and `abc` modules, promoting portability and adaptability.
 
-**The project is divided into 2 directories**:
-  - images : This are thedocker ready files. it uses interface starategy to not realy in one speficic framework. Related to ptest performed, FastApi and Streamlit were choosen as they perform quite well.
-  - src: MOdular soruce code yused to perform Exploratory Data Analysys (EDA), the transformation pipeline of data and the TrainerPipeline. We rely on abstractions to make the modules reusable with other frameworks.
+## Project Structure
 
-**How to mainly use it?**
-The repository is thought ytto use the docker image, but we also provide the source code inc ase you would like to change anything. We provide 2 main uses for this repo:
-- One: Use the training pipeline by the Makefile
-- Two: Using Docker compose.
+The project is organized into two primary directories:
 
-**Using the training pipeline**
+- **`images/`**: Contains Docker-ready files. It employs the interface strategy pattern to avoid reliance on a specific framework. For testing purposes, FastAPI and Streamlit were selected due to their performance and compatibility.
 
-```
-git clone https://github.com/HlhDataScience/mobile-use-detection
+- **`src/`**: Houses modular source code responsible for Exploratory Data Analysis (EDA), data transformation pipelines, and the TrainerPipeline. Abstractions are utilized to ensure modules are reusable across different frameworks.
+
+## Usage Instructions
+
+The repository is designed to be used via the Docker image; however, the source code is also provided for customization. Two primary methods are available for utilizing this repository:
+
+1. **Using the Training Pipeline via Makefile**:
+
+```bash
+git clone https://github.com/HlhDataScience/mobile-use-detection.git
 cd mobile-use-detection
 make run_all
-```
 
+```
 **Using the Docker Compose**
 ```
 cd images
@@ -28,21 +31,21 @@ docker-compose up --build
 ```
 ## Done related to EDA_train_phase
 - We have completed the Hydra config to handle yalm automatization of the pipeline.
-- We have created the logger.py file that handles logging across the files.
+- We have created the `logger.py` file that handles logging across the files.
 - We have completed the data validation & serialization classes
 - We have performed the EDA analysis
-- Created an ABC Pipeline class to be aligned with SOLID principles.
-- Created ABC validation classes and its interfaces for data and configuration validation
-- Tested LazyTransformationPipeline refactored as a subclass of BasicPipeline(ABC) abstract class.
+- Created an `ABC Pipeline` class to be aligned with SOLID principles.
+- Created `ABC validation` classes and its interfaces for data and configuration validation
+- Tested `LazyTransformationPipeline` refactored as a subclass of `BasicPipeline(ABC)` abstract class.
 - Tested the run method of the pipeline with interfaces and good results.
 - Tested the rest of the methods of CV with good results.
-- Completed train.py class.
-- Completed test for TrainerPipeline: Everything works properly.
-- Created Makefile for main.py
-- Tested main.py. It works without problem.
-- Created KNN deviating branch to test different experiments.
-- Created the dvc pipeline managing system
-- Created class methods for ABC_Pipeline. ABC_Pipeline now is more flexible.
+- Completed `train.py` class.
+- Completed test for `TrainerPipeline`: Everything works properly.
+- Created `Makefile` for `main.py`
+- Tested `main.py`. It works without problem.
+- Created `KNN` deviating branch to test different experiments.
+- Created the `dvc` pipeline managing system
+- Created class methods for `ABC_Pipeline`. `ABC_Pipeline` now is more flexible.
 
 ## Done related to production_phase
   - Refactored structure of the project to work with the 2 development and production phases of MLOps
