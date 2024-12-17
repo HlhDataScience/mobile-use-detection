@@ -4,10 +4,10 @@ experiment_name: ${dynamic_settings.experiment_name}
 registered_model_name: ${dynamic_settings.registered_model_name}
 # train and test Paths
 
-x_train: "Phases/DataTrain/processed_data/train_data/X_train.csv"
-x_test: "Phases/DataTrain/processed_data/test_data/X_test.csv"
-y_train: "Phases/DataTrain/processed_data/train_data/y_train.csv"
-y_test: "Phases/DataTrain/processed_data/test_data/y_test.csv"
+x_train: "src/train/DataTrain/processed_data/train_data/X_train.csv"
+x_test: "src/train/DataTrain/processed_data/test_data/X_test.csv"
+y_train: "src/train/DataTrain/processed_data/train_data/y_train.csv"
+y_test: "src/train/DataTrain/processed_data/test_data/y_test.csv"
 
 #Standardized and Normalized Paths
 
@@ -23,13 +23,13 @@ standardized_df: ${dynamic_settings.standardized_df}
 
 # ModelsProduction path
 
-model_path: "Phases/ModelsTrain"
+model_path: "src/train/ModelsTrain"
 
 # tuned parameters and MetricsTrain
 using_custom_parameters: ${dynamic_settings.using_custom_parameters}
 custom_parameters: ${dynamic_settings.custom_parameters}
 tuned_parameters: ${dynamic_settings.tuned_parameters}
 average_mode: ${dynamic_settings.average_mode}
-metrics: "Phases/MetricsTrain"
+metrics: "src/train/MetricsTrain"
 
 

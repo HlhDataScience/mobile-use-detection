@@ -7,23 +7,24 @@ from pathlib import Path
 import dagshub
 from hydra import initialize
 from hydra.core.global_hydra import GlobalHydra
-from Phases.EDA_train_phase import setup_logging
-from Phases.EDA_train_phase.src.pipeline.transformation_pipeline import (
+from sklearn.tree import DecisionTreeClassifier
+
+from src.train.logging_functions.logger import setup_logging
+from src.train.pipeline.transformation_pipeline import (
     LazyTransformationPipeline,
 )
-from Phases.EDA_train_phase.src.training.train import TrainerPipeline
-from Phases.EDA_train_phase.src.validation_classes.validation_configurations import (
+from src.train.training.train import TrainerPipeline
+from src.train.validation_classes.validation_configurations import (
     DataTransformationConfig,
     DataValidationConfig,
     TrainerConfig,
 )
-from Phases.EDA_train_phase.src.validation_classes.validation_interfaces import (
+from src.train.validation_classes.validation_interfaces import (
     HydraConfLoader,
     MLFlowTracker,
     PanderaValidationModel,
     PydanticConfigModel,
 )
-from sklearn.tree import DecisionTreeClassifier
 
 # CONSTANTS
 LOG_FILE = Path("logs/main_program.log")

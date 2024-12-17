@@ -38,7 +38,8 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
   - Included query functionality for the small json file used as database.
   - All the functions of the API adhere to EndPointProtocol class.
   - Created the interfaces for the app and tested them in jupyter notebook
-  - UUpdated MMakefile to support the different apps.
+  - Updated Makefile to support the different apps.
+  - Completed refactor after dockerization of the project.
     
 ## TODOs related to EDA_train_phase
   - ~~We need to create Hydra Config to handle yalm automatization~~ 
@@ -72,5 +73,4 @@ This repository is a small sample of how we can leverage MLOps workflow with sim
  - ~~Check with dir() all the functions that need to adhere to EndPointProtocolFunction~~
  - ~~Create the interface system for the webapp and test it with jupỳter notebook.~~
  - ~~Update the Makefile to support the different apps~~
- - Dockerize the project to make it portable
- - upload your streamlit app into streamlit for advertisement purposes.
+ - ~~Dockerize the project to make it portable~~

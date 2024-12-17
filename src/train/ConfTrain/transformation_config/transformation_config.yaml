@@ -34,14 +34,14 @@ feature_engineering_dict: ${dynamic_settings.feature_engineering_dict}
 feature_mode: ${dynamic_settings.feature_mode}
 
 # Saving Data File Paths
-transformed_intermediate_df_path: "Phases/DataTrain/processed_data/intermediate_data/transformed_df.csv"
-transformed_train_df_path_x: "Phases/DataTrain/train_data/X_train.csv"
-transformed_test_df_path_x: "Phases/DataTrain/test_data/X_test.csv"
-transformed_train_df_path_y: "Phases/DataTrain/train_data/y_train.csv"
-transformed_test_df_path_y: "Phases/DataTrain/test_data/y_test.csv"
-#transformed_normalized_df_path_train_x: "train/DataTrain/processed_data/train_data"
-#transformed_normalized_df_path_test_x: "train/DataTrain/processed_data/test_data"
-#transformed_standardized_df_path_train_x: "train/DataTrain/processed_data/train_data"
-#transformed_standardized_df_path_test_x: "train/DataTrain/processed_data/test_data"
+transformed_intermediate_df_path: "src/train/DataTrain/intermediate_data/transformed_df.csv"
+transformed_train_df_path_x: "src/train/DataTrain/train_data/X_train.csv"
+transformed_test_df_path_x: "src/train/DataTrain/test_data/X_test.csv"
+transformed_train_df_path_y: "src/train/DataTrain/train_data/y_train.csv"
+transformed_test_df_path_y: "src/train/DataTrain/test_data/y_test.csv"
+#transformed_normalized_df_path_train_x: "src/train/DataTrain/processed_data/train_data"
+#transformed_normalized_df_path_test_x: "src/train/DataTrain/processed_data/test_data"
+#transformed_standardized_df_path_train_x: "src/train/DataTrain/processed_data/train_data"
+#transformed_standardized_df_path_test_x: "src/train/DataTrain/processed_data/test_data"
 
 

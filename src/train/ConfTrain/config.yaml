@@ -9,7 +9,7 @@ dynamic_settings:
   registered_model_name: "sk-learn-Decision-Tree-Classifier-custom-params_V4"
   ##SETTINGS FOR TRANSFORMATION AND TRAINING
   # load the original DataTrain
-  original_datapath: "train/DataTrain/rawdata/user_behavior_dataset.csv"
+  original_datapath: "src/train/DataTrain/rawdata/user_behavior_dataset.csv"
 
   # Transformations
   categorical_columns_to_transform:
@@ -28,6 +28,7 @@ dynamic_settings:
     - "BatteryDrain_mAh_day"
     - "NumberOfAppsInstalled"
     - "DataUsage_MB_day"
+
   # Model selection and hyperparameter tuning
   ML_type: "Tree-Based" # Literal["SVM", "KNN", "PCA", "Gradient", "Tree-Based", "Naive"]
   number_iterations: 3
@@ -59,6 +60,7 @@ dynamic_settings:
       - "balanced"
 
   feature_mode: "GridSearch"
+
   #trainer settings
   model_path: "train/Phases/ModelsTrain"
   normalized_df: false #to use the normalized dataframe for training and testing.

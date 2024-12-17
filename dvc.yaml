@@ -1,32 +1,32 @@
 stages:
   transformation_pipeline:
-    cmd: python3 main_app.py --pipeline transformation
+    cmd: python3 main.py --pipeline transformation
     deps:
-    - Phases/DataTrain/rawdata/user_behavior_dataset.csv
-    - main_app.py
+    - src/train/DataTrain/rawdata/user_behavior_dataset.csv
+    - main.py
     outs:
-    - Phases/DataTrain/processed_data/intermediate_data/transformed_df.csv
-    - Phases/DataTrain/processed_data/test_data/X_test.csv
-    - Phases/DataTrain/processed_data/test_data/y_test.csv
-    - Phases/DataTrain/processed_data/train_data/X_train.csv
-    - Phases/DataTrain/processed_data/train_data/y_train.csv
+    - src/train/DataTrain/processed_data/intermediate_data/transformed_df.csv
+    - src/train/DataTrain/processed_data/test_data/X_test.csv
+    - src/train/DataTrain/processed_data/test_data/y_test.csv
+    - src/train/DataTrain/processed_data/train_data/X_train.csv
+    - src/train/DataTrain/processed_data/train_data/y_train.csv
     metrics:
     - Phases/MetricsTrain/categorical_mapping.json:
         cache: false
   training_pipeline:
-    cmd: python3 main_app.py --pipeline training
+    cmd: python3 main.py --pipeline training
     deps:
-    - Phases/DataTrain/processed_data/test_data/X_test.csv
-    - Phases/DataTrain/processed_data/test_data/y_test.csv
-    - Phases/DataTrain/processed_data/train_data/X_train.csv
-    - Phases/DataTrain/processed_data/train_data/y_train.csv
-    - main_app.py
+    - src/train/DataTrain/processed_data/test_data/X_test.csv
+    - src/train/DataTrain/processed_data/test_data/y_test.csv
+    - src/train/DataTrain/processed_data/train_data/X_train.csv
+    - src/train/DataTrain/processed_data/train_data/y_train.csv
+    - main.py
     outs:
     - Phases/ModelsTrain/Tree_Classifier_New_v4.joblib
     metrics:
-    - Phases/MetricsTrain/Tree_Classifier_New_v4_Test_metrics.json:
+    - src/train/MetricsTrain/Tree_Classifier_New_v4_Test_metrics.json:
         cache: false
-    - Phases/MetricsTrain/Tree_Classifier_New_v4_Train_metrics.json:
+    - src/train/MetricsTrain/Tree_Classifier_New_v4_Train_metrics.json:
         cache: false
-    - Phases/MetricsTrain/Tree_Classifier_New_v4_parameters.json:
+    - src/train/MetricsTrain/Tree_Classifier_New_v4_parameters.json:
         cache: false
