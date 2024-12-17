@@ -7,7 +7,8 @@ from typing import Annotated, Dict
 import joblib  # type: ignore
 import numpy as np
 from fastapi import Header, HTTPException, Query, Request
-from validation_classes import (
+
+from src.production.backend.validation_classes import (
     APIInfo,
     ClassifierInputFeature,
     ClassifierOutput,
@@ -50,7 +51,7 @@ def load_classifier(model_path: str):
 def save_results(prediction_entry: Dict) -> None:
     """Save the predictions and results into a JSON file."""
     try:
-        with open(f"Phases/DataProduction/{PREDICTION_FILE}", "r") as f:
+        with open(f"s{PREDICTION_FILE}", "r") as f:
             predictions = json.load(f)
     except FileNotFoundError:
         predictions = []  # If file doesn't exist, start with an empty list

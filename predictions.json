@@ -1,0 +1,15 @@
+[
+    {
+        "ML_model": "Tree_Classifier_New_v4",
+        "features": {
+            "AppUsageTime_min_day": 0,
+            "ScreenOnTime_hours_day": 0.0,
+            "BatteryDrain_mAh_day": 0,
+            "NumberOfAppsInstalled": 0,
+            "DataUsage_MB_day": 0
+        },
+        "prediction": 1,
+        "time_stamp": "2024-12-17T17:49:09.469436+00:00",
+        "index_id": 0
+    }
+]

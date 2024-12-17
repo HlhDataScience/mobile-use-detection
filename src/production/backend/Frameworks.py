@@ -4,7 +4,8 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 from fastapi import Depends, FastAPI
 from pydantic import BaseModel
-from WebFrameworksProtocols import (
+
+from src.production.backend.WebFrameworksProtocols import (
     EndPointProtocolFunction,
     WebFrameworkProtocol,
 )

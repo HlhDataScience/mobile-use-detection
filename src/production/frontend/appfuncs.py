@@ -18,14 +18,16 @@ def inference_point(
     Returns:
     - dict: The API response in JSON format.
     """
-    api_endpoint = api_end_point
+
     headers = {"accept": "application/json", "Content-Type": "application/json"}
 
     try:
-        response = requests.post(api_endpoint, json=input_data, headers=headers)
-        response.raise_for_status()
-        human_response = response.json()
-        return f"Your usage of your smartphone is classified as class {human_response['prediction']}"
+        if not api_end_point:
+            api_endpoint = "http://0.0.0.0:8002/predict/"
+            response = requests.post(api_endpoint, json=input_data, headers=headers)
+            response.raise_for_status()
+            human_response = response.json()
+            return f"Your usage of your smartphone is classified as class {human_response['prediction']}"
     except requests.exceptions.HTTPError as e:
         # Handle HTTP errors
         if e.response is not None:
@@ -56,7 +58,7 @@ def gradio_inference(
         "NumberOfAppsInstalled": NumApps,
         "DataUsage_MB_day": DataUsage,
     }
-    return inference_point(input_features)
+    return inference_point("http://0.0.0.0:8002/predict/", input_data=input_features)
 
 
 def provide_class_info(class_prediction: str) -> str:

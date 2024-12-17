@@ -8,33 +8,30 @@ from typing import Dict, List, Tuple
 import gradio as gr
 import streamlit as st
 from fastapi import FastAPI
-from Phases.SrcProduction.api.apifuncs import (
+from pydantic import BaseModel
+
+from src.production.backend.apifuncs import (
     classify,
     get_results,
     load_classifier,
     read_root,
     results,
 )
-from Phases.SrcProduction.api.Frameworks import FastAPIFramework
-from Phases.SrcProduction.api.validation_classes import (
+from src.production.backend.Frameworks import FastAPIFramework
+from src.production.backend.validation_classes import (
     APIInfo,
     ClassifierOutput,
     ResultsDisplay,
 )
-from Phases.SrcProduction.api.WebFrameworksProtocols import (
+from src.production.backend.WebFrameworksProtocols import (
     EndPointProtocolFunction,
 )
-from Phases.SrcProduction.app.app import (
-    BlockGradioApp,
-    GradioApp,
-    StreamlitApp,
-)
-from Phases.SrcProduction.app.appfuncs import (
+from src.production.frontend.app import BlockGradioApp, GradioApp, StreamlitApp
+from src.production.frontend.appfuncs import (
     gradio_inference_wrapper,
     inference_point,
     provide_class_info,
 )
-from pydantic import BaseModel
 
 # CONSTANTS
 MODEL_PATH = "src/production/backend/Tree_Classifier_New_v4.joblib"
@@ -163,7 +160,10 @@ def main():
                 "NumberOfAppsInstalled": num_apps,
                 "DataUsage_MB_day": data_usage,
             }
-            class_prediction = inference_point(input_features)
+            class_prediction = inference_point(
+                api_end_point="http://0.0.0.0:8002/predict/", input_data=input_features
+            )
+            print(class_prediction)
             additional_info = provide_class_info(class_prediction)
             st.subheader("Prediction")
             st.write(class_prediction)

@@ -18,7 +18,11 @@ from typing import Any, Callable
 
 import gradio as gr
 import streamlit as st
-from appfuncs import gradio_inference, provide_class_info
+
+from src.production.frontend.appfuncs import (
+    gradio_inference,
+    provide_class_info,
+)
 
 
 class GradioApp:
