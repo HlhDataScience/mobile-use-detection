@@ -10,7 +10,7 @@ The project is organized into two primary directories:
 
 - **`images/`**: Contains Docker-ready files. It employs the interface strategy pattern to avoid reliance on a specific framework. For testing purposes, FastAPI and Streamlit were selected due to their performance and compatibility.
 
-- **`src/`**: Houses modular source code responsible for Exploratory Data Analysis (EDA), data transformation pipelines, and the TrainerPipeline. Abstractions are utilized to ensure modules are reusable across different frameworks.
+- **`src/`**: Houses modular source code responsible for Exploratory Data Analysis (EDA), data transformation pipelines, and the TrainerPipeline as well as the production code to test different apps or apis. Abstractions are utilized to ensure modules are reusable across different frameworks.
 
 ## Usage Instructions
 
