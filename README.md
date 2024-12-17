@@ -2,12 +2,30 @@
 
 ## About
 
-This repository is a small sample of how we can leverage MLOps workflow with simple tools and good results. We use GitHub and dvc to version control both our code and our data. We also use pydantic to ensure good data input serialization (for EDA and training steps) as well as backend with FastAPI. Finally, we have a gradio powered app and a Docker image to use it in cloud computing.
+This repository is a small sample of how we can leverage competent MLOps workflows with simple tools and good results. We use GitHub and dvc to version control both our code and our data. We also use pydantic to ensure good data input serialization (for EDA and training steps) as well as backend with FastAPI. Finally, we have a gradio powered app and a Docker image to use it in cloud computing. To make the code more reusable, we decided to implement interfaces and abstract classes bvy using prtocol and abc from python standar library, making the code more portable and usable.
 
 **The project is divided into 2 directories**:
-  - EDA_train_phase : IN this directory you will find the full transformation and training pipelines. Based on ABC, the code uses interfaces and abstractions be reusable in other projects with different needs.
-  - Production_phase: This directory contains the basic implementation of the app using FastAPI and Gradio to dockerization. In this way can be portable into other systems (local, owned server or cloud computing)
+  - images : This are thedocker ready files. it uses interface starategy to not realy in one speficic framework. Related to ptest performed, FastApi and Streamlit were choosen as they perform quite well.
+  - src: MOdular soruce code yused to perform Exploratory Data Analysys (EDA), the transformation pipeline of data and the TrainerPipeline. We rely on abstractions to make the modules reusable with other frameworks.
 
+**How to mainly use it?**
+The repository is thought ytto use the docker image, but we also provide the source code inc ase you would like to change anything. We provide 2 main uses for this repo:
+- One: Use the training pipeline by the Makefile
+- Two: Using Docker compose.
+
+**Using the training pipeline**
+
+```
+git clone https://github.com/HlhDataScience/mobile-use-detection
+cd mobile-use-detection
+make run_all
+```
+
+**Using the Docker Compose**
+```
+cd images
+docker-compose up --build
+```
 ## Done related to EDA_train_phase
 - We have completed the Hydra config to handle yalm automatization of the pipeline.
 - We have created the logger.py file that handles logging across the files.
