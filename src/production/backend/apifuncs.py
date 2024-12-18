@@ -51,7 +51,7 @@ def load_classifier(model_path: str):
 def save_results(prediction_entry: Dict) -> None:
     """Save the predictions and results into a JSON file."""
     try:
-        with open(f"s{PREDICTION_FILE}", "r") as f:
+        with open(f"src/production/backend/{PREDICTION_FILE}", "r") as f:
             predictions = json.load(f)
     except FileNotFoundError:
         predictions = []  # If file doesn't exist, start with an empty list
@@ -59,7 +59,7 @@ def save_results(prediction_entry: Dict) -> None:
     predictions.append(prediction_entry)
     for index, dicti in enumerate(predictions):
         dicti["index_id"] = index
-    with open(PREDICTION_FILE, "w") as f:
+    with open(f"src/production/backend/{PREDICTION_FILE}", "w") as f:
         json.dump(predictions, f, indent=4)  # type: ignore
 
 
@@ -147,3 +147,72 @@ async def get_results(
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"{str(e)}")
+
+
+"""
+POSSIBLE IMPLEMENTATION FOR BINARY TREE SEARCH INSIDE THE API FOR JSON FILE.
+import json
+from bisect import bisect_left
+from fastapi import HTTPException
+from typing import List, Dict, Any
+
+async def search_results(json_file: List[Dict[str, Any]], filter_query: QueryParameters) -> List[Dict[str, Any]]:
+    # Sort the json_file by index_id and class_ for binary search
+    json_file.sort(key=lambda x: (x.get("index_id", 0), x.get("prediction", 0)))
+        filtered_results = []
+    # Perform binary search for index_id
+    if filter_query.index is not None:
+        index_list = [entry["index_id"] for entry in json_file]
+        pos = bisect_left(index_list, filter_query.index)
+        # Collect results that match the index_id
+        while pos < len(json_file) and json_file[pos]["index_id"] == filter_query.index:
+            filtered_results.append(json_file[pos])
+            pos += 1
+    # Perform binary search for class_ if specified
+    if filter_query.class_ is not None:
+        # Filter the results based on class_ using binary search
+        class_list = [entry["prediction"] for entry in filtered_results]
+        class_pos = bisect_left(class_list, filter_query.class_)
+        # Collect results that match the class_
+        filtered_results = [
+            entry for entry in filtered_results[class_pos:]
+            if entry["prediction"] == filter_query.class_
+        ]
+
+    # Sort the results if needed
+    if filter_query.order_by:
+        filtered_results.sort(key=lambda x: x.get(filter_query.order_by, 0))
+
+    return filtered_results
+
+async def get_results(
+    headers: Annotated[PredictionHeathers, Header()],
+    filter_query: Annotated[QueryParameters, Query()],
+) -> ResultsDisplay:
+
+    with open(PREDICTION_FILE, "r") as f:
+        json_file = json.load(f)
+
+    try:
+        headers_var = {k: v for k, v in headers.model_dump().items()}
+
+        if filter_query.class_ is None and filter_query.index is None:
+            return ResultsDisplay(
+                results=json_file,
+                headers=headers_var,
+            )
+
+        # Call the search_results function and await its results
+        filtered_results = await search_results(json_file, filter_query)
+
+        # Check if there are any results
+        if not filtered_results:
+            raise HTTPException(status_code=404, detail="No match found")
+
+        return ResultsDisplay(
+            results=filtered_results,
+            headers=headers_var,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"{str(e)}")
+        """

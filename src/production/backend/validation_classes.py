@@ -3,7 +3,7 @@ This module defines data validation classes using Pydantic for a machine learnin
 output predictions, query parameters, and API information.
 """
 
-from typing import Dict, List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -76,7 +76,7 @@ class ClassifierOutput(BaseModel):
     """
 
     ML_model: str = "Tree_Classifier_New_v4"
-    features: ClassifierInputFeature
+    features: Dict[str, Any]
     prediction: int = Field(
         1, ge=1, le=5, description="The class predicted by the model."
     )
@@ -132,5 +132,5 @@ class ResultsDisplay(BaseModel):
         results (List[ClassifierOutput]): A list of classifier output results.
     """
 
-    headers: Optional[PredictionHeathers] = None
+    headers: Dict[str, Any] = None
     results: List[ClassifierOutput]
