@@ -29,6 +29,8 @@ make run_all
 cd images
 docker-compose up --build
 ```
+**Alternatively you can find the images published in [DockerHub](https://hub.docker.com/repository/docker/hlh1993/mobile-use-detection/tags)**
+
 ## Done related to EDA_train_phase
 - We have completed the Hydra config to handle yalm automatization of the pipeline.
 - We have created the `logger.py` file that handles logging across the files.
