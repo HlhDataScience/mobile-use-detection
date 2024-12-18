@@ -8,12 +8,6 @@ import joblib
 import numpy as np
 import polars as pl
 from mlflow.models import infer_signature
-from Phases.EDA_train_phase.src.abstractions.ABC_trainer import BasicTrainer
-from Phases.EDA_train_phase.src.validation_classes.validation_interfaces import (
-    HydraConfLoader,
-    MLFlowTracker,
-    PydanticConfigModel,
-)
 from sklearn.base import BaseEstimator
 from sklearn.metrics import (
     accuracy_score,
@@ -24,6 +18,13 @@ from sklearn.metrics import (
     roc_auc_score,
 )
 from typing_extensions import override
+
+from src.train.abstractions.ABC_trainer import BasicTrainer
+from src.train.validation_classes.validation_interfaces import (
+    HydraConfLoader,
+    MLFlowTracker,
+    PydanticConfigModel,
+)
 
 
 class TrainerPipeline(BasicTrainer):

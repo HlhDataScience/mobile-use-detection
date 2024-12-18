@@ -12,11 +12,12 @@ import polars.selectors as cs
 import seaborn as sns
 from hydra import compose, initialize
 from omegaconf import DictConfig, OmegaConf
-from Phases.EDA_train_phase.src.logging_functions.logger import setup_logging
-from Phases.EDA_train_phase.src.validation_classes.validation_configurations import (
+from pydantic import BaseModel, Field, FilePath
+
+from src.train.logging_functions.logger import setup_logging
+from src.train.validation_classes.validation_configurations import (
     DataValidationConfig,
 )
-from pydantic import BaseModel, Field, FilePath
 
 # CONSTANTS
 LOG_FILE = Path("../../logs/EDA.log")

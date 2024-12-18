@@ -1,1 +1,1 @@
-"""inizializer of the module"""
+"""initializer of the module"""

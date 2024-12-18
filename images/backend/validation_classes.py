@@ -3,7 +3,7 @@ This module defines data validation classes using Pydantic for a machine learnin
 output predictions, query parameters, and API information.
 """
 
-from typing import Annotated, Dict, List, Literal, Optional
+from typing import Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -111,7 +111,7 @@ class PredictionHeathers(BaseModel):
     a link to the model metrics.
 
     Attributes:
-        headers (Dict[str, str]): A dictionary containing header information
+        ML_model_metrics (str): A dictionary containing header information
                                    related to the model metrics.
     """
 

@@ -18,15 +18,16 @@ from typing import List, Tuple
 import numpy as np
 import polars as pl
 import polars.selectors as cs
-from Phases.EDA_train_phase.src.abstractions.ABC_Pipeline import BasicPipeline
-from Phases.EDA_train_phase.src.validation_classes.validation_interfaces import (
+from sklearn.base import BaseEstimator
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from skopt import BayesSearchCV
+
+from src.train.abstractions.ABC_Pipeline import BasicPipeline
+from src.train.validation_classes.validation_interfaces import (
     HydraConfLoader,
     PanderaValidationModel,
     PydanticConfigModel,
 )
-from sklearn.base import BaseEstimator
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
-from skopt import BayesSearchCV
 
 
 class LazyTransformationPipeline(BasicPipeline):

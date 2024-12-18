@@ -37,6 +37,7 @@ class FastAPIFramework:
         tags: Optional[List[str]] = None,
         dependencies: Optional[List[Depends]] = None,
     ) -> None:
+        # noinspection GrazieInspection
         """
         Adds routes to the FastAPI app for the specified HTTP methods.
 
