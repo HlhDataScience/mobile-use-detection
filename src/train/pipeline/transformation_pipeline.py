@@ -11,6 +11,8 @@ Modules used:
 - Skopt for Bayesian optimization
 """
 
+# We need to check this function and devide the functions in a better way. Separating the preprocessing into smaller functions.
+
 import json
 import logging
 from typing import List, Tuple
