@@ -6,7 +6,7 @@ authors = ["Hector <data_analitics_HLH@protonmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.11.10"
 hydra-core = "^1.3.2"
 polars = "^1.12.0"
 seaborn = "^0.13.2"
@@ -21,6 +21,7 @@ gradio = "^5.7.1"
 streamlit = "^1.40.2"
 jupyterlab = "^4.3.2"
 streamlit-jupyter = "^0.2.1"
+scalene = "^1.5.49"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
