@@ -46,7 +46,6 @@ class MyPipeline(BasicPipeline):
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Callable
-from types import MethodType
 from typing import List
 
 import polars as pl
@@ -61,14 +60,14 @@ from src.train.abstractions.ABC_validations import (
 
 class BasicPipeline(ABC):
     """
-    Abstract base class for defining DataTrain pipelines with built-in support for validation
-    and configuration management using abstraction layers for various libraries.
+    Abstract base class for building scalable and extensible data pipelines with
+    validation, configuration management, and structured workflows.
 
-    This class is designed to:
-    - Validate input dataframes using an abstraction of validation ModelsTrain.
-    - Parse and validate pipeline configurations using an abstraction of configuration ModelsTrain.
-    - Automate the management of configurations through an abstraction of configuration loaders.
-    - Enforce a structured and extensible workflow through abstract methods.
+    This class provides a foundation for implementing data pipelines that include:
+    - Input validation using a specified validation model.
+    - Configuration parsing and validation with a configuration model.
+    - Dynamic configuration management through a configuration loader.
+    - Customizable and reusable pipeline workflows.
 
     Constructor:
     -------------
@@ -76,7 +75,6 @@ class BasicPipeline(ABC):
         validation_model: IValidationModel,
         config_model: IConfigModel,
         config_loader: IConfigurationLoader,
-        config_path: str,
         config_name: str,
         apply_custom_function: bool,
         config_section: str = None
@@ -85,73 +83,88 @@ class BasicPipeline(ABC):
     Args:
     -----
     - validation_model (IValidationModel):
-        An abstraction for validating input dataframes.
+        A model responsible for validating input dataframes.
     - config_model (IConfigModel):
-        An abstraction for parsing and validating pipeline configuration.
+        A model for parsing and validating configuration data.
     - config_loader (IConfigurationLoader):
-        An abstraction for loading configuration DataTrain from specified paths.
-    - config_path (str):
-        The path to the configuration file to be loaded.
+        Loader for retrieving configuration data from external sources.
     - config_name (str):
-        The name of the main configuration file (e.g., 'main').
+        Name of the configuration file to be loaded.
     - apply_custom_function (bool):
-        Determines whether to use a custom validation function (`custom_validate`).
+        If `True`, uses the `custom_validate` method for custom validation logic.
+        If `False`, uses the default `_validate_dataframe` method.
     - config_section (str, optional):
-        Specifies a sub-configuration section (e.g., `transformation_config`) within the main configuration.
-        If provided, the corresponding section will be extracted and validated. Defaults to `None`.
+        Name of a subsection within the configuration to be loaded and validated.
+        If provided, only the specified section is used. Defaults to `None`.
+
+    Attributes:
+    -----------
+    - functions (List[Callable]):
+        A list of callable functions that define the sequence of operations for the pipeline.
+        These functions are executed in order when `run_from_functions` is called.
+        This attribute is optional and should be populated in subclasses or externally
+        before executing the pipeline.
 
     Key Features:
     -------------
-    - **Built-in Validation**: Ensures configuration validity and DataTrain integrity
-      through the use of validation abstractions, reducing manual errors.
-    - **Flexible Configuration Handling**: Allows for dynamic selection of specific sub-configurations
-      within a larger configuration file using the `config_section` parameter.
-    - **Extensibility**: Abstract methods define a flexible framework for custom
-      pipeline logic, enabling developers to implement transformations, scaling,
-      and other operations.
-    - **Logging**: Provides informative logging during validation and configuration
-      parsing to aid debugging.
-    - **Mandatory YAML Field**: The `config_data` must include `original_datapath`
-      to specify the dataset's file path. This is essential for the `_validate_dataframe` method.
+    - **Validation**: Supports both default and custom validation methods to ensure
+      data and configuration integrity.
+    - **Configuration Handling**: Allows dynamic loading and validation of configurations,
+      including the ability to focus on specific subsections.
+    - **Extensibility**: Abstract methods enforce implementation of custom pipeline logic
+      while enabling reuse of common functionalities.
+    - **Orchestrated Execution**: Allows users to define a sequence of operations
+      using `functions`, enabling modular and reusable workflows.
+    - **Logging**: Provides detailed logs for each step, aiding debugging and monitoring.
 
-    Additional Elements:
-    --------------------
-    - **Error Handling and Logging**: Comprehensive error handling ensures that the
-      pipeline fails gracefully during validation and configuration parsing.
-    - **Reproducibility and Scalability**: Using configuration-driven design allows the pipeline
-      to adapt to new workflows with minimal code changes.
-    - **Integration Points**: The class is compatible with libraries through abstractions,
-      making it easy to integrate with existing DataTrain processing tools.
-    - **Target Audience**: Designed for DataTrain scientists and ML engineers seeking
-      validation, configuration management, and scalable workflows.
+    Methods:
+    --------
+    - `_validate_dataframe`: Default validation logic using the provided validation model.
+    - `custom_validate`: Abstract method for implementing custom validation logic.
+    - `run_from_functions`: Executes the pipeline by running the `functions` in sequence.
+    - `run`: Abstract method that orchestrates the pipeline workflow.
 
-    Default Methods:
-    -----------------
-    Subclasses may implement, depending on the needs, the following methods:
+    Usage:
+    ------
+    1. Define or extend the `BasicPipeline` class and implement the `custom_validate` and `run` methods.
+    2. Populate the `functions` attribute with a list of callable functions.
+       Each function must accept the pipeline instance as its argument.
+    3. Use the `run_from_functions` method to execute the functions in order
+       or implement custom orchestration logic in the `run` method.
 
-    - `categorical_encoding`: Conversion of categorical features to numerical.
-    - `split_train_test`: Splitting DataTrain into training and test sets.
-    - `scaling`: Scaling DataTrain features.
-    - `normalize`: Normalizing DataTrain features.
-    - `standardize`: Standardizing DataTrain features.
-    - `_apply_feature_search`: Applying feature search techniques.
-    - `apply_feature_engineering`: Implementing feature engineering.
+    Example:
+    --------
+    ```python
+    class MyPipeline(BasicPipeline):
+        def custom_validate(self):
+            # Custom validation logic
+            pass
 
-    WARNING: Calling these methods without implementation will raise a NotImplementedError.
+        def run(self):
+            # Orchestrate the pipeline
+            self.run_from_functions()
+
+    pipeline = MyPipeline(
+        validation_model=my_validation_model,
+        config_model=my_config_model,
+        config_loader=my_config_loader,
+        config_name="pipeline_config.yaml",
+        apply_custom_function=True,
+    )
+
+    pipeline.functions = [step1, step2, step3]  # Define pipeline steps
+    pipeline.run()  # Execute the pipeline
+    ```
 
     Abstract Methods:
     -----------------
-    Subclasses must implement the following:
-    - `custom_validate`: Custom logic for DataTrain validation.
-    - `run`: Executing the pipeline end-to-end.
+    - `custom_validate`: To be implemented for specific validation logic.
+    - `run`: To be implemented for orchestrating the pipeline workflow.
 
-    Updates:
-    --------
-    - **`config_section` Argument**: Enables loading and validating a specific section
-      of the configuration file. This is useful for modular pipelines where each phase
-      (e.g., eda, transformation, training) has its own configuration.
-    - **Error Handling for Missing Sections**: Raises a `KeyError` if the specified
-      `config_section` does not exist in the configuration file.
+    Error Handling:
+    ---------------
+    - Logs and raises a `KeyError` if the specified `config_section` is missing.
+    - Logs validation errors for configuration and data issues.
     """
 
     def __init__(
@@ -168,6 +181,7 @@ class BasicPipeline(ABC):
         self.config_data = config_loader.load(config_name)
         self.apply_custom_function = apply_custom_function
         self.functions: List[Callable] = []
+
         if config_section:
             if config_section in self.config_data:
                 self.config_data = self.config_data[config_section]
@@ -205,63 +219,19 @@ class BasicPipeline(ABC):
         )
 
     def custom_validate(self):
-        """Custom  validation method."""
+        """Custom validation method."""
         raise NotImplementedError
 
-    @classmethod
-    def from_functions(
-        cls,
-        validation_model: IValidationModel,
-        config_model: IConfigModel,
-        config_loader: IConfigurationLoader,
-        config_name: str,
-        apply_custom_function: bool,
-        config_section: str,
-        functions_constructor: List[Callable],
-    ) -> "BasicPipeline":
+    def run_from_functions(self):
         """
-        Creates a BasicPipeline instance and allows customization through provided functions.
-
-        Args:
-            validation_model (IValidationModel): Validation model for the pipeline.
-            config_model (IConfigModel): Configuration model for parsing and validation.
-            config_loader (IConfigurationLoader): Loader for configuration data.
-            config_name (str): Name of the configuration file.
-            apply_custom_function (bool): Whether to apply custom validation logic.
-            config_section (str): Section of the configuration to load.
-            functions_constructor (Tuple[Callable, ...]): Additional functions to customize behavior.
-
-        Returns:
-            BasicPipeline: An initialized instance of the BasicPipeline.
+        Executes the pipeline by running the functions in sequence.
+        This method can be overridden by subclasses if needed.
         """
-        # Create the pipeline instance
-        instance = cls(
-            validation_model=validation_model,
-            config_model=config_model,
-            config_loader=config_loader,
-            config_name=config_name,
-            apply_custom_function=apply_custom_function,
-            config_section=config_section,
-        )
-
-        # Store the functions to be executed later
-        instance.functions = functions_constructor
-
-        # Dynamically assign the run method to execute the functions in sequence
-        def run(self):
-            """
-            Executes the pipeline by running the functions in sequence.
-            """
-            logging.info("Pipeline is starting.")
-            for function in self.functions:
-                logging.info(f"Running function: {function.__name__}")
-                function(self)
-            logging.info("Pipeline execution finished.")
-
-        # Override the run method for this instance
-        instance.run = MethodType(run, instance)
-
-        return instance
+        logging.info("Pipeline is starting.")
+        for function in self.functions:
+            logging.info(f"Running function: {function.__name__}")
+            function(self)
+        logging.info("Pipeline execution finished.")
 
     @abstractmethod
     def run(self):
